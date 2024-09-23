@@ -1,4 +1,4 @@
-# DProjektauftrag: Erstellung einer Teamverwaltungssoftware für ein MOBA (Multiplayer Online Battle Arena) Spiel (ähnlich zu Dota, LoL usw.).
+# Projektauftrag: Erstellung einer Teamverwaltungssoftware für ein MOBA (Multiplayer Online Battle Arena) Spiel (ähnlich zu Dota, LoL usw.).
 Das nachfolgende Projekt benötigt eine Datenbank und GUI. Welche Technologien verwendet werden, ist der Gruppe überlassen. Die nachfolgenden Punkte müssen im Projekt vorhanden sein. Fehlende Auflistungspunkte im Projekt führen zu Punktabzug!
 -
 Mitglieder sollen in der DB angelegt werden können. Es sind Spielername, Vorname, Nachname, E-Mailadresse und Spielposition (Top, Mid, Jungle usw.) zu erfassen. Weitere Informationen sind bei Bedarf hinzuzufügen.
