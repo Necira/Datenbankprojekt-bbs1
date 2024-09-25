@@ -12,3 +12,8 @@ Matchmaking-Mode (1v1): Es können jeweils 2 Spieler und ein Ausgang der Partie 
 
 Matchmaking-Mode (Team vs Team): Selbes Vorgehen wie oben (hier TeamElo als Grundlage)
 Turniermodus: Implementieren Sie die Möglichkeit (grafisch), dass mehrere Teams ein Turnier gegeneinander bestreiten können.
+
+Turniermodus: Implementieren Sie die Möglichkeit (grafisch), dass mehrere Teams ein
+Turnier gegeneinander bestreiten können
+
+Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position “Top“ spielen.
