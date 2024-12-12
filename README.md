@@ -19,8 +19,6 @@ Turnier gegeneinander bestreiten können
 Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position “Top“ spielen.
 
 ## Projekt starten
-
-### Voraussetzungen
 Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, um die Teamverwaltungssoftware zu starten:
 ```
 cd teamverwaltungssoftware
