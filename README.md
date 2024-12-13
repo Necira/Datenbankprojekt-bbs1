@@ -18,11 +18,23 @@ Turnier gegeneinander bestreiten können
 
 Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position “Top“ spielen.
 
-## Projekt starten
-Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, um die Teamverwaltungssoftware zu starten:
+## Teamverwaltungssoftware starten
+
+### Voraussetzungen
+Auf dem Gerät muss die [aktuellste Version Node.js](https://nodejs.org/en/download/package-manager) und der Node Version Manager (nvm) für das entsprechende Betriebssystem installiert sein, damit das Projekt ohne Probleme startet.
+
+### Vue.js-Projekt starten
+Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt zum ersten mal startest:
 ```
 cd teamverwaltungssoftware
 npm install
+nvm use 21
+npm run serve
+```
+
+Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt schon mal gestartet hat:
+```
+cd teamverwaltungssoftware
 nvm use 21
 npm run serve
 ```
