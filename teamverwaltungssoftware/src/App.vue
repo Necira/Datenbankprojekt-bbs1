@@ -1,17 +1,8 @@
 <template>
-    <!-- <router-link to="/">Home</router-link> -->
     <router-view></router-view>
 </template>
 
 <script>
-// import Homescreen from './components/HomeScreen.vue';
-
-// export default {
-//     name: 'App',
-//     components: {
-//         Homescreen,
-//     },
-// };
 </script>
 
 <style>
