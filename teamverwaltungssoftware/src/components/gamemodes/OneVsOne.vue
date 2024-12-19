@@ -1,15 +1,17 @@
 <template>
   <div class="buttons">
-      <RouterLink to="/TeamSettings"> Team </RouterLink>
-      <RouterLink to="/PlayerSettings"> Player </RouterLink>
-      <RouterLink to="/"> Back </RouterLink>
+     <button> Player One </button>
+     <button> Player Two </button>
+     <button>  Play </button>
   </div>
+  <RouterLink to="/"> Back </RouterLink>
 </template>
 
 <script>
 export default {
-  name: 'SettingScreen',
+  name: 'OneVsOne',
 };
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

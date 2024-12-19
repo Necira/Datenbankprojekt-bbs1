@@ -1,8 +1,8 @@
 <template>
     <div class="buttons">
-        <RouterLink to="/"> 1v1 </RouterLink>
-        <RouterLink to="/"> Team vs Team</RouterLink>
-        <RouterLink to="/">Go to Home</RouterLink>
+        <RouterLink to="/OneVsOne"> 1v1 </RouterLink>
+        <RouterLink to="/TeamVsTeam"> Team vs Team</RouterLink>
+        <RouterLink to="/TournamentMode">Tournament</RouterLink>
         <RouterLink to="/SettingScreen">Settings</RouterLink>
     </div>
 </template>
@@ -11,7 +11,6 @@
 export default {
     name: 'HomeScreen',
 };
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

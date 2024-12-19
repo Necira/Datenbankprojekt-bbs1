@@ -2,8 +2,8 @@
   <h1> test</h1>
   <div class="buttons">
       <input v-model="Playername" placeholder="Playername">
-      
   </div>
+  <RouterLink to="/SettingScreen"> Back </RouterLink>
 </template>
 
 <script>

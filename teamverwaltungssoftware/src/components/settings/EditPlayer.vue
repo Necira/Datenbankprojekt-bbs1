@@ -3,11 +3,12 @@
   <div class="buttons">
       <input v-model="PlayerName" placeholder="PlayerName">   
   </div>
+  <RouterLink to="/SettingScreen"> Back </RouterLink>
 </template>
 
 <script>
 export default {
-  name: 'EditTeam',
+  name: 'EditPlayer',
 };
 </script>
 
