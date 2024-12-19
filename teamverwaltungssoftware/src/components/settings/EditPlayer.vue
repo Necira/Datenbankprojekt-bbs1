@@ -1,23 +1,22 @@
 <template>
-  <h1> test</h1>
-  <div class="buttons">
-      <input v-model="PlayerName" placeholder="PlayerName">   
-  </div>
-  <RouterLink to="/SettingScreen"> Back </RouterLink>
+    <h1>test</h1>
+    <div class="buttons">
+        <input v-model="PlayerName" placeholder="PlayerName" />
+    </div>
+    <RouterLink to="/PlayerSettings"> Back </RouterLink>
 </template>
 
 <script>
 export default {
-  name: 'EditPlayer',
+    name: 'EditPlayer',
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .buttons {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
-
 </style>
