@@ -1,7 +1,7 @@
 <template>
   <div class="buttons">
-      <RouterLink to="/CreateTeam"> Create Player </RouterLink>
-      <RouterLink to="/EditTeam"> Edit Player </RouterLink>
+      <RouterLink to="/CreatePlayer"> Create Player </RouterLink>
+      <RouterLink to="/EditPlayer"> Edit Player </RouterLink>
       <RouterLink to="/SettingScreen"> Back </RouterLink>
   </div>
 </template>
