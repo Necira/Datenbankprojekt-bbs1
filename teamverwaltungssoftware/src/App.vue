@@ -1,4 +1,6 @@
 <template>
+    <setting-screen></setting-screen>
+    <HomeScreen></HomeScreen>
     <router-view></router-view>
 </template>
 
