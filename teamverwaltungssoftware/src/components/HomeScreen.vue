@@ -1,5 +1,10 @@
 <template>
-    <span>Hallo du</span>
+    <div class="buttons">
+        <RouterLink to="/OneVsOne"> 1v1 </RouterLink>
+        <RouterLink to="/TeamVsTeam"> Team vs Team</RouterLink>
+        <RouterLink to="/TournamentMode">Tournament</RouterLink>
+        <RouterLink to="/SettingScreen">Settings</RouterLink>
+    </div>
 </template>
 
 <script>
@@ -10,7 +15,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-span {
-    color: #42b983;
+.buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
+
 </style>
