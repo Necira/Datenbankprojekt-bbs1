@@ -1,29 +1,51 @@
 <template>
     <h1>Edit existing player</h1>
-    <form class="edit-player-form">
-        <label for="playername">Playername:</label>
-        <select id="playername" name="playername">
-            <!-- TO-DO: Add each player -->
-            <option>test1</option>
-        </select>
-        <label for="firstname">firstname:</label>
-        <input type="text" id="firstname" name="firstname" />
-        <label for="lastname">lastname:</label>
-        <input type="text" id="lastname" name="lastname" />
-        <label for="email">E-Mail:</label>
-        <input type="email" id="email" name="email" />
-        <label for="position">Position:</label>
-        <input type="text" id="position" name="position" />
-        <label for="eloPoints">Elo-Points:</label>
-        <input type="number" min="0" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="editPlayer">Edit player</button>
-    </form>
-    <span class="error-message">{{ textErrorMessage }}</span>
-    <button type="button" @click="openAndClosePopUpWindow">Delete player</button>
+    <table class="player-table">
+        <thead>
+            <tr>
+                <th>playerID</th>
+                <th>playername</th>
+                <th>firstname</th>
+                <th>lastname</th>
+                <th>email</th>
+                <th>position</th>
+                <th>eloPoints</th>
+                <th>deleted</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-player-table"></tbody>
+    </table>
+    <button type="button" @click="openAndCloseDeletePlayerPopUpWindow">Delete player</button>
+    <button type="button" @click="openAndCloseEditPlayerForm">Edit player</button>
     <RouterLink to="/PlayerSettings"> Back </RouterLink>
 
-    <div id="popUp-Window" v-if="openPoPUpWindow">
-        <button type="button" class="close-PopUpWindow" @click="openAndClosePopUpWindow">X</button>
+    <div v-if="openEditPlayerForm" class="popUp-Window">
+        <button type="button" class="close-PopUpWindow" @click="openAndCloseEditPlayerForm">X</button>
+        <form class="edit-player-form">
+            <label for="playername">Playername:</label>
+            <select id="playername" name="playername">
+                <!-- TO-DO: Add each player -->
+                <option>test1</option>
+            </select>
+            <label for="firstname">firstname:</label>
+            <input type="text" id="firstname" name="firstname" />
+            <label for="lastname">lastname:</label>
+            <input type="text" id="lastname" name="lastname" />
+            <label for="email">E-Mail:</label>
+            <input type="email" id="email" name="email" />
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position" />
+            <label for="eloPoints">Elo-Points:</label>
+            <input type="number" min="0" id="eloPoints" name="eloPoints" />
+            <button type="button" @click="editPlayer">Edit player</button>
+        </form>
+        <span class="error-message">{{ textErrorMessage }}</span>
+    </div>
+
+    <div class="popUp-Window" v-if="openDeletePlayerPopUpWindow">
+        <button type="button" class="close-PopUpWindow" @click="openAndCloseDeletePlayerPopUpWindow">
+            X
+        </button>
         <div class="column">
             <label for="playername">Chosse a player:</label>
             <select id="playername" name="playername">
@@ -41,16 +63,19 @@ export default {
         return {
             name: 'EditPlayer',
             textErrorMessage: '',
-            openPoPUpWindow: false,
+            openDeletePlayerPopUpWindow: false,
+            openEditPlayerForm: false,
         };
     },
     methods: {
         deletePlayer() {
             console.log('delete player');
         },
-        openAndClosePopUpWindow() {
-            this.openPoPUpWindow = !this.openPoPUpWindow;
-            console.log(this.openPoPUpWindow);
+        openAndCloseDeletePlayerPopUpWindow() {
+            this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
+        },
+        openAndCloseEditPlayerForm() {
+            this.openEditPlayerForm = !this.openEditPlayerForm;
         },
         editPlayer() {
             console.log('edit player');
@@ -114,6 +139,56 @@ export default {
             }
         },
     },
+    mounted() {
+        /** call function, when component is created
+         * Start server.js and databank for a functional post-request
+         */
+        fetch('http://localhost:3000/getPlayer')
+            .then(response => response.json())
+            .then(data => {
+                for (let i = 0; i < data.length; i++) {
+                    let newTableRow = document.createElement('tr');
+
+                    let tableDataCellID = document.createElement('td');
+                    tableDataCellID.innerHTML = data[i].playerID;
+                    newTableRow.appendChild(tableDataCellID);
+
+                    let tableDataCellPlayername = document.createElement('td');
+                    tableDataCellPlayername.innerHTML = data[i].playername;
+                    newTableRow.appendChild(tableDataCellPlayername);
+
+                    let tableDataCellFirstname = document.createElement('td');
+                    tableDataCellFirstname.innerHTML = data[i].firstname;
+                    newTableRow.appendChild(tableDataCellFirstname);
+
+                    let tableDataCellLastname = document.createElement('td');
+                    tableDataCellLastname.innerHTML = data[i].lastname;
+                    newTableRow.appendChild(tableDataCellLastname);
+
+                    let tableDataCellEmail = document.createElement('td');
+                    tableDataCellEmail.innerHTML = data[i].email;
+                    newTableRow.appendChild(tableDataCellEmail);
+
+                    let tableDataCellPosition = document.createElement('td');
+                    tableDataCellPosition.innerHTML = data[i].position;
+                    newTableRow.appendChild(tableDataCellPosition);
+
+                    let tableDataCellEloPoints = document.createElement('td');
+                    tableDataCellEloPoints.innerHTML = data[i].eloPoints;
+                    newTableRow.appendChild(tableDataCellEloPoints);
+
+                    let tableDataCellDeleted = document.createElement('td');
+                    tableDataCellDeleted.innerHTML = data[i].deleted;
+                    newTableRow.appendChild(tableDataCellDeleted);
+
+                    document.getElementById('tbody-player-table').appendChild(newTableRow);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                return;
+            });
+    },
 };
 </script>
 
@@ -130,7 +205,7 @@ export default {
     font-size: 20px;
 }
 
-#popUp-Window {
+.popUp-Window {
     background-color: aquamarine;
     padding: 15px;
     position: fixed;
@@ -148,5 +223,9 @@ export default {
 
 .close-PopUpWindow {
     display: flex;
+}
+
+.player-table {
+    margin: auto;
 }
 </style>

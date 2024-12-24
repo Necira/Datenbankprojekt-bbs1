@@ -36,7 +36,6 @@ app.post('/createNewPlayer', (req, res) => {
 
 // API-Endpoint to get all Player
 app.get('/getPlayer', (req, res) => {
-    // TO-DO: Test sql-querie
     connection.query('SELECT * FROM `player`', (err, rows) => {
         if (err) {
             console.error(err);

@@ -53,7 +53,7 @@ export default {
                     }
                 }
 
-                // Start server.js for a functional post-request
+                // Start server.js and databank for a functional post-request
                 fetch('http://localhost:3000/createNewPlayer', {
                     method: 'POST',
                     headers: {
