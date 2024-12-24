@@ -47,11 +47,8 @@
             X
         </button>
         <div class="column">
-            <label for="playername">Chosse a player:</label>
-            <select id="playername" name="playername">
-                <!-- TO-DO: Add each player -->
-                <option>test1</option>
-            </select>
+            <label for="SelectPlayername">Chosse a player:</label>
+            <select id="SelectPlayername" name="SelectPlayername"></select>
             <button type="button" @click="deletePlayer">Delete player</button>
         </div>
     </div>
@@ -69,10 +66,51 @@ export default {
     },
     methods: {
         deletePlayer() {
-            console.log('delete player');
+            let selectElement = document.getElementById('SelectPlayername');
+            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+
+            // Start server.js and databank for a functional post-request
+            fetch('http://localhost:3000/deletePlayer', {
+                method: 'PATCH',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    deletedPlayerId: idSelectedOption,
+                    valueDeleted: 1,
+                }),
+            })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
+
+            // Update table in frontend after new changes
+            this.displayPlayerTable();
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
+
+            /** Start server.js and databank for a functional post-request
+             *  Display all availab eplayers in the select-option-field
+             */
+            fetch('http://localhost:3000/getPlayer')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        let newPlayerOption = document.createElement('option');
+                        newPlayerOption.innerHTML = data[i].playername;
+                        newPlayerOption.id = data[i].playerID;
+
+                        document.getElementById('SelectPlayername').appendChild(newPlayerOption);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
         },
         openAndCloseEditPlayerForm() {
             this.openEditPlayerForm = !this.openEditPlayerForm;
@@ -138,56 +176,60 @@ export default {
                 this.textErrorMessage = '';
             }
         },
+        displayPlayerTable() {
+            document.getElementById('tbody-player-table').innerHTML = '';
+
+            // Start server.js and databank for a functional post-request
+            fetch('http://localhost:3000/getPlayer')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        let newTableRow = document.createElement('tr');
+
+                        let tableDataCellID = document.createElement('td');
+                        tableDataCellID.innerHTML = data[i].playerID;
+                        newTableRow.appendChild(tableDataCellID);
+
+                        let tableDataCellPlayername = document.createElement('td');
+                        tableDataCellPlayername.innerHTML = data[i].playername;
+                        newTableRow.appendChild(tableDataCellPlayername);
+
+                        let tableDataCellFirstname = document.createElement('td');
+                        tableDataCellFirstname.innerHTML = data[i].firstname;
+                        newTableRow.appendChild(tableDataCellFirstname);
+
+                        let tableDataCellLastname = document.createElement('td');
+                        tableDataCellLastname.innerHTML = data[i].lastname;
+                        newTableRow.appendChild(tableDataCellLastname);
+
+                        let tableDataCellEmail = document.createElement('td');
+                        tableDataCellEmail.innerHTML = data[i].email;
+                        newTableRow.appendChild(tableDataCellEmail);
+
+                        let tableDataCellPosition = document.createElement('td');
+                        tableDataCellPosition.innerHTML = data[i].position;
+                        newTableRow.appendChild(tableDataCellPosition);
+
+                        let tableDataCellEloPoints = document.createElement('td');
+                        tableDataCellEloPoints.innerHTML = data[i].eloPoints;
+                        newTableRow.appendChild(tableDataCellEloPoints);
+
+                        let tableDataCellDeleted = document.createElement('td');
+                        tableDataCellDeleted.innerHTML = data[i].deleted;
+                        newTableRow.appendChild(tableDataCellDeleted);
+
+                        document.getElementById('tbody-player-table').appendChild(newTableRow);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
+        },
     },
     mounted() {
-        /** call function, when component is created
-         * Start server.js and databank for a functional post-request
-         */
-        fetch('http://localhost:3000/getPlayer')
-            .then(response => response.json())
-            .then(data => {
-                for (let i = 0; i < data.length; i++) {
-                    let newTableRow = document.createElement('tr');
-
-                    let tableDataCellID = document.createElement('td');
-                    tableDataCellID.innerHTML = data[i].playerID;
-                    newTableRow.appendChild(tableDataCellID);
-
-                    let tableDataCellPlayername = document.createElement('td');
-                    tableDataCellPlayername.innerHTML = data[i].playername;
-                    newTableRow.appendChild(tableDataCellPlayername);
-
-                    let tableDataCellFirstname = document.createElement('td');
-                    tableDataCellFirstname.innerHTML = data[i].firstname;
-                    newTableRow.appendChild(tableDataCellFirstname);
-
-                    let tableDataCellLastname = document.createElement('td');
-                    tableDataCellLastname.innerHTML = data[i].lastname;
-                    newTableRow.appendChild(tableDataCellLastname);
-
-                    let tableDataCellEmail = document.createElement('td');
-                    tableDataCellEmail.innerHTML = data[i].email;
-                    newTableRow.appendChild(tableDataCellEmail);
-
-                    let tableDataCellPosition = document.createElement('td');
-                    tableDataCellPosition.innerHTML = data[i].position;
-                    newTableRow.appendChild(tableDataCellPosition);
-
-                    let tableDataCellEloPoints = document.createElement('td');
-                    tableDataCellEloPoints.innerHTML = data[i].eloPoints;
-                    newTableRow.appendChild(tableDataCellEloPoints);
-
-                    let tableDataCellDeleted = document.createElement('td');
-                    tableDataCellDeleted.innerHTML = data[i].deleted;
-                    newTableRow.appendChild(tableDataCellDeleted);
-
-                    document.getElementById('tbody-player-table').appendChild(newTableRow);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                return;
-            });
+        // call function, when component is created
+        this.displayPlayerTable();
     },
 };
 </script>

@@ -64,13 +64,11 @@ app.patch('/updatePlayer/:id', (req, res) => {
 });
 
 // API-Endpoint to delete a specific player
-app.patch('/deletePlayer/:id', (req, res) => {
-    const playerId = req.params.id;
-    const { deleted } = req.body;
-    // TO-DO: write correct sql-querie and test it
+app.patch('/deletePlayer', (req, res) => {
+    const { valueDeleted, deletedPlayerId } = req.body;
     connection.query(
-        'UPDATE `player` SET `deleted` = ? WHERE `player-id` = ?',
-        [deleted, playerId],
+        'UPDATE `player` SET `deleted` = ? WHERE `playerID` = ?',
+        [valueDeleted, deletedPlayerId],
         (err, result) => {
             if (err) {
                 console.error(err);
