@@ -4,10 +4,11 @@ export default {
         return {
             name: 'CreatePlayer',
             textErrorMessage: '',
+            textSuccessMessage: '',
         };
     },
     methods: {
-        saveNewPlayer() {
+        async saveNewPlayer() {
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
@@ -52,40 +53,30 @@ export default {
                     }
                 }
 
-                // let mysql = require('mysql');
+                // Start server.js for a functional post-request
+                fetch('http://localhost:3000/createNewPlayer', {
+                    method: 'POST',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        newPlayername: playername,
+                        newFirstname: firstname,
+                        newLastname: lastname,
+                        newEmail: email,
+                        newPosition: position,
+                        newEloPoints: eloPoints,
+                    }),
+                })
+                    .then(response => response.json())
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
 
-                // let connection = mysql.createConnection({
-                //     host: 'localhost',
-                //     user: 'root',
-                //     password: '',
-                //     database: 'Datenbankprojekt-BBS1',
-                // });
-
-                // connection.connect(function () {
-                //     try {
-                //         console.log('Connected!');
-                //         var sqlQuerie =
-                //             'INSERT INTO player(playername,firstname,lastname,email,position,elo-points) VALUES ("' +
-                //             playername +
-                //             '","' +
-                //             firstname +
-                //             '","' +
-                //             lastname +
-                //             '","' +
-                //             email +
-                //             '","' +
-                //             position +
-                //             '",' +
-                //             eloPoints +
-                //             ');';
-                //         connection.query(sqlQuerie, function (result) {
-                //             console.log('1 record inserted', result);
-                //             connection.end();
-                //         });
-                //     } catch (error) {
-                //         console.error(error);
-                //     }
-                // });
+                this.textSuccessMessage = 'Added new player successfully!';
+                console.log('test');
             }
         },
     },
@@ -109,6 +100,7 @@ export default {
         <input type="number" min="0" id="eloPoints" name="eloPoints" />
         <button type="button" @click="saveNewPlayer">Save player</button>
     </form>
+    <span class="success-message"> {{ textSuccessMessage }}</span>
     <span class="error-message">{{ textErrorMessage }}</span>
     <RouterLink to="/PlayerSettings"> Back </RouterLink>
 </template>
@@ -123,6 +115,11 @@ export default {
 
 .error-message {
     color: red;
+    font-size: 20px;
+}
+
+.success-message {
+    color: green;
     font-size: 20px;
 }
 </style>

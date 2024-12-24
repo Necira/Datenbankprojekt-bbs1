@@ -1,0 +1,83 @@
+const express = require('express');
+const mySql = require('mysql');
+const cors = require('cors');
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+app.use(cors());
+app.listen(port, () => {
+    console.log('server runs on http://localhost:' + port);
+});
+
+let connection = mySql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'Datenbankprojekt-BBS1',
+});
+
+// API-Endpoint to create new player
+app.post('/createNewPlayer', (req, res) => {
+    let { newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints } = req.body;
+    connection.query(
+        'INSERT INTO `player` (`playername`, `firstname`, `lastname`, `email`, `position`, `elo-points`) VALUES (?, ?, ?, ?, ?, ?)',
+        [newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send('User added successfully!', req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to get all Player
+app.get('/getPlayer', (req, res) => {
+    // TO-DO: Test sql-querie
+    connection.query('SELECT * FROM `player`', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to update a specific player
+app.patch('/updatePlayer/:id', (req, res) => {
+    const playerId = req.params.id;
+    // TO-DO: write correct sql-querie and test it
+    const { name, email } = req.body;
+    connection.query(
+        'UPDATE `player` SET name = ?, email = ? WHERE `player-id` = ?',
+        [name, email, playerId],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send('User updated successfully');
+            }
+        },
+    );
+});
+
+// API-Endpoint to delete a specific player
+app.patch('/deletePlayer/:id', (req, res) => {
+    const playerId = req.params.id;
+    const { deleted } = req.body;
+    // TO-DO: write correct sql-querie and test it
+    connection.query(
+        'UPDATE `player` SET `deleted` = ? WHERE `player-id` = ?',
+        [deleted, playerId],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send('User updated successfully');
+            }
+        },
+    );
+});
