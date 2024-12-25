@@ -11,6 +11,7 @@ import EditTeam from './components/settings/EditTeam.vue';
 import OneVsOne from './components/gamemodes/OneVsOne.vue';
 import TeamVsTeam from './components/gamemodes/TeamVsTeam.vue';
 import TournamentMode from './components/gamemodes/TournamentMode.vue';
+import EditPlayer from './components/settings/EditPlayer.vue';
 
 /** create router instance: https://router.vuejs.org/guide/
  *  routes-property defines the path itself and the components,
@@ -18,16 +19,17 @@ import TournamentMode from './components/gamemodes/TournamentMode.vue';
  */
 const router = createRouter({
     routes: [
-        { path: '/', component: HomeScreen }, 
-        { path: '/SettingScreen', component: SettingScreen},
-        { path: '/TeamSettings', component: TeamSettings},
-        { path: '/PlayerSettings', component: PlayerSettings},
-        { path: '/CreateTeam', component: CreateTeam},
-        { path: '/EditTeam', component: EditTeam},
-        { path: '/CreatePlayer', component: CreatePlayer},
-        { path: '/OneVsOne', component: OneVsOne},
-        { path: '/TeamVsTeam', component: TeamVsTeam},
-        { path: '/TournamentMode ', component: TournamentMode},
+        { path: '/', component: HomeScreen },
+        { path: '/SettingScreen', component: SettingScreen },
+        { path: '/TeamSettings', component: TeamSettings },
+        { path: '/PlayerSettings', component: PlayerSettings },
+        { path: '/CreateTeam', component: CreateTeam },
+        { path: '/EditTeam', component: EditTeam },
+        { path: '/EditPlayer', component: EditPlayer },
+        { path: '/CreatePlayer', component: CreatePlayer },
+        { path: '/OneVsOne', component: OneVsOne },
+        { path: '/TeamVsTeam', component: TeamVsTeam },
+        { path: '/TournamentMode ', component: TournamentMode },
     ],
     // mapps the routes to the the URL
     history: createWebHistory(),

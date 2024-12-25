@@ -1,12 +1,26 @@
-var mysql = require('mysql');
+let mysql = require('mysql');
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: 'root',
-  password: '',
+let connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'Datenbankprojekt-BBS1',
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
+connection.connect(function () {
+    try {
+        console.log('Connected!');
+        var sqlQuerie =
+            'INSERT INTO `player` (`playername`,`firstname`,`lastname`,`email`,`position`,`elo-points`) VALUES ("NoFPS","louis","lohmer","louis.lohmer@mediaman.de","top",1200);';
+        connection.query(sqlQuerie, function (error) {
+            if (error) {
+                console.error(error);
+            } else {
+                console.log('Successfull databank operation!');
+                connection.end();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
 });
