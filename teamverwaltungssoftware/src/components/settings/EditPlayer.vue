@@ -22,11 +22,10 @@
     <div v-if="openEditPlayerForm" class="popUp-Window">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditPlayerForm">X</button>
         <form class="edit-player-form">
+            <label for="selectPlayerID">PlayerID:</label>
+            <select id="selectPlayerID" name="selectPlayerID"></select>
             <label for="playername">Playername:</label>
-            <select id="playername" name="playername">
-                <!-- TO-DO: Add each player -->
-                <option>test1</option>
-            </select>
+            <input id="playername" name="playername" />
             <label for="firstname">firstname:</label>
             <input type="text" id="firstname" name="firstname" />
             <label for="lastname">lastname:</label>
@@ -39,6 +38,7 @@
             <input type="number" min="0" id="eloPoints" name="eloPoints" />
             <button type="button" @click="editPlayer">Edit player</button>
         </form>
+        <span class="success-message"> {{ textSuccessMessage }}</span>
         <span class="error-message">{{ textErrorMessage }}</span>
     </div>
 
@@ -51,6 +51,7 @@
             <select id="SelectPlayername" name="SelectPlayername"></select>
             <button type="button" @click="deletePlayer">Delete player</button>
         </div>
+        <span class="success-message"> {{ textSuccessMessage }}</span>
     </div>
 </template>
 
@@ -60,6 +61,7 @@ export default {
         return {
             name: 'EditPlayer',
             textErrorMessage: '',
+            textSuccessMessage: '',
             openDeletePlayerPopUpWindow: false,
             openEditPlayerForm: false,
         };
@@ -69,7 +71,7 @@ export default {
             let selectElement = document.getElementById('SelectPlayername');
             let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
 
-            // Start server.js and databank for a functional post-request
+            // Start server.js and databank for a functional patch-request
             fetch('http://localhost:3000/deletePlayer', {
                 method: 'PATCH',
                 headers: {
@@ -89,6 +91,7 @@ export default {
 
             // Update table in frontend after new changes
             this.displayPlayerTable();
+            this.textSuccessMessage = 'deleted player successfully!';
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
@@ -96,28 +99,52 @@ export default {
             /** Start server.js and databank for a functional post-request
              *  Display all availab eplayers in the select-option-field
              */
-            fetch('http://localhost:3000/getPlayer')
-                .then(response => response.json())
-                .then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        let newPlayerOption = document.createElement('option');
-                        newPlayerOption.innerHTML = data[i].playername;
-                        newPlayerOption.id = data[i].playerID;
+            if (this.openDeletePlayerPopUpWindow) {
+                fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+                            let newPlayerOption = document.createElement('option');
+                            newPlayerOption.innerHTML = data[i].playername;
+                            newPlayerOption.id = data[i].playerID;
 
-                        document.getElementById('SelectPlayername').appendChild(newPlayerOption);
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    return;
-                });
+                            document.getElementById('SelectPlayername').appendChild(newPlayerOption);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+            }
         },
         openAndCloseEditPlayerForm() {
             this.openEditPlayerForm = !this.openEditPlayerForm;
+
+            if (this.openEditPlayerForm) {
+                /** Start server.js and databank for a functional post-request
+                 *  Display all availab eplayers in the select-option-field
+                 */
+                fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+                            let playerOption = document.createElement('option');
+                            playerOption.innerHTML = data[i].playerID;
+                            playerOption.id = data[i].playerID;
+
+                            document.getElementById('selectPlayerID').appendChild(playerOption);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+            }
         },
         editPlayer() {
-            console.log('edit player');
-            // let playername = document.getElementById('playername').value;
+            let selectElement = document.getElementById('selectPlayerID');
+            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+            let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
             let email = document.getElementById('email').value;
@@ -125,11 +152,11 @@ export default {
             let eloPoints = document.getElementById('eloPoints').value;
 
             if (
-                // playername.length === 0 &&
-                firstname.length === 0 &&
-                lastname.length === 0 &&
-                email.length === 0 &&
-                position.length === 0 &&
+                playername.length === 0 ||
+                firstname.length === 0 ||
+                lastname.length === 0 ||
+                email.length === 0 ||
+                position.length === 0 ||
                 eloPoints.length === 0
             ) {
                 this.textErrorMessage = 'Please fill out at least one form field!';
@@ -175,11 +202,39 @@ export default {
             } else {
                 this.textErrorMessage = '';
             }
+
+            // Start server.js and databank for a functional put-request
+            fetch('http://localhost:3000/updatePlayer', {
+                method: 'PUT',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    changedPlayername: playername,
+                    changedFirstname: firstname,
+                    changedLastname: lastname,
+                    changedEmail: email,
+                    changedPosition: position,
+                    changedEloPoints: eloPoints,
+                    playerId: idSelectedOption,
+                }),
+            })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
+
+            this.textSuccessMessage = 'updated player successfully!';
+
+            // display new changes in player table
+            this.displayPlayerTable();
         },
         displayPlayerTable() {
             document.getElementById('tbody-player-table').innerHTML = '';
 
-            // Start server.js and databank for a functional post-request
+            // Start server.js and databank for a functional get-request
             fetch('http://localhost:3000/getPlayer')
                 .then(response => response.json())
                 .then(data => {
@@ -244,6 +299,11 @@ export default {
 
 .error-message {
     color: red;
+    font-size: 20px;
+}
+
+.success-message {
+    color: green;
     font-size: 20px;
 }
 

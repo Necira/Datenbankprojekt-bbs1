@@ -8,6 +8,7 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 app.listen(port, () => {
+    // Databank must run in the background in order run server.js successfully
     console.log('server runs on http://localhost:' + port);
 });
 
@@ -46,13 +47,29 @@ app.get('/getPlayer', (req, res) => {
 });
 
 // API-Endpoint to update a specific player
-app.patch('/updatePlayer/:id', (req, res) => {
-    const playerId = req.params.id;
+app.put('/updatePlayer', (req, res) => {
     // TO-DO: write correct sql-querie and test it
-    const { name, email } = req.body;
+    let {
+        changedPlayername,
+        changedFirstname,
+        changedLastname,
+        changedEmail,
+        changedPosition,
+        changedEloPoints,
+        playerId,
+    } = req.body;
+
     connection.query(
-        'UPDATE `player` SET name = ?, email = ? WHERE `player-id` = ?',
-        [name, email, playerId],
+        'UPDATE `player` SET `playername` = ?, `firstname` = ?, `lastname`= ?, `email` = ?, `position` = ?, `eloPoints`= ? WHERE `playerID` = ?',
+        [
+            changedPlayername,
+            changedFirstname,
+            changedLastname,
+            changedEmail,
+            changedPosition,
+            changedEloPoints,
+            playerId,
+        ],
         (err, result) => {
             if (err) {
                 console.error(err);
