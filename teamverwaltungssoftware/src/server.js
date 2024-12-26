@@ -123,3 +123,17 @@ app.post('/createNewTeam', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to get all player
+app.get('/getTeams', (req, res) => {
+    connection.query(
+        'SELECT * FROM `teams` INNER JOIN `member` ON `teams`.`teamID` = `member`.`teamID`',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
+            }
+        },
+    );
+});
