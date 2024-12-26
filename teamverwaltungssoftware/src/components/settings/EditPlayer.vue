@@ -36,6 +36,8 @@
             <input type="text" id="position" name="position" />
             <label for="eloPoints">Elo-Points:</label>
             <input type="number" min="0" id="eloPoints" name="eloPoints" />
+            <label for="deleted">deleted:</label>
+            <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <button type="button" @click="editPlayer">Edit player</button>
         </form>
         <span class="success-message"> {{ textSuccessMessage }}</span>
@@ -103,7 +105,7 @@ export default {
              *  Display all availab eplayers in the select-option-field
              */
             if (this.openDeletePlayerPopUpWindow) {
-                fetch('http://localhost:3000/getPlayer')
+                fetch('http://localhost:3000/getActivelayer')
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
@@ -153,8 +155,10 @@ export default {
             let email = document.getElementById('email').value;
             let position = document.getElementById('position').value;
             let eloPoints = document.getElementById('eloPoints').value;
+            let deleted = document.getElementById('deleted').value;
 
             if (
+                deleted.length === 0 ||
                 playername.length === 0 ||
                 firstname.length === 0 ||
                 lastname.length === 0 ||
@@ -220,6 +224,7 @@ export default {
                     changedEmail: email,
                     changedPosition: position,
                     changedEloPoints: eloPoints,
+                    changedDeletedValue: deleted,
                     playerId: idSelectedOption,
                 }),
             })
@@ -318,7 +323,7 @@ export default {
     position: fixed;
     margin: auto 0;
     left: 45%;
-    bottom: 50%;
+    top: 25%;
 }
 
 .column {

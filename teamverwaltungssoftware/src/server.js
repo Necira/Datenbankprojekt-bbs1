@@ -35,7 +35,7 @@ app.post('/createNewPlayer', (req, res) => {
     );
 });
 
-// API-Endpoint to get all Player
+// API-Endpoint to get all player
 app.get('/getPlayer', (req, res) => {
     connection.query('SELECT * FROM `player`', (err, rows) => {
         if (err) {
@@ -46,9 +46,19 @@ app.get('/getPlayer', (req, res) => {
     });
 });
 
+// API-Endpoint to get all active player
+app.get('/getActivelayer', (req, res) => {
+    connection.query('SELECT * FROM `player` WHERE `deleted` = 0', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
 // API-Endpoint to update a specific player
 app.put('/updatePlayer', (req, res) => {
-    // TO-DO: write correct sql-querie and test it
     let {
         changedPlayername,
         changedFirstname,
@@ -56,11 +66,12 @@ app.put('/updatePlayer', (req, res) => {
         changedEmail,
         changedPosition,
         changedEloPoints,
+        changedDeletedValue,
         playerId,
     } = req.body;
 
     connection.query(
-        'UPDATE `player` SET `playername` = ?, `firstname` = ?, `lastname`= ?, `email` = ?, `position` = ?, `eloPoints`= ? WHERE `playerID` = ?',
+        'UPDATE `player` SET `playername` = ?, `firstname` = ?, `lastname`= ?, `email` = ?, `position` = ?, `eloPoints`= ?, `deleted`= ? WHERE `playerID` = ?',
         [
             changedPlayername,
             changedFirstname,
@@ -68,6 +79,7 @@ app.put('/updatePlayer', (req, res) => {
             changedEmail,
             changedPosition,
             changedEloPoints,
+            changedDeletedValue,
             playerId,
         ],
         (err, result) => {
