@@ -100,6 +100,7 @@ export default {
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
+            this.textSuccessMessage = '';
 
             /** Start server.js and databank for a functional post-request
              *  Display all available player-IDs in the select-option-field
@@ -124,6 +125,7 @@ export default {
         },
         openAndCloseEditPlayerForm() {
             this.openEditPlayerForm = !this.openEditPlayerForm;
+            this.textSuccessMessage = '';
 
             if (this.openEditPlayerForm) {
                 /** Start server.js and databank for a functional post-request

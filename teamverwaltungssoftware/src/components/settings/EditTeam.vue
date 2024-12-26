@@ -76,6 +76,7 @@ export default {
         },
         openAndCloseDeleteTeamPopUpWindow() {
             this.openDeleteTeamPopUpWindow = !this.openDeleteTeamPopUpWindow;
+            this.textSuccessMessage = '';
 
             if (this.openDeleteTeamPopUpWindow) {
                 /** Start server.js and databank for a functional post-request
