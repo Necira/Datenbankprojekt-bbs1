@@ -23,13 +23,13 @@ let connection = mySql.createConnection({
 app.post('/createNewPlayer', (req, res) => {
     let { newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints } = req.body;
     connection.query(
-        'INSERT INTO `player` (`playername`, `firstname`, `lastname`, `email`, `position`, `elo-points`) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO `player` (`playername`, `firstname`, `lastname`, `email`, `position`, `eloPoints`) VALUES (?, ?, ?, ?, ?, ?)',
         [newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints],
         (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User added successfully!', req.body);
+                res.send(req.body);
             }
         },
     );
@@ -91,6 +91,22 @@ app.patch('/deletePlayer', (req, res) => {
                 console.error(err);
             } else {
                 res.send('User updated successfully');
+            }
+        },
+    );
+});
+
+// API-Endpoint to create new team
+app.post('/createNewTeam', (req, res) => {
+    let { newTeamname, newEloPoints } = req.body;
+    connection.query(
+        'INSERT INTO `teams` (`teamname`, `eloPoints`) VALUES (?, ?)',
+        [newTeamname, newEloPoints],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
             }
         },
     );
