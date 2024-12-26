@@ -102,10 +102,10 @@ export default {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
 
             /** Start server.js and databank for a functional post-request
-             *  Display all availab eplayers in the select-option-field
+             *  Display all available player-IDs in the select-option-field
              */
             if (this.openDeletePlayerPopUpWindow) {
-                fetch('http://localhost:3000/getActivelayer')
+                fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
@@ -127,7 +127,7 @@ export default {
 
             if (this.openEditPlayerForm) {
                 /** Start server.js and databank for a functional post-request
-                 *  Display all availab eplayers in the select-option-field
+                 *  Display all available player in the select-option-field
                  */
                 fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())

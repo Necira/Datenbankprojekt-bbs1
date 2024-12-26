@@ -47,7 +47,7 @@ app.get('/getPlayer', (req, res) => {
 });
 
 // API-Endpoint to get all active player
-app.get('/getActivelayer', (req, res) => {
+app.get('/getActivePlayer', (req, res) => {
     connection.query('SELECT * FROM `player` WHERE `deleted` = 0', (err, rows) => {
         if (err) {
             console.error(err);
@@ -86,7 +86,7 @@ app.put('/updatePlayer', (req, res) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User updated successfully');
+                res.send(req.body);
             }
         },
     );
@@ -102,7 +102,7 @@ app.patch('/deletePlayer', (req, res) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User updated successfully');
+                res.send(req.body);
             }
         },
     );
@@ -124,7 +124,7 @@ app.post('/createNewTeam', (req, res) => {
     );
 });
 
-// API-Endpoint to get all player
+// API-Endpoint to get all teams
 app.get('/getTeams', (req, res) => {
     connection.query(
         'SELECT * FROM `teams` INNER JOIN `member` ON `teams`.`teamID` = `member`.`teamID`',
@@ -133,6 +133,33 @@ app.get('/getTeams', (req, res) => {
                 console.error(err);
             } else {
                 res.json(rows);
+            }
+        },
+    );
+});
+
+// API-Endpoint to get all active teams
+app.get('/getActiveTeams', (req, res) => {
+    connection.query('SELECT * FROM `teams` WHERE `deleted` = 0', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to delete a specific team
+app.patch('/deleteTeam', (req, res) => {
+    const { valueDeleted, deletedTeamID } = req.body;
+    connection.query(
+        'UPDATE `teams` SET `deleted` = ? WHERE `teamID` = ?',
+        [valueDeleted, deletedTeamID],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
             }
         },
     );
