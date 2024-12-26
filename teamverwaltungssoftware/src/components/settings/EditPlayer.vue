@@ -83,15 +83,18 @@ export default {
                     valueDeleted: 1,
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        // Update table in frontend after new changes
+                        this.displayPlayerTable();
+                        this.textSuccessMessage = 'deleted player successfully!';
+                        return response.json();
+                    }
+                })
                 .catch(error => {
                     console.error(error);
                     return;
                 });
-
-            // Update table in frontend after new changes
-            this.displayPlayerTable();
-            this.textSuccessMessage = 'deleted player successfully!';
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
@@ -220,16 +223,18 @@ export default {
                     playerId: idSelectedOption,
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        // display new changes in player table
+                        this.displayPlayerTable();
+                        this.textSuccessMessage = 'updated player successfully!';
+                        return response.json();
+                    }
+                })
                 .catch(error => {
                     console.error(error);
                     return;
                 });
-
-            this.textSuccessMessage = 'updated player successfully!';
-
-            // display new changes in player table
-            this.displayPlayerTable();
         },
         displayPlayerTable() {
             document.getElementById('tbody-player-table').innerHTML = '';

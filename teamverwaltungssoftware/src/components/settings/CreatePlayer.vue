@@ -69,14 +69,16 @@ export default {
                         newEloPoints: eloPoints,
                     }),
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (response.ok) {
+                            this.textSuccessMessage = 'Added new player successfully!';
+                            return response.json();
+                        }
+                    })
                     .catch(error => {
                         console.error(error);
                         return;
                     });
-
-                this.textSuccessMessage = 'Added new player successfully!';
-                console.log('test');
             }
         },
     },
