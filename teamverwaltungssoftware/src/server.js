@@ -162,3 +162,38 @@ app.patch('/deleteTeam', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to update a specific team
+app.put('/updateTeam', (req, res) => {
+    let {
+        changedTeamname,
+        changedDeletedValue,
+        changedFirstMember,
+        changedSecondMember,
+        changedThirdMember,
+        changedFourthMember,
+        changedFifthMember,
+        teamId,
+    } = req.body;
+
+    connection.query(
+        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
+        [
+            changedTeamname,
+            changedDeletedValue,
+            changedFirstMember,
+            changedSecondMember,
+            changedThirdMember,
+            changedFourthMember,
+            changedFifthMember,
+            teamId,
+        ],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});
