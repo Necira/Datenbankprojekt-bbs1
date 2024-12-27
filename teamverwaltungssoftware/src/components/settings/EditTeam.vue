@@ -6,8 +6,12 @@
                 <th>teamID</th>
                 <th>teamname</th>
                 <th>eloPoints</th>
-                <th>playerID</th>
                 <th>deleted</th>
+                <th>firstMember</th>
+                <th>secondMember</th>
+                <th>thirdMember</th>
+                <th>fourthMember</th>
+                <th>fifthMember</th>
             </tr>
         </thead>
         <tbody id="tbody-teams-table"></tbody>
@@ -58,13 +62,49 @@ export default {
                         tableDataCellEloPoints.innerHTML = data[i].eloPoints;
                         newTableRow.appendChild(tableDataCellEloPoints);
 
-                        let tableDataCellPlayerID = document.createElement('td');
-                        tableDataCellPlayerID.innerHTML = data[i].playerID;
-                        newTableRow.appendChild(tableDataCellPlayerID);
-
                         let tableDataCellDeleted = document.createElement('td');
                         tableDataCellDeleted.innerHTML = data[i].deleted;
                         newTableRow.appendChild(tableDataCellDeleted);
+
+                        let tableDataCellFirstMember = document.createElement('td');
+                        if (data[i].firstMember !== null) {
+                            tableDataCellFirstMember.innerHTML = data[i].firstMember;
+                        } else {
+                            tableDataCellFirstMember.innerHTML = 'null';
+                        }
+                        newTableRow.appendChild(tableDataCellFirstMember);
+
+                        let tableDataCellSecondMember = document.createElement('td');
+                        if (data[i].secondMember !== null) {
+                            tableDataCellSecondMember.innerHTML = data[i].secondMember;
+                        } else {
+                            tableDataCellSecondMember.innerHTML = 'null';
+                        }
+                        newTableRow.appendChild(tableDataCellSecondMember);
+
+                        let tableDataCellThirdMember = document.createElement('td');
+                        if (data[i].thirdMember !== null) {
+                            tableDataCellThirdMember.innerHTML = data[i].thirdMember;
+                        } else {
+                            tableDataCellThirdMember.innerHTML = 'null';
+                        }
+                        newTableRow.appendChild(tableDataCellThirdMember);
+
+                        let tableDataCellFourthMember = document.createElement('td');
+                        if (data[i].fourthMember !== null) {
+                            tableDataCellFourthMember.innerHTML = data[i].fourthMember;
+                        } else {
+                            tableDataCellFourthMember.innerHTML = 'null';
+                        }
+                        newTableRow.appendChild(tableDataCellFourthMember);
+
+                        let tableDataCellFifthMember = document.createElement('td');
+                        if (data[i].fifthMember !== null) {
+                            tableDataCellFifthMember.innerHTML = data[i].fifthMember;
+                        } else {
+                            tableDataCellFifthMember.innerHTML = 'null';
+                        }
+                        newTableRow.appendChild(tableDataCellFifthMember);
 
                         document.getElementById('tbody-teams-table').appendChild(newTableRow);
                     }
@@ -101,8 +141,6 @@ export default {
         deleteTeam() {
             let selectElement = document.getElementById('selectTeamname');
             let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
-
-            console.log(idSelectedOption);
 
             // Start server.js and databank for a functional patch-request
             fetch('http://localhost:3000/deleteTeam', {

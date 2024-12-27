@@ -110,10 +110,11 @@ app.patch('/deletePlayer', (req, res) => {
 
 // API-Endpoint to create new team
 app.post('/createNewTeam', (req, res) => {
-    let { newTeamname, newEloPoints } = req.body;
+    let { newTeamname, newEloPoints, firstMember, secondMember, thirdMember, fourthMember, fifthMember } =
+        req.body;
     connection.query(
-        'INSERT INTO `teams` (`teamname`, `eloPoints`) VALUES (?, ?)',
-        [newTeamname, newEloPoints],
+        'INSERT INTO `teams` (`teamname`, `eloPoints`, `firstMember`, `secondMember`,`thirdMember`,`fourthMember`,`fifthMember`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [newTeamname, newEloPoints, firstMember, secondMember, thirdMember, fourthMember, fifthMember],
         (err, result) => {
             if (err) {
                 console.error(err);
@@ -126,16 +127,13 @@ app.post('/createNewTeam', (req, res) => {
 
 // API-Endpoint to get all teams
 app.get('/getTeams', (req, res) => {
-    connection.query(
-        'SELECT * FROM `teams` INNER JOIN `member` ON `teams`.`teamID` = `member`.`teamID`',
-        (err, rows) => {
-            if (err) {
-                console.error(err);
-            } else {
-                res.json(rows);
-            }
-        },
-    );
+    connection.query('SELECT * FROM `teams`', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
 });
 
 // API-Endpoint to get all active teams
