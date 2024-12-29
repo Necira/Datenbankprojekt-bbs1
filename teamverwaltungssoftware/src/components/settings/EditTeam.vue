@@ -290,7 +290,8 @@ export default {
                 });
         },
         editTeam() {
-            console.log('hello there');
+            this.textSuccessMessage = '';
+
             let selectFieldTeamId = document.getElementById('selectTeamID');
             let teamId = selectFieldTeamId.options[selectFieldTeamId.selectedIndex].id;
             let teamname = document.getElementById('teamname').value;
@@ -312,6 +313,24 @@ export default {
 
             if (teamname.length === 0 || deleted.length === 0) {
                 this.textErrorMessage = 'Please fill out at least one form field!';
+                return;
+            } else {
+                this.textErrorMessage = '';
+            }
+
+            if (
+                firstMember === secondMember ||
+                firstMember === thirdMember ||
+                firstMember === fourthMember ||
+                firstMember === fifthMember ||
+                secondMember === thirdMember ||
+                secondMember === fourthMember ||
+                secondMember === fifthMember ||
+                thirdMember === fourthMember ||
+                thirdMember === fifthMember ||
+                fourthMember === fifthMember
+            ) {
+                this.textErrorMessage = 'Cannot add the same player twice!';
                 return;
             } else {
                 this.textErrorMessage = '';
