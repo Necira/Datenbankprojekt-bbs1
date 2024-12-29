@@ -57,6 +57,20 @@ app.get('/getActivePlayer', (req, res) => {
     });
 });
 
+// API-Endpoint to get all active player that are not in a team yet
+app.get('/getActiveTeammember', (req, res) => {
+    connection.query(
+        'SELECT * FROM `player` WHERE `deleted` = 0 AND `playerID` = (SELECT `firstMember` FROM `teams` WHERE `firstMember` = `playerID`) OR `playerID` = (SELECT `secondMember` FROM `teams` WHERE `secondMember` = `playerID`) OR `playerID` = (SELECT `thirdMember` FROM `teams` WHERE `thirdMember` = `playerID`) OR `playerID` = (SELECT `fourthMember` FROM `teams` WHERE `fourthMember` = `playerID`) OR `playerID` = (SELECT `fifthMember` FROM `teams` WHERE `fifthMember` = `playerID`)',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
+            }
+        },
+    );
+});
+
 // API-Endpoint to update a specific player
 app.put('/updatePlayer', (req, res) => {
     let {

@@ -193,66 +193,89 @@ export default {
 
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
-                    .then(data => {
-                        let selectFieldFirstMember = document.getElementById('firstMember');
-                        let selectFieldSecondMember = document.getElementById('secondMember');
-                        let selectFieldthirdMember = document.getElementById('thirdMember');
-                        let selectFieldFourthMember = document.getElementById('fourthMember');
-                        let selectFieldFifthMember = document.getElementById('fifthMember');
-
-                        let noPlayerOptionFirstMember = document.createElement('option');
-                        noPlayerOptionFirstMember.innerHTML = 'no player';
-                        noPlayerOptionFirstMember.id = null;
-
-                        let noPlayerOptionSecondMember = document.createElement('option');
-                        noPlayerOptionSecondMember.innerHTML = 'no player';
-                        noPlayerOptionSecondMember.id = null;
-
-                        let noPlayerOptionThirdMember = document.createElement('option');
-                        noPlayerOptionThirdMember.innerHTML = 'no player';
-                        noPlayerOptionThirdMember.id = null;
-
-                        let noPlayerOptionFourthMember = document.createElement('option');
-                        noPlayerOptionFourthMember.innerHTML = 'no player';
-                        noPlayerOptionFourthMember.id = null;
-
-                        let noPlayerOptionFifthMember = document.createElement('option');
-                        noPlayerOptionFifthMember.innerHTML = 'no player';
-                        noPlayerOptionFifthMember.id = null;
-
-                        selectFieldFirstMember.appendChild(noPlayerOptionFirstMember);
-                        selectFieldSecondMember.appendChild(noPlayerOptionSecondMember);
-                        selectFieldthirdMember.appendChild(noPlayerOptionThirdMember);
-                        selectFieldFourthMember.appendChild(noPlayerOptionFourthMember);
-                        selectFieldFifthMember.appendChild(noPlayerOptionFifthMember);
-
-                        for (let i = 0; i < data.length; i++) {
-                            let newPlayerOptionFirstMember = document.createElement('option');
-                            newPlayerOptionFirstMember.innerHTML = data[i].playerID;
-                            newPlayerOptionFirstMember.id = data[i].playerID;
-
-                            let newPlayerOptionSecondMember = document.createElement('option');
-                            newPlayerOptionSecondMember.innerHTML = data[i].playerID;
-                            newPlayerOptionSecondMember.id = data[i].playerID;
-
-                            let newPlayerOptionThirdMember = document.createElement('option');
-                            newPlayerOptionThirdMember.innerHTML = data[i].playerID;
-                            newPlayerOptionThirdMember.id = data[i].playerID;
-
-                            let newPlayerOptionFourthMember = document.createElement('option');
-                            newPlayerOptionFourthMember.innerHTML = data[i].playerID;
-                            newPlayerOptionFourthMember.id = data[i].playerID;
-
-                            let newPlayerOptionFifthMember = document.createElement('option');
-                            newPlayerOptionFifthMember.innerHTML = data[i].playerID;
-                            newPlayerOptionFifthMember.id = data[i].playerID;
-
-                            selectFieldFirstMember.appendChild(newPlayerOptionFirstMember);
-                            selectFieldSecondMember.appendChild(newPlayerOptionSecondMember);
-                            selectFieldthirdMember.appendChild(newPlayerOptionThirdMember);
-                            selectFieldFourthMember.appendChild(newPlayerOptionFourthMember);
-                            selectFieldFifthMember.appendChild(newPlayerOptionFifthMember);
+                    .then(activePlayerData => {
+                        let activePlayer = [];
+                        for (let i = 0; i < activePlayerData.length; i++) {
+                            activePlayer.push(activePlayerData[i].playerID);
                         }
+
+                        fetch('http://localhost:3000/getActiveTeammember')
+                            .then(response => response.json())
+                            .then(activeTeammemberData => {
+                                let activeTeammember = [];
+                                for (let i = 0; i < activeTeammemberData.length; i++) {
+                                    activeTeammember.push(activeTeammemberData[i].playerID);
+                                }
+
+                                // Display only player that are not deleted and are not in a team yet
+                                let availableTeammember = [];
+                                for (let i = 0; i < activeTeammember.length; i++) {
+                                    for (let a = 0; a < activePlayer.length; a++) {
+                                        if (
+                                            activeTeammember[i] !== activePlayer[a] &&
+                                            !availableTeammember.includes(activePlayer[a]) &&
+                                            !activeTeammember.includes(activePlayer[a])
+                                        ) {
+                                            console.log(activeTeammember[i], activePlayer[a]);
+                                            availableTeammember.push(activePlayer[a]);
+                                        }
+                                    }
+                                }
+
+                                let selectFieldFirstMember = document.getElementById('firstMember');
+                                let selectFieldSecondMember = document.getElementById('secondMember');
+                                let selectFieldthirdMember = document.getElementById('thirdMember');
+                                let selectFieldFourthMember = document.getElementById('fourthMember');
+                                let selectFieldFifthMember = document.getElementById('fifthMember');
+                                let noPlayerOptionFirstMember = document.createElement('option');
+                                noPlayerOptionFirstMember.innerHTML = 'no player';
+                                noPlayerOptionFirstMember.id = null;
+                                let noPlayerOptionSecondMember = document.createElement('option');
+                                noPlayerOptionSecondMember.innerHTML = 'no player';
+                                noPlayerOptionSecondMember.id = null;
+                                let noPlayerOptionThirdMember = document.createElement('option');
+                                noPlayerOptionThirdMember.innerHTML = 'no player';
+                                noPlayerOptionThirdMember.id = null;
+                                let noPlayerOptionFourthMember = document.createElement('option');
+                                noPlayerOptionFourthMember.innerHTML = 'no player';
+                                noPlayerOptionFourthMember.id = null;
+                                let noPlayerOptionFifthMember = document.createElement('option');
+                                noPlayerOptionFifthMember.innerHTML = 'no player';
+                                noPlayerOptionFifthMember.id = null;
+                                selectFieldFirstMember.appendChild(noPlayerOptionFirstMember);
+                                selectFieldSecondMember.appendChild(noPlayerOptionSecondMember);
+                                selectFieldthirdMember.appendChild(noPlayerOptionThirdMember);
+                                selectFieldFourthMember.appendChild(noPlayerOptionFourthMember);
+                                selectFieldFifthMember.appendChild(noPlayerOptionFifthMember);
+
+                                console.log(availableTeammember, activePlayer, activeTeammember);
+                                for (let i = 0; i < availableTeammember.length; i++) {
+                                    let newPlayerOptionFirstMember = document.createElement('option');
+                                    newPlayerOptionFirstMember.innerHTML = availableTeammember[i];
+                                    newPlayerOptionFirstMember.id = availableTeammember[i];
+                                    let newPlayerOptionSecondMember = document.createElement('option');
+                                    newPlayerOptionSecondMember.innerHTML = availableTeammember[i];
+                                    newPlayerOptionSecondMember.id = availableTeammember[i];
+                                    let newPlayerOptionThirdMember = document.createElement('option');
+                                    newPlayerOptionThirdMember.innerHTML = availableTeammember[i];
+                                    newPlayerOptionThirdMember.id = availableTeammember[i];
+                                    let newPlayerOptionFourthMember = document.createElement('option');
+                                    newPlayerOptionFourthMember.innerHTML = availableTeammember[i];
+                                    newPlayerOptionFourthMember.id = availableTeammember[i];
+                                    let newPlayerOptionFifthMember = document.createElement('option');
+                                    newPlayerOptionFifthMember.innerHTML = availableTeammember[i];
+                                    newPlayerOptionFifthMember.id = availableTeammember[i];
+                                    selectFieldFirstMember.appendChild(newPlayerOptionFirstMember);
+                                    selectFieldSecondMember.appendChild(newPlayerOptionSecondMember);
+                                    selectFieldthirdMember.appendChild(newPlayerOptionThirdMember);
+                                    selectFieldFourthMember.appendChild(newPlayerOptionFourthMember);
+                                    selectFieldFifthMember.appendChild(newPlayerOptionFifthMember);
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                return;
+                            });
                     })
                     .catch(error => {
                         console.error(error);
