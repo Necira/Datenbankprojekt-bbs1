@@ -114,6 +114,8 @@ export default {
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
                 .then(data => {
+                    this.tableTeams = [];
+
                     for (let i = 0; i < data.length; i++) {
                         // Push data into array in order to display it with v-for
                         if (data[i].firstMember === null) {
@@ -169,7 +171,6 @@ export default {
                             // Push data into array in order to display it with v-for
                             this.deleteableTeams.push({ id: data[i].teamID, name: data[i].teamname });
                         }
-                        console.log(this.deleteableTeams);
                     })
                     .catch(error => {
                         console.error(error);
@@ -307,26 +308,23 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            console.log(firstMember, secondMember, thirdMember, fourthMember);
-
-            // TO-DO: fix later
-            // if (
-            //     firstMember === secondMember ||
-            //     firstMember === thirdMember ||
-            //     firstMember === fourthMember ||
-            //     firstMember === fifthMember ||
-            //     secondMember === thirdMember ||
-            //     secondMember === fourthMember ||
-            //     secondMember === fifthMember ||
-            //     thirdMember === fourthMember ||
-            //     thirdMember === fifthMember ||
-            //     fourthMember === fifthMember
-            // ) {
-            //     this.textErrorMessage = 'Cannot add the same player twice!';
-            //     return;
-            // } else {
-            //     this.textErrorMessage = '';
-            // }
+            if (
+                firstMember === secondMember ||
+                firstMember === thirdMember ||
+                firstMember === fourthMember ||
+                firstMember === fifthMember ||
+                secondMember === thirdMember ||
+                secondMember === fourthMember ||
+                secondMember === fifthMember ||
+                thirdMember === fourthMember ||
+                thirdMember === fifthMember ||
+                fourthMember === fifthMember
+            ) {
+                this.textErrorMessage = 'Cannot add the same player twice!';
+                return;
+            } else {
+                this.textErrorMessage = '';
+            }
 
             // Start server.js and databank for a functional put-request
             fetch('http://localhost:3000/updateTeam', {
