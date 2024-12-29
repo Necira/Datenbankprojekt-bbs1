@@ -95,18 +95,57 @@ export default {
              */
             fetch('http://localhost:3000/getActivePlayer')
                 .then(response => response.json())
-                .then(data => {
-                    for (let i = 0; i < data.length; i++) {
-                        let container = document.createElement('div');
-                        let availablePlayerCheckbox = document.createElement('input');
-                        availablePlayerCheckbox.type = 'checkbox';
-                        availablePlayerCheckbox.id = data[i].playerID;
-                        let availablePlayerLabel = document.createElement('label');
-                        availablePlayerLabel.innerHTML = data[i].playername;
-                        container.appendChild(availablePlayerCheckbox);
-                        container.appendChild(availablePlayerLabel);
-                        document.getElementById('availabe-player').appendChild(container);
+                .then(activePlayerData => {
+                    let activePlayerIDs = [];
+                    let activePlayernames = [];
+
+                    for (let i = 0; i < activePlayerData.length; i++) {
+                        activePlayerIDs.push(activePlayerData[i].playerID);
+                        activePlayernames.push(activePlayerData[i].playername);
                     }
+
+                    fetch('http://localhost:3000/getActiveTeammember')
+                        .then(response => response.json())
+                        .then(activeTeammemberData => {
+                            let activeTeammemberIDs = [];
+
+                            for (let i = 0; i < activeTeammemberData.length; i++) {
+                                activeTeammemberIDs.push(activeTeammemberData[i].playerID);
+                            }
+
+                            // Display only player that are not deleted and are not in a team yet
+                            let availableTeammemberIDs = [];
+                            let availableTeammemberNames = [];
+
+                            for (let i = 0; i < activeTeammemberIDs.length; i++) {
+                                for (let a = 0; a < activePlayerIDs.length; a++) {
+                                    if (
+                                        activeTeammemberIDs[i] !== activePlayerIDs[a] &&
+                                        !availableTeammemberIDs.includes(activePlayerIDs[a]) &&
+                                        !activeTeammemberIDs.includes(activePlayerIDs[a])
+                                    ) {
+                                        availableTeammemberIDs.push(activePlayerIDs[a]);
+                                        availableTeammemberNames.push(activePlayernames[a]);
+                                    }
+                                }
+                            }
+
+                            for (let i = 0; i < availableTeammemberIDs.length; i++) {
+                                let container = document.createElement('div');
+                                let availablePlayerCheckbox = document.createElement('input');
+                                availablePlayerCheckbox.type = 'checkbox';
+                                availablePlayerCheckbox.id = availableTeammemberIDs[i];
+                                let availablePlayerLabel = document.createElement('label');
+                                availablePlayerLabel.innerHTML = availableTeammemberNames[i];
+                                container.appendChild(availablePlayerCheckbox);
+                                container.appendChild(availablePlayerLabel);
+                                document.getElementById('availabe-player').appendChild(container);
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            return;
+                        });
                 })
                 .catch(error => {
                     console.error(error);
