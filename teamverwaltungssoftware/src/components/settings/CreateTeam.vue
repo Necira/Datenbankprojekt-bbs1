@@ -6,7 +6,12 @@
         <label for="eloPoints">elo-points</label>
         <input id="eloPoints" name="eloPoints" type="number" min="0" />
         <label for="member">member</label>
-        <div id="availabe-player"></div>
+        <div id="availabe-player">
+            <div v-for="player in availablePlayer" :key="player">
+                <input type="checkbox" :id="player.id" />
+                <label :for="player.id">{{ player.name }}</label>
+            </div>
+        </div>
         <button type="button" @click="saveNewTeam">Save team</button>
     </form>
     <span class="success-message"> {{ textSuccessMessage }}</span>
@@ -21,6 +26,7 @@ export default {
             name: 'CreateTeam',
             textErrorMessage: '',
             textSuccessMessage: '',
+            availablePlayer: [],
         };
     },
     methods: {
@@ -34,7 +40,7 @@ export default {
             for (let i = 0; i < availablePlayerContainer.length; i++) {
                 let checkbox = availablePlayerContainer[i].childNodes[0];
 
-                if (checkbox.checked) {
+                if (checkbox !== undefined && checkbox.checked) {
                     counterCheckedTeammember++;
                     choosenTeamMembers.push(Number(checkbox.id));
                 }
@@ -131,15 +137,21 @@ export default {
                             }
 
                             for (let i = 0; i < availableTeammemberIDs.length; i++) {
-                                let container = document.createElement('div');
-                                let availablePlayerCheckbox = document.createElement('input');
-                                availablePlayerCheckbox.type = 'checkbox';
-                                availablePlayerCheckbox.id = availableTeammemberIDs[i];
-                                let availablePlayerLabel = document.createElement('label');
-                                availablePlayerLabel.innerHTML = availableTeammemberNames[i];
-                                container.appendChild(availablePlayerCheckbox);
-                                container.appendChild(availablePlayerLabel);
-                                document.getElementById('availabe-player').appendChild(container);
+                                // let container = document.createElement('div');
+                                // let availablePlayerCheckbox = document.createElement('input');
+                                // availablePlayerCheckbox.type = 'checkbox';
+                                // availablePlayerCheckbox.id = availableTeammemberIDs[i];
+                                // let availablePlayerLabel = document.createElement('label');
+                                // availablePlayerLabel.innerHTML = availableTeammemberNames[i];
+                                // container.appendChild(availablePlayerCheckbox);
+                                // container.appendChild(availablePlayerLabel);
+                                // document.getElementById('availabe-player').appendChild(container);
+
+                                // Push data into array in order to display it with v-for
+                                this.availablePlayer.push({
+                                    id: availableTeammemberIDs[i],
+                                    name: availableTeammemberNames[i],
+                                });
                             }
                         })
                         .catch(error => {

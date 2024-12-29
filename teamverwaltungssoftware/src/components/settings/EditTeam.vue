@@ -14,7 +14,19 @@
                 <th>fifthMember</th>
             </tr>
         </thead>
-        <tbody id="tbody-teams-table"></tbody>
+        <tbody>
+            <tr v-for="row in tableTeams" :key="row">
+                <td>{{ row.tableDataCellTeamID }}</td>
+                <td>{{ row.tableDataCellTeamname }}</td>
+                <td>{{ row.tableDataCellEloPoints }}</td>
+                <td>{{ row.tableDataCellDeleted }}</td>
+                <td>{{ row.tableDataCellFirstMember }}</td>
+                <td>{{ row.tableDataCellSecondMember }}</td>
+                <td>{{ row.tableDataCellThirdMember }}</td>
+                <td>{{ row.tableDataCellFourthMember }}</td>
+                <td>{{ row.tableDataCellFifthMember }}</td>
+            </tr>
+        </tbody>
     </table>
     <button type="button" @click="openAndCloseDeleteTeamPopUpWindow">Delete team</button>
     <button type="button" @click="openAndCloseEditTeamForm">Edit team</button>
@@ -24,7 +36,9 @@
         <button type="button" class="close-PopUpWindow" @click="openAndCloseDeleteTeamPopUpWindow">X</button>
         <div class="column">
             <label for="selectTeamname">Choose a team:</label>
-            <select id="selectTeamname" name="selectTeamname"></select>
+            <select id="selectTeamname" name="selectTeamname">
+                <option v-for="team in deleteableTeams" :key="team" :id="team.id">{{ team.name }}</option>
+            </select>
             <button type="button" @click="deleteTeam">Delete team</button>
         </div>
         <span class="success-message"> {{ textSuccessMessage }}</span>
@@ -34,21 +48,43 @@
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditTeamForm">X</button>
         <form class="edit-team-form">
             <label for="selectTeamID">TeamID:</label>
-            <select id="selectTeamID" name="selectTeamID"></select>
+            <select id="selectTeamID" name="selectTeamID">
+                <option v-for="team in editableTeams" :key="team" :id="team">{{ team }}</option>
+            </select>
             <label for="teamname">teamname:</label>
             <input id="teamname" name="teamname" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <label for="firstMember">firstMember:</label>
-            <select id="firstMember" name="firstMember"></select>
+            <select id="firstMember" name="firstMember">
+                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
             <label for="secondMember">secondMember:</label>
-            <select id="secondMember" name="secondMember"></select>
+            <select id="secondMember" name="secondMember">
+                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
             <label for="thirdMember">thirdMember:</label>
-            <select id="thirdMember" name="thirdMember"></select>
+            <select id="thirdMember" name="thirdMember">
+                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
             <label for="fourthMember">fourthMember:</label>
-            <select id="fourthMember" name="fourthMember"></select>
+            <select id="fourthMember" name="fourthMember">
+                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
             <label for="fifthMember">fifthMember:</label>
-            <select id="fifthMember" name="fifthMember"></select>
+            <select id="fifthMember" name="fifthMember">
+                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
 
             <button type="button" @click="editTeam">Edit team</button>
         </form>
@@ -66,76 +102,51 @@ export default {
             openEditTeamForm: false,
             textSuccessMessage: '',
             textErrorMessage: '',
+            deleteableTeams: [],
+            availablePlayer: [],
+            editableTeams: [],
+            tableTeams: [],
         };
     },
     methods: {
         displayTeamsTable() {
-            document.getElementById('tbody-teams-table').innerHTML = '';
-
             // Start server.js and databank for a functional get-request
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
                 .then(data => {
                     for (let i = 0; i < data.length; i++) {
-                        let newTableRow = document.createElement('tr');
-
-                        let tableDataCellTeamID = document.createElement('td');
-                        tableDataCellTeamID.innerHTML = data[i].teamID;
-                        newTableRow.appendChild(tableDataCellTeamID);
-
-                        let tableDataCellTeamname = document.createElement('td');
-                        tableDataCellTeamname.innerHTML = data[i].teamname;
-                        newTableRow.appendChild(tableDataCellTeamname);
-
-                        let tableDataCellEloPoints = document.createElement('td');
-                        tableDataCellEloPoints.innerHTML = data[i].eloPoints;
-                        newTableRow.appendChild(tableDataCellEloPoints);
-
-                        let tableDataCellDeleted = document.createElement('td');
-                        tableDataCellDeleted.innerHTML = data[i].deleted;
-                        newTableRow.appendChild(tableDataCellDeleted);
-
-                        let tableDataCellFirstMember = document.createElement('td');
-                        if (data[i].firstMember !== null) {
-                            tableDataCellFirstMember.innerHTML = data[i].firstMember;
-                        } else {
-                            tableDataCellFirstMember.innerHTML = 'null';
+                        // Push data into array in order to display it with v-for
+                        if (data[i].firstMember === null) {
+                            data[i].firstMember = 'NULL';
                         }
-                        newTableRow.appendChild(tableDataCellFirstMember);
 
-                        let tableDataCellSecondMember = document.createElement('td');
-                        if (data[i].secondMember !== null) {
-                            tableDataCellSecondMember.innerHTML = data[i].secondMember;
-                        } else {
-                            tableDataCellSecondMember.innerHTML = 'null';
+                        if (data[i].secondMember === null) {
+                            data[i].secondMember = 'NULL';
                         }
-                        newTableRow.appendChild(tableDataCellSecondMember);
 
-                        let tableDataCellThirdMember = document.createElement('td');
-                        if (data[i].thirdMember !== null) {
-                            tableDataCellThirdMember.innerHTML = data[i].thirdMember;
-                        } else {
-                            tableDataCellThirdMember.innerHTML = 'null';
+                        if (data[i].thirdMember === null) {
+                            data[i].thirdMember = 'NULL';
                         }
-                        newTableRow.appendChild(tableDataCellThirdMember);
 
-                        let tableDataCellFourthMember = document.createElement('td');
-                        if (data[i].fourthMember !== null) {
-                            tableDataCellFourthMember.innerHTML = data[i].fourthMember;
-                        } else {
-                            tableDataCellFourthMember.innerHTML = 'null';
+                        if (data[i].fourthMember === null) {
+                            data[i].fourthMember = 'NULL';
                         }
-                        newTableRow.appendChild(tableDataCellFourthMember);
 
-                        let tableDataCellFifthMember = document.createElement('td');
-                        if (data[i].fifthMember !== null) {
-                            tableDataCellFifthMember.innerHTML = data[i].fifthMember;
-                        } else {
-                            tableDataCellFifthMember.innerHTML = 'null';
+                        if (data[i].fifthMember === null) {
+                            data[i].fifthMember = 'NULL';
                         }
-                        newTableRow.appendChild(tableDataCellFifthMember);
 
-                        document.getElementById('tbody-teams-table').appendChild(newTableRow);
+                        this.tableTeams.push({
+                            tableDataCellTeamID: data[i].teamID,
+                            tableDataCellTeamname: data[i].teamname,
+                            tableDataCellEloPoints: data[i].eloPoints,
+                            tableDataCellDeleted: data[i].deleted,
+                            tableDataCellFirstMember: data[i].firstMember,
+                            tableDataCellSecondMember: data[i].secondMember,
+                            tableDataCellThirdMember: data[i].thirdMember,
+                            tableDataCellFourthMember: data[i].fourthMember,
+                            tableDataCellFifthMember: data[i].fifthMember,
+                        });
                     }
                 })
                 .catch(error => {
@@ -155,11 +166,10 @@ export default {
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
-                            let newTeamOption = document.createElement('option');
-                            newTeamOption.innerHTML = data[i].teamname;
-                            newTeamOption.id = data[i].teamID;
-                            document.getElementById('selectTeamname').appendChild(newTeamOption);
+                            // Push data into array in order to display it with v-for
+                            this.deleteableTeams.push({ id: data[i].teamID, name: data[i].teamname });
                         }
+                        console.log(this.deleteableTeams);
                     })
                     .catch(error => {
                         console.error(error);
@@ -170,6 +180,7 @@ export default {
         openAndCloseEditTeamForm() {
             this.openEditTeamForm = !this.openEditTeamForm;
             this.textSuccessMessage = '';
+            this.availablePlayer = [];
 
             if (this.openEditTeamForm) {
                 /** Start server.js and databank for a functional post-request
@@ -179,11 +190,8 @@ export default {
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
-                            let teamOption = document.createElement('option');
-                            teamOption.innerHTML = data[i].teamID;
-                            teamOption.id = data[i].teamID;
-
-                            document.getElementById('selectTeamID').appendChild(teamOption);
+                            // Push data into array in order to display it with v-for
+                            this.editableTeams.push(data[i].teamID);
                         }
                     })
                     .catch(error => {
@@ -216,60 +224,18 @@ export default {
                                             !availableTeammember.includes(activePlayer[a]) &&
                                             !activeTeammember.includes(activePlayer[a])
                                         ) {
-                                            console.log(activeTeammember[i], activePlayer[a]);
                                             availableTeammember.push(activePlayer[a]);
                                         }
                                     }
                                 }
 
-                                let selectFieldFirstMember = document.getElementById('firstMember');
-                                let selectFieldSecondMember = document.getElementById('secondMember');
-                                let selectFieldthirdMember = document.getElementById('thirdMember');
-                                let selectFieldFourthMember = document.getElementById('fourthMember');
-                                let selectFieldFifthMember = document.getElementById('fifthMember');
-                                let noPlayerOptionFirstMember = document.createElement('option');
-                                noPlayerOptionFirstMember.innerHTML = 'no player';
-                                noPlayerOptionFirstMember.id = null;
-                                let noPlayerOptionSecondMember = document.createElement('option');
-                                noPlayerOptionSecondMember.innerHTML = 'no player';
-                                noPlayerOptionSecondMember.id = null;
-                                let noPlayerOptionThirdMember = document.createElement('option');
-                                noPlayerOptionThirdMember.innerHTML = 'no player';
-                                noPlayerOptionThirdMember.id = null;
-                                let noPlayerOptionFourthMember = document.createElement('option');
-                                noPlayerOptionFourthMember.innerHTML = 'no player';
-                                noPlayerOptionFourthMember.id = null;
-                                let noPlayerOptionFifthMember = document.createElement('option');
-                                noPlayerOptionFifthMember.innerHTML = 'no player';
-                                noPlayerOptionFifthMember.id = null;
-                                selectFieldFirstMember.appendChild(noPlayerOptionFirstMember);
-                                selectFieldSecondMember.appendChild(noPlayerOptionSecondMember);
-                                selectFieldthirdMember.appendChild(noPlayerOptionThirdMember);
-                                selectFieldFourthMember.appendChild(noPlayerOptionFourthMember);
-                                selectFieldFifthMember.appendChild(noPlayerOptionFifthMember);
-
-                                console.log(availableTeammember, activePlayer, activeTeammember);
+                                this.availablePlayer.push({ id: 'NULL', name: 'no player' });
                                 for (let i = 0; i < availableTeammember.length; i++) {
-                                    let newPlayerOptionFirstMember = document.createElement('option');
-                                    newPlayerOptionFirstMember.innerHTML = availableTeammember[i];
-                                    newPlayerOptionFirstMember.id = availableTeammember[i];
-                                    let newPlayerOptionSecondMember = document.createElement('option');
-                                    newPlayerOptionSecondMember.innerHTML = availableTeammember[i];
-                                    newPlayerOptionSecondMember.id = availableTeammember[i];
-                                    let newPlayerOptionThirdMember = document.createElement('option');
-                                    newPlayerOptionThirdMember.innerHTML = availableTeammember[i];
-                                    newPlayerOptionThirdMember.id = availableTeammember[i];
-                                    let newPlayerOptionFourthMember = document.createElement('option');
-                                    newPlayerOptionFourthMember.innerHTML = availableTeammember[i];
-                                    newPlayerOptionFourthMember.id = availableTeammember[i];
-                                    let newPlayerOptionFifthMember = document.createElement('option');
-                                    newPlayerOptionFifthMember.innerHTML = availableTeammember[i];
-                                    newPlayerOptionFifthMember.id = availableTeammember[i];
-                                    selectFieldFirstMember.appendChild(newPlayerOptionFirstMember);
-                                    selectFieldSecondMember.appendChild(newPlayerOptionSecondMember);
-                                    selectFieldthirdMember.appendChild(newPlayerOptionThirdMember);
-                                    selectFieldFourthMember.appendChild(newPlayerOptionFourthMember);
-                                    selectFieldFifthMember.appendChild(newPlayerOptionFifthMember);
+                                    // Push data into array in order to display it with v-for
+                                    this.availablePlayer.push({
+                                        id: availableTeammember[i],
+                                        name: availableTeammember[i],
+                                    });
                                 }
                             })
                             .catch(error => {
@@ -341,23 +307,26 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            if (
-                firstMember === secondMember ||
-                firstMember === thirdMember ||
-                firstMember === fourthMember ||
-                firstMember === fifthMember ||
-                secondMember === thirdMember ||
-                secondMember === fourthMember ||
-                secondMember === fifthMember ||
-                thirdMember === fourthMember ||
-                thirdMember === fifthMember ||
-                fourthMember === fifthMember
-            ) {
-                this.textErrorMessage = 'Cannot add the same player twice!';
-                return;
-            } else {
-                this.textErrorMessage = '';
-            }
+            console.log(firstMember, secondMember, thirdMember, fourthMember);
+
+            // TO-DO: fix later
+            // if (
+            //     firstMember === secondMember ||
+            //     firstMember === thirdMember ||
+            //     firstMember === fourthMember ||
+            //     firstMember === fifthMember ||
+            //     secondMember === thirdMember ||
+            //     secondMember === fourthMember ||
+            //     secondMember === fifthMember ||
+            //     thirdMember === fourthMember ||
+            //     thirdMember === fifthMember ||
+            //     fourthMember === fifthMember
+            // ) {
+            //     this.textErrorMessage = 'Cannot add the same player twice!';
+            //     return;
+            // } else {
+            //     this.textErrorMessage = '';
+            // }
 
             // Start server.js and databank for a functional put-request
             fetch('http://localhost:3000/updateTeam', {
