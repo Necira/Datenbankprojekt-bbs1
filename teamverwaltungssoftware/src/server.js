@@ -23,19 +23,19 @@ let connection = mySql.createConnection({
 app.post('/createNewPlayer', (req, res) => {
     let { newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints } = req.body;
     connection.query(
-        'INSERT INTO `player` (`playername`, `firstname`, `lastname`, `email`, `position`, `elo-points`) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO `player` (`playername`, `firstname`, `lastname`, `email`, `position`, `eloPoints`) VALUES (?, ?, ?, ?, ?, ?)',
         [newPlayername, newFirstname, newLastname, newEmail, newPosition, newEloPoints],
         (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User added successfully!', req.body);
+                res.send(req.body);
             }
         },
     );
 });
 
-// API-Endpoint to get all Player
+// API-Endpoint to get all player
 app.get('/getPlayer', (req, res) => {
     connection.query('SELECT * FROM `player`', (err, rows) => {
         if (err) {
@@ -46,9 +46,33 @@ app.get('/getPlayer', (req, res) => {
     });
 });
 
+// API-Endpoint to get all active player
+app.get('/getActivePlayer', (req, res) => {
+    connection.query('SELECT * FROM `player` WHERE `deleted` = 0', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to get all active player that are not in a team yet
+app.get('/getActiveTeammember', (req, res) => {
+    connection.query(
+        'SELECT * FROM `player` WHERE `deleted` = 0 AND `playerID` = (SELECT `firstMember` FROM `teams` WHERE `firstMember` = `playerID`) OR `playerID` = (SELECT `secondMember` FROM `teams` WHERE `secondMember` = `playerID`) OR `playerID` = (SELECT `thirdMember` FROM `teams` WHERE `thirdMember` = `playerID`) OR `playerID` = (SELECT `fourthMember` FROM `teams` WHERE `fourthMember` = `playerID`) OR `playerID` = (SELECT `fifthMember` FROM `teams` WHERE `fifthMember` = `playerID`)',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
+            }
+        },
+    );
+});
+
 // API-Endpoint to update a specific player
 app.put('/updatePlayer', (req, res) => {
-    // TO-DO: write correct sql-querie and test it
     let {
         changedPlayername,
         changedFirstname,
@@ -56,11 +80,12 @@ app.put('/updatePlayer', (req, res) => {
         changedEmail,
         changedPosition,
         changedEloPoints,
+        changedDeletedValue,
         playerId,
     } = req.body;
 
     connection.query(
-        'UPDATE `player` SET `playername` = ?, `firstname` = ?, `lastname`= ?, `email` = ?, `position` = ?, `eloPoints`= ? WHERE `playerID` = ?',
+        'UPDATE `player` SET `playername` = ?, `firstname` = ?, `lastname`= ?, `email` = ?, `position` = ?, `eloPoints`= ?, `deleted`= ? WHERE `playerID` = ?',
         [
             changedPlayername,
             changedFirstname,
@@ -68,13 +93,14 @@ app.put('/updatePlayer', (req, res) => {
             changedEmail,
             changedPosition,
             changedEloPoints,
+            changedDeletedValue,
             playerId,
         ],
         (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User updated successfully');
+                res.send(req.body);
             }
         },
     );
@@ -90,7 +116,97 @@ app.patch('/deletePlayer', (req, res) => {
             if (err) {
                 console.error(err);
             } else {
-                res.send('User updated successfully');
+                res.send(req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to create new team
+app.post('/createNewTeam', (req, res) => {
+    let { newTeamname, newEloPoints, firstMember, secondMember, thirdMember, fourthMember, fifthMember } =
+        req.body;
+    connection.query(
+        'INSERT INTO `teams` (`teamname`, `eloPoints`, `firstMember`, `secondMember`,`thirdMember`,`fourthMember`,`fifthMember`) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [newTeamname, newEloPoints, firstMember, secondMember, thirdMember, fourthMember, fifthMember],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to get all teams
+app.get('/getTeams', (req, res) => {
+    connection.query('SELECT * FROM `teams`', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to get all active teams
+app.get('/getActiveTeams', (req, res) => {
+    connection.query('SELECT * FROM `teams` WHERE `deleted` = 0', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to delete a specific team
+app.patch('/deleteTeam', (req, res) => {
+    const { valueDeleted, deletedTeamID } = req.body;
+    connection.query(
+        'UPDATE `teams` SET `deleted` = ? WHERE `teamID` = ?',
+        [valueDeleted, deletedTeamID],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to update a specific team
+app.put('/updateTeam', (req, res) => {
+    let {
+        changedTeamname,
+        changedDeletedValue,
+        changedFirstMember,
+        changedSecondMember,
+        changedThirdMember,
+        changedFourthMember,
+        changedFifthMember,
+        teamId,
+    } = req.body;
+
+    connection.query(
+        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
+        [
+            changedTeamname,
+            changedDeletedValue,
+            changedFirstMember,
+            changedSecondMember,
+            changedThirdMember,
+            changedFourthMember,
+            changedFifthMember,
+            teamId,
+        ],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
             }
         },
     );

@@ -1,6 +1,6 @@
 <template>
     <h1>Edit existing player</h1>
-    <table class="player-table">
+    <table id="player-table">
         <thead>
             <tr>
                 <th>playerID</th>
@@ -13,7 +13,18 @@
                 <th>deleted</th>
             </tr>
         </thead>
-        <tbody id="tbody-player-table"></tbody>
+        <tbody>
+            <tr v-for="row in tablePlayer" :key="row">
+                <td>{{ row.tableDataCellPlayerId }}</td>
+                <td>{{ row.tableDataCellPlayername }}</td>
+                <td>{{ row.tableDataCellFirstname }}</td>
+                <td>{{ row.tableDataCellLastname }}</td>
+                <td>{{ row.tableDataCellEmail }}</td>
+                <td>{{ row.tableDataCellPosition }}</td>
+                <td>{{ row.tableDataCellEloPoints }}</td>
+                <td>{{ row.tableDataCellDeleted }}</td>
+            </tr>
+        </tbody>
     </table>
     <button type="button" @click="openAndCloseDeletePlayerPopUpWindow">Delete player</button>
     <button type="button" @click="openAndCloseEditPlayerForm">Edit player</button>
@@ -23,7 +34,9 @@
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditPlayerForm">X</button>
         <form class="edit-player-form">
             <label for="selectPlayerID">PlayerID:</label>
-            <select id="selectPlayerID" name="selectPlayerID"></select>
+            <select id="selectPlayerID" name="selectPlayerID">
+                <option v-for="player in editablePlayer" :key="player" :id="player">{{ player }}</option>
+            </select>
             <label for="playername">Playername:</label>
             <input id="playername" name="playername" />
             <label for="firstname">firstname:</label>
@@ -36,6 +49,8 @@
             <input type="text" id="position" name="position" />
             <label for="eloPoints">Elo-Points:</label>
             <input type="number" min="0" id="eloPoints" name="eloPoints" />
+            <label for="deleted">deleted:</label>
+            <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <button type="button" @click="editPlayer">Edit player</button>
         </form>
         <span class="success-message"> {{ textSuccessMessage }}</span>
@@ -48,7 +63,11 @@
         </button>
         <div class="column">
             <label for="SelectPlayername">Chosse a player:</label>
-            <select id="SelectPlayername" name="SelectPlayername"></select>
+            <select id="SelectPlayername" name="SelectPlayername">
+                <option v-for="player in deleteablePlayer" :key="player" :id="player.id">
+                    {{ player.name }}
+                </option>
+            </select>
             <button type="button" @click="deletePlayer">Delete player</button>
         </div>
         <span class="success-message"> {{ textSuccessMessage }}</span>
@@ -64,6 +83,9 @@ export default {
             textSuccessMessage: '',
             openDeletePlayerPopUpWindow: false,
             openEditPlayerForm: false,
+            deleteablePlayer: [],
+            editablePlayer: [],
+            tablePlayer: [],
         };
     },
     methods: {
@@ -83,32 +105,34 @@ export default {
                     valueDeleted: 1,
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        // Update table in frontend after new changes
+                        this.displayPlayerTable();
+                        this.textSuccessMessage = 'deleted player successfully!';
+                        return response.json();
+                    }
+                })
                 .catch(error => {
                     console.error(error);
                     return;
                 });
-
-            // Update table in frontend after new changes
-            this.displayPlayerTable();
-            this.textSuccessMessage = 'deleted player successfully!';
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
+            this.textSuccessMessage = '';
+            this.deleteablePlayer = [];
 
             /** Start server.js and databank for a functional post-request
-             *  Display all availab eplayers in the select-option-field
+             *  Display all available player-IDs in the select-option-field
              */
             if (this.openDeletePlayerPopUpWindow) {
-                fetch('http://localhost:3000/getPlayer')
+                fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
-                            let newPlayerOption = document.createElement('option');
-                            newPlayerOption.innerHTML = data[i].playername;
-                            newPlayerOption.id = data[i].playerID;
-
-                            document.getElementById('SelectPlayername').appendChild(newPlayerOption);
+                            // Push data into array in order to display it with v-for
+                            this.deleteablePlayer.push({ id: data[i].playerID, name: data[i].playername });
                         }
                     })
                     .catch(error => {
@@ -119,20 +143,19 @@ export default {
         },
         openAndCloseEditPlayerForm() {
             this.openEditPlayerForm = !this.openEditPlayerForm;
+            this.textSuccessMessage = '';
+            this.editablePlayer = [];
 
             if (this.openEditPlayerForm) {
                 /** Start server.js and databank for a functional post-request
-                 *  Display all availab eplayers in the select-option-field
+                 *  Display all available player in the select-option-field
                  */
                 fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
-                            let playerOption = document.createElement('option');
-                            playerOption.innerHTML = data[i].playerID;
-                            playerOption.id = data[i].playerID;
-
-                            document.getElementById('selectPlayerID').appendChild(playerOption);
+                            // Push data into array in order to display it with v-for
+                            this.editablePlayer.push(data[i].playerID);
                         }
                     })
                     .catch(error => {
@@ -150,8 +173,10 @@ export default {
             let email = document.getElementById('email').value;
             let position = document.getElementById('position').value;
             let eloPoints = document.getElementById('eloPoints').value;
+            let deleted = document.getElementById('deleted').value;
 
             if (
+                deleted.length === 0 ||
                 playername.length === 0 ||
                 firstname.length === 0 ||
                 lastname.length === 0 ||
@@ -217,67 +242,51 @@ export default {
                     changedEmail: email,
                     changedPosition: position,
                     changedEloPoints: eloPoints,
+                    changedDeletedValue: deleted,
                     playerId: idSelectedOption,
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        // display new changes in player table
+                        this.displayPlayerTable();
+                        this.textSuccessMessage = 'updated player successfully!';
+                        return response.json();
+                    }
+                })
                 .catch(error => {
                     console.error(error);
                     return;
                 });
-
-            this.textSuccessMessage = 'updated player successfully!';
-
-            // display new changes in player table
-            this.displayPlayerTable();
         },
         displayPlayerTable() {
-            document.getElementById('tbody-player-table').innerHTML = '';
+            this.tablePlayer = [];
 
             // Start server.js and databank for a functional get-request
             fetch('http://localhost:3000/getPlayer')
                 .then(response => response.json())
                 .then(data => {
+                    if (data.length === 0) {
+                        document.getElementById('player-table').innerHTML = 'No data available!';
+                    }
+
                     for (let i = 0; i < data.length; i++) {
-                        let newTableRow = document.createElement('tr');
-
-                        let tableDataCellID = document.createElement('td');
-                        tableDataCellID.innerHTML = data[i].playerID;
-                        newTableRow.appendChild(tableDataCellID);
-
-                        let tableDataCellPlayername = document.createElement('td');
-                        tableDataCellPlayername.innerHTML = data[i].playername;
-                        newTableRow.appendChild(tableDataCellPlayername);
-
-                        let tableDataCellFirstname = document.createElement('td');
-                        tableDataCellFirstname.innerHTML = data[i].firstname;
-                        newTableRow.appendChild(tableDataCellFirstname);
-
-                        let tableDataCellLastname = document.createElement('td');
-                        tableDataCellLastname.innerHTML = data[i].lastname;
-                        newTableRow.appendChild(tableDataCellLastname);
-
-                        let tableDataCellEmail = document.createElement('td');
-                        tableDataCellEmail.innerHTML = data[i].email;
-                        newTableRow.appendChild(tableDataCellEmail);
-
-                        let tableDataCellPosition = document.createElement('td');
-                        tableDataCellPosition.innerHTML = data[i].position;
-                        newTableRow.appendChild(tableDataCellPosition);
-
-                        let tableDataCellEloPoints = document.createElement('td');
-                        tableDataCellEloPoints.innerHTML = data[i].eloPoints;
-                        newTableRow.appendChild(tableDataCellEloPoints);
-
-                        let tableDataCellDeleted = document.createElement('td');
-                        tableDataCellDeleted.innerHTML = data[i].deleted;
-                        newTableRow.appendChild(tableDataCellDeleted);
-
-                        document.getElementById('tbody-player-table').appendChild(newTableRow);
+                        // Push data into array in order to display it with v-for
+                        this.tablePlayer.push({
+                            tableDataCellPlayerId: data[i].playerID,
+                            tableDataCellPlayername: data[i].playername,
+                            tableDataCellFirstname: data[i].firstname,
+                            tableDataCellLastname: data[i].lastname,
+                            tableDataCellEmail: data[i].email,
+                            tableDataCellPosition: data[i].position,
+                            tableDataCellEloPoints: data[i].eloPoints,
+                            tableDataCellDeleted: data[i].deleted,
+                        });
                     }
                 })
                 .catch(error => {
                     console.error(error);
+                    document.getElementById('player-table').innerHTML = 'No data available!';
                     return;
                 });
         },
@@ -313,7 +322,7 @@ export default {
     position: fixed;
     margin: auto 0;
     left: 45%;
-    bottom: 50%;
+    top: 25%;
 }
 
 .column {
@@ -327,7 +336,7 @@ export default {
     display: flex;
 }
 
-.player-table {
+#player-table {
     margin: auto;
 }
 </style>
