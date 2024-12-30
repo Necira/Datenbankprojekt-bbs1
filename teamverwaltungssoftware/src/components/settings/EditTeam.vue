@@ -1,6 +1,6 @@
 <template>
     <h1>Edit existing team</h1>
-    <table class="teams-table">
+    <table id="teams-table">
         <thead>
             <tr>
                 <th>teamID</th>
@@ -116,6 +116,10 @@ export default {
                 .then(data => {
                     this.tableTeams = [];
 
+                    if (data.length === 0) {
+                        document.getElementById('teams-table').innerHTML = 'No data available!';
+                    }
+
                     for (let i = 0; i < data.length; i++) {
                         // Push data into array in order to display it with v-for
                         if (data[i].firstMember === null) {
@@ -153,6 +157,7 @@ export default {
                 })
                 .catch(error => {
                     console.error(error);
+                    document.getElementById('teams-table').innerHTML = 'No data available!';
                     return;
                 });
         },
@@ -367,7 +372,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.teams-table {
+#teams-table {
     margin: auto;
 }
 

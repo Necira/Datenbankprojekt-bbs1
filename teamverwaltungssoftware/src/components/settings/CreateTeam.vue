@@ -3,8 +3,6 @@
     <form class="create-team-form">
         <label for="teamname">teamname</label>
         <input id="teamname" name="teamname" />
-        <label for="eloPoints">elo-points</label>
-        <input id="eloPoints" name="eloPoints" type="number" min="0" />
         <label for="member">member</label>
         <div id="availabe-player">
             <div v-for="player in availablePlayer" :key="player">
@@ -30,10 +28,10 @@ export default {
         };
     },
     methods: {
-        saveNewTeam() {
+        async saveNewTeam() {
             let teamname = document.getElementById('teamname').value;
-            let eloPoints = document.getElementById('eloPoints').value;
             let availablePlayerContainer = document.getElementById('availabe-player').childNodes;
+            let eloPointsTeam = 0;
             let choosenTeamMembers = [];
 
             let counterCheckedTeammember = 0;
@@ -49,7 +47,31 @@ export default {
             if (counterCheckedTeammember > 5) {
                 this.textErrorMessage = 'Cannot add more than five teammember!';
                 return;
+            } else if (counterCheckedTeammember === 5) {
+                /** Start server.js and databank for a functional get-request
+                 *  Calculate Elo-Points, if team is complete
+                 */
+                eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        let calculatedEloPoints = 0;
+                        for (let i = 0; i < choosenTeamMembers.length; i++) {
+                            for (let a = 0; a < data.length; a++) {
+                                if (choosenTeamMembers[i] === data[a].playerID) {
+                                    calculatedEloPoints += data[a].eloPoints;
+                                }
+                            }
+                        }
+
+                        return calculatedEloPoints;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
             } else if (counterCheckedTeammember < 5) {
+                eloPointsTeam += 1;
+
                 // Push null-value into array to prevent error of undefined teammembers
                 let durationLoop = 5 - choosenTeamMembers.length;
                 for (let i = 0; i < durationLoop; i++) {
@@ -59,7 +81,7 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            if (teamname.length === 0 || eloPoints.length === 0) {
+            if (teamname.length === 0) {
                 this.textErrorMessage = 'Please fill out the entire form!';
                 this.textSuccessMessage = '';
                 return;
@@ -76,7 +98,7 @@ export default {
                 },
                 body: JSON.stringify({
                     newTeamname: teamname,
-                    newEloPoints: eloPoints,
+                    newEloPoints: eloPointsTeam,
                     firstMember: choosenTeamMembers[0],
                     secondMember: choosenTeamMembers[1],
                     thirdMember: choosenTeamMembers[2],
@@ -136,17 +158,11 @@ export default {
                                 }
                             }
 
-                            for (let i = 0; i < availableTeammemberIDs.length; i++) {
-                                // let container = document.createElement('div');
-                                // let availablePlayerCheckbox = document.createElement('input');
-                                // availablePlayerCheckbox.type = 'checkbox';
-                                // availablePlayerCheckbox.id = availableTeammemberIDs[i];
-                                // let availablePlayerLabel = document.createElement('label');
-                                // availablePlayerLabel.innerHTML = availableTeammemberNames[i];
-                                // container.appendChild(availablePlayerCheckbox);
-                                // container.appendChild(availablePlayerLabel);
-                                // document.getElementById('availabe-player').appendChild(container);
+                            if (availableTeammemberIDs.length === 0) {
+                                document.getElementById('availabe-player').innerHTML = 'No player available!';
+                            }
 
+                            for (let i = 0; i < availableTeammemberIDs.length; i++) {
                                 // Push data into array in order to display it with v-for
                                 this.availablePlayer.push({
                                     id: availableTeammemberIDs[i],

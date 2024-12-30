@@ -1,6 +1,6 @@
 <template>
     <h1>Edit existing player</h1>
-    <table class="player-table">
+    <table id="player-table">
         <thead>
             <tr>
                 <th>playerID</th>
@@ -266,6 +266,10 @@ export default {
             fetch('http://localhost:3000/getPlayer')
                 .then(response => response.json())
                 .then(data => {
+                    if (data.length === 0) {
+                        document.getElementById('player-table').innerHTML = 'No data available!';
+                    }
+
                     for (let i = 0; i < data.length; i++) {
                         // Push data into array in order to display it with v-for
                         this.tablePlayer.push({
@@ -282,6 +286,7 @@ export default {
                 })
                 .catch(error => {
                     console.error(error);
+                    document.getElementById('player-table').innerHTML = 'No data available!';
                     return;
                 });
         },
@@ -331,7 +336,7 @@ export default {
     display: flex;
 }
 
-.player-table {
+#player-table {
     margin: auto;
 }
 </style>
