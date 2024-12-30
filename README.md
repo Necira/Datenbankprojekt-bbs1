@@ -23,6 +23,14 @@ Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position 
 ### Voraussetzungen
 Auf dem Gerät muss die [aktuellste Version Node.js](https://nodejs.org/en/download/package-manager) und der Node Version Manager (nvm) für das entsprechende Betriebssystem installiert sein, damit das Projekt ohne Probleme startet.
 
+Um mit der Datenbank über CRUD-Operationen interagieren zu können, muss diese im Hintergrund laufen und die Datei "Server.js", welche die Datenbankverbindungen vom Frontend herstellt, muss auch gestartet werden. Dies erfolgt mithilfe der folgenden Befehle im Terminal der IDE:
+```
+cd teamverwaltungssoftware
+cd src
+node server.js
+```
+Bei einem erfolgreichen Start der Datei wird die folgende Nachricht im Terminal ausgeben: "server runs on http://localhost:3000"
+
 ### Vue.js-Projekt starten
 Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt zum ersten mal startest:
 ```
