@@ -305,7 +305,6 @@ export default {
             let playerTable = document.getElementById('player-table');
             let tbodyPlayerTable = playerTable.childNodes[1];
             let tbodyRows = tbodyPlayerTable.childNodes;
-            let counterHiddenRows = 0;
             let counterDisplayedRows = 0;
 
             if (searchvalue.length === 0) {
@@ -322,10 +321,8 @@ export default {
                         let currentTableDataCell = currentRow.cells[i];
 
                         if (currentTableDataCell.innerHTML.toLowerCase() !== searchvalue.toLowerCase()) {
-                            counterHiddenRows++;
                             currentRow.classList.add('hidden');
                         } else {
-                            counterHiddenRows--;
                             counterDisplayedRows++;
                             currentRow.classList.remove('hidden');
                             break;
@@ -333,12 +330,8 @@ export default {
                     }
                 }
 
-                if (counterHiddenRows === 64) {
-                    this.textResultMessage = 'No dataset found that matches ' + searchvalue;
-                } else {
-                    this.textResultMessage =
-                        'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
-                }
+                this.textResultMessage =
+                    'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
             }
         },
     },
