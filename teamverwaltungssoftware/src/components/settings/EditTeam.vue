@@ -1,5 +1,14 @@
 <template>
     <h1>Edit existing team</h1>
+    <div class="column">
+        <input
+            type="text"
+            id="searchfield"
+            placeholder="search for position,teamname..."
+            @keyup="getFilteredTeam"
+        />
+        <span class="resultMessage"> {{ textResultMessage }}</span>
+    </div>
     <table id="teams-table">
         <thead>
             <tr>
@@ -102,6 +111,7 @@ export default {
             openEditTeamForm: false,
             textSuccessMessage: '',
             textErrorMessage: '',
+            textResultMessage: '',
             deleteableTeams: [],
             availablePlayer: [],
             editableTeams: [],
@@ -362,6 +372,40 @@ export default {
                     return;
                 });
         },
+        getFilteredTeam() {
+            let searchvalue = document.getElementById('searchfield').value;
+            let teamtable = document.getElementById('teams-table');
+            let tbodyTeamtable = teamtable.childNodes[1];
+            let tbodyRows = tbodyTeamtable.childNodes;
+            let counterDisplayedRows = 0;
+
+            if (searchvalue.length === 0) {
+                this.textResultMessage = '';
+
+                for (let i = 1; i < 5; i++) {
+                    tbodyRows[i].classList.remove('hidden');
+                }
+            } else {
+                for (let i = 1; i < 5; i++) {
+                    let currentRow = tbodyRows[i];
+
+                    for (let i = 0; i < currentRow.cells.length; i++) {
+                        let currentTableDataCell = currentRow.cells[i];
+
+                        if (currentTableDataCell.innerHTML.toLowerCase() !== searchvalue.toLowerCase()) {
+                            currentRow.classList.add('hidden');
+                        } else {
+                            counterDisplayedRows++;
+                            currentRow.classList.remove('hidden');
+                            break;
+                        }
+                    }
+                }
+
+                this.textResultMessage =
+                    'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
+            }
+        },
     },
     mounted() {
         // call function, when component is created
@@ -415,5 +459,13 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#searchfield {
+    width: 200px;
 }
 </style>
