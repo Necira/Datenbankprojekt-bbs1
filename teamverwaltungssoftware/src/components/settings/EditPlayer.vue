@@ -1,5 +1,14 @@
 <template>
     <h1>Edit existing player</h1>
+    <div class="column">
+        <input
+            type="text"
+            id="searchfield"
+            placeholder="search for position,playername..."
+            @keyup="getFilteredPlayer"
+        />
+        <span class="resultMessage"> {{ textResultMessage }}</span>
+    </div>
     <table id="player-table">
         <thead>
             <tr>
@@ -81,6 +90,7 @@ export default {
             name: 'EditPlayer',
             textErrorMessage: '',
             textSuccessMessage: '',
+            textResultMessage: '',
             openDeletePlayerPopUpWindow: false,
             openEditPlayerForm: false,
             deleteablePlayer: [],
@@ -290,6 +300,40 @@ export default {
                     return;
                 });
         },
+        getFilteredPlayer() {
+            let searchvalue = document.getElementById('searchfield').value;
+            let playerTable = document.getElementById('player-table');
+            let tbodyPlayerTable = playerTable.childNodes[1];
+            let tbodyRows = tbodyPlayerTable.childNodes;
+            let counterDisplayedRows = 0;
+
+            if (searchvalue.length === 0) {
+                this.textResultMessage = '';
+
+                for (let i = 1; i < 9; i++) {
+                    tbodyRows[i].classList.remove('hidden');
+                }
+            } else {
+                for (let i = 1; i < 9; i++) {
+                    let currentRow = tbodyRows[i];
+
+                    for (let i = 0; i < currentRow.cells.length; i++) {
+                        let currentTableDataCell = currentRow.cells[i];
+
+                        if (currentTableDataCell.innerHTML.toLowerCase() !== searchvalue.toLowerCase()) {
+                            currentRow.classList.add('hidden');
+                        } else {
+                            counterDisplayedRows++;
+                            currentRow.classList.remove('hidden');
+                            break;
+                        }
+                    }
+                }
+
+                this.textResultMessage =
+                    'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
+            }
+        },
     },
     mounted() {
         // call function, when component is created
@@ -338,5 +382,13 @@ export default {
 
 #player-table {
     margin: auto;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#searchfield {
+    width: 200px;
 }
 </style>
