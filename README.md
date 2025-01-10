@@ -25,7 +25,7 @@ Das Framework Vue wurde gewählt, um eine übersichtliche Arbeitsweise mit vorte
 ## Teamverwaltungssoftware starten
 
 ### Voraussetzungen
-Auf dem Gerät muss die [aktuellste Version Node.js](https://nodejs.org/en/download/package-manager) und der Node Version Manager (nvm) für das entsprechende Betriebssystem installiert sein, damit das Projekt ohne Probleme startet.
+Auf dem Gerät muss die [aktuellste Version von Node.js](https://nodejs.org/en/download/package-manager), der Node Version Manager (nvm) für das entsprechende Betriebssystem, Docker sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro) installiert sein, damit das Projekt ohne Probleme startet.
 
 Um mit der Datenbank über CRUD-Operationen interagieren zu können, muss diese im Hintergrund laufen und die Datei "Server.js", welche die Datenbankverbindungen vom Frontend herstellt, muss auch gestartet werden. Dies erfolgt mithilfe der folgenden Befehle im Terminal der IDE:
 ```
