@@ -13,9 +13,9 @@ app.listen(port, () => {
 });
 
 let connection = mySql.createConnection({
-    host: 'localhost',
+    host: 'mysql-container',  // Hier den Container-Namen verwenden
     user: 'root',
-    password: '',
+    password: '',  // Falls du ein Passwort gesetzt hast, gebe es hier an
     database: 'Datenbankprojekt-BBS1',
 });
 

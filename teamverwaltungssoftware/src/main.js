@@ -12,11 +12,8 @@ import OneVsOne from './components/gamemodes/OneVsOne.vue';
 import TeamVsTeam from './components/gamemodes/TeamVsTeam.vue';
 import TournamentMode from './components/gamemodes/TournamentMode.vue';
 import EditPlayer from './components/settings/EditPlayer.vue';
+import axios from 'axios';
 
-/** create router instance: https://router.vuejs.org/guide/
- *  routes-property defines the path itself and the components,
- *  that will be displayed on it.
- */
 const router = createRouter({
     routes: [
         { path: '/', component: HomeScreen },
@@ -31,8 +28,15 @@ const router = createRouter({
         { path: '/TeamVsTeam', component: TeamVsTeam },
         { path: '/TournamentMode ', component: TournamentMode },
     ],
-    // mapps the routes to the the URL
     history: createWebHistory(),
 });
 
 createApp(App).use(router).mount('#app');
+
+axios.get('http://backend:3000/api/getPlayer')
+    .then(response => {
+        console.log('Players:', response.data);
+    })
+    .catch(error => {
+        console.error('Error fetching players:', error);
+    });
