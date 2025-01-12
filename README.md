@@ -25,28 +25,12 @@ Das Framework Vue wurde gewählt, um eine übersichtliche Arbeitsweise mit vorte
 ## Teamverwaltungssoftware starten
 
 ### Voraussetzungen
-Auf dem Gerät muss die [aktuellste Version von Node.js](https://nodejs.org/en/download/package-manager), der Node Version Manager (nvm) für das entsprechende Betriebssystem, Docker sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro) installiert sein, damit das Projekt ohne Probleme startet.
-
-Um mit der Datenbank über CRUD-Operationen interagieren zu können, muss diese im Hintergrund laufen und die Datei "Server.js", welche die Datenbankverbindungen vom Frontend herstellt, muss auch gestartet werden. Dies erfolgt mithilfe der folgenden Befehle im Terminal der IDE:
-```
-cd teamverwaltungssoftware
-cd src
-node server.js
-```
-Bei einem erfolgreichen Start der Datei wird die folgende Nachricht im Terminal ausgeben: "server runs on http://localhost:3000"
+Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro) installiert sein, damit das Projekt ohne Probleme startet.
 
 ### Vue.js-Projekt starten
-Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt zum ersten mal startest:
+Das Projekt kann, insofern der Container in Docker angezeigt wird, auch darüber gestartet werden. Falls das nicht gewünscht ist, starte Docker im Hintergrund und führe die folgenden Befehle im Terminal der IDE aus, wenn du das Projekt auf einem anderen Weg starten möchtest:
 ```
 cd teamverwaltungssoftware
-npm install
-nvm use 21
-npm run serve
-```
-
-Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt schon mal gestartet hat:
-```
-cd teamverwaltungssoftware
-nvm use 21
-npm run serve
+docker compose build
+docker compose up -d
 ```
