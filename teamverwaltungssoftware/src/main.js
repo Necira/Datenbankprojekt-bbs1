@@ -33,7 +33,7 @@ const router = createRouter({
 
 createApp(App).use(router).mount('#app');
 
-axios.get('http://backend:3000/api/getPlayer')
+axios.get('http://localhost:3000/api/getPlayer')  // Ändere backend zu localhost
     .then(response => {
         console.log('Players:', response.data);
     })
