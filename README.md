@@ -18,32 +18,19 @@ Turnier gegeneinander bestreiten können
 
 Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position “Top“ spielen.
 
+### Vorgehensweise
+Die Arbeit erfolgt über Git, sowie Docker, sodass die Teamarbeit effizient und möglichst risikofrei verläuft. Eine Skizze jeder Seite mit Inhalten wurde gefertigt, wodurch ersichtlich wurde was genau bearbeitet werden muss. Dann erfassten wir das ER-Diagramm mit Inhalten und Datenbankstruktur. 
+Das Framework Vue wurde gewählt, um eine übersichtliche Arbeitsweise mit vorteilhafter strukturierung zu ermöglichen. Dann begann die Entwicklung nach dem top-down prinzip. Die Übersichtsseiten wurden erstellt, worauf die einzelnen Unterkategorien und letztlich Inhalte folgten. Es hat sich ein trunk-based Workflow entwickelt. 
+
 ## Teamverwaltungssoftware starten
 
 ### Voraussetzungen
-Auf dem Gerät muss die [aktuellste Version Node.js](https://nodejs.org/en/download/package-manager) und der Node Version Manager (nvm) für das entsprechende Betriebssystem installiert sein, damit das Projekt ohne Probleme startet.
-
-Um mit der Datenbank über CRUD-Operationen interagieren zu können, muss diese im Hintergrund laufen und die Datei "Server.js", welche die Datenbankverbindungen vom Frontend herstellt, muss auch gestartet werden. Dies erfolgt mithilfe der folgenden Befehle im Terminal der IDE:
-```
-cd teamverwaltungssoftware
-cd src
-node server.js
-```
-Bei einem erfolgreichen Start der Datei wird die folgende Nachricht im Terminal ausgeben: "server runs on http://localhost:3000"
+Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro)installiert sein, damit das Projekt ohne Probleme startet. Das geht einfach mit der Befehlszeile "npm install axios"
 
 ### Vue.js-Projekt starten
-Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt zum ersten mal startest:
+Das Projekt kann, insofern der Container in Docker angezeigt wird, auch darüber gestartet werden. Falls das nicht gewünscht ist, starte Docker im Hintergrund und führe die folgenden Befehle im Terminal der IDE aus, wenn du das Projekt auf einem anderen Weg starten möchtest:
 ```
 cd teamverwaltungssoftware
-npm install
-nvm use 21
-npm run serve
+docker compose build
+docker compose up -d
 ```
-
-Führe die folgenden Befehle in der angegebenen Reihenfolge im Terminal der IDE aus, wenn du das Projekt schon mal gestartet hat:
-```
-cd teamverwaltungssoftware
-nvm use 21
-npm run serve
-```
-

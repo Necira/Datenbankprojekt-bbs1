@@ -1,5 +1,5 @@
 const express = require('express');
-const mySql = require('mysql');
+const mysql = require('mysql');
 const cors = require('cors');
 
 const app = express();
@@ -12,10 +12,10 @@ app.listen(port, () => {
     console.log('server runs on http://localhost:' + port);
 });
 
-let connection = mySql.createConnection({
-    host: 'localhost',
+let connection = mysql.createConnection({
+    host: 'mysql',  // Hier den Container-Namen verwenden
     user: 'root',
-    password: '',
+    password: 'root',  // Falls du ein Passwort gesetzt hast, gebe es hier an
     database: 'Datenbankprojekt-BBS1',
 });
 
@@ -167,41 +167,6 @@ app.patch('/deleteTeam', (req, res) => {
     connection.query(
         'UPDATE `teams` SET `deleted` = ? WHERE `teamID` = ?',
         [valueDeleted, deletedTeamID],
-        (err, result) => {
-            if (err) {
-                console.error(err);
-            } else {
-                res.send(req.body);
-            }
-        },
-    );
-});
-
-// API-Endpoint to update a specific team
-app.put('/updateTeam', (req, res) => {
-    let {
-        changedTeamname,
-        changedDeletedValue,
-        changedFirstMember,
-        changedSecondMember,
-        changedThirdMember,
-        changedFourthMember,
-        changedFifthMember,
-        teamId,
-    } = req.body;
-
-    connection.query(
-        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
-        [
-            changedTeamname,
-            changedDeletedValue,
-            changedFirstMember,
-            changedSecondMember,
-            changedThirdMember,
-            changedFourthMember,
-            changedFifthMember,
-            teamId,
-        ],
         (err, result) => {
             if (err) {
                 console.error(err);
