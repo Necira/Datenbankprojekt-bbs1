@@ -25,7 +25,10 @@ Das Framework Vue wurde gewählt, um eine übersichtliche Arbeitsweise mit vorte
 ## Teamverwaltungssoftware starten
 
 ### Voraussetzungen
-Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro)installiert sein, damit das Projekt ohne Probleme startet. Das geht einfach mit der Befehlszeile "npm install axios"
+Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro) installiert sein, damit das Projekt ohne Probleme startet. Das geht einfach mit der folgenden Befehlszeile: 
+```
+npm install axios
+```
 
 ### Vue.js-Projekt starten
 Das Projekt kann, insofern der Container in Docker angezeigt wird, auch darüber gestartet werden. Falls das nicht gewünscht ist, starte Docker im Hintergrund und führe die folgenden Befehle im Terminal der IDE aus, wenn du das Projekt auf einem anderen Weg starten möchtest:
