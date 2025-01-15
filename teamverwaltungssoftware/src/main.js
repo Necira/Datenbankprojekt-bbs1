@@ -12,7 +12,6 @@ import OneVsOne from './components/gamemodes/OneVsOne.vue';
 import TeamVsTeam from './components/gamemodes/TeamVsTeam.vue';
 import TournamentMode from './components/gamemodes/TournamentMode.vue';
 import EditPlayer from './components/settings/EditPlayer.vue';
-import axios from 'axios';
 
 const router = createRouter({
     routes: [
@@ -32,11 +31,3 @@ const router = createRouter({
 });
 
 createApp(App).use(router).mount('#app');
-
-axios.get('http://localhost:3000/api/getPlayer')  // Ändere backend zu localhost
-    .then(response => {
-        console.log('Players:', response.data);
-    })
-    .catch(error => {
-        console.error('Error fetching players:', error);
-    });
