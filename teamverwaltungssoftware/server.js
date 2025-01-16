@@ -8,7 +8,6 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 app.listen(port, () => {
-    // Databank must run in the background in order run server.js successfully
     console.log('server runs on http://localhost:' + port);
 });
 
