@@ -48,9 +48,7 @@ export default {
                 this.textErrorMessage = 'Cannot add more than five teammember!';
                 return;
             } else if (counterCheckedTeammember === 5) {
-                /** Start server.js and databank for a functional get-request
-                 *  Calculate Elo-Points, if team is complete
-                 */
+                // Calculate Elo-Points, if team is complete
                 eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
@@ -89,7 +87,6 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            // Start server.js and databank for a functional post-request
             fetch('http://localhost:3000/createNewTeam', {
                 method: 'POST',
                 headers: {
@@ -118,9 +115,7 @@ export default {
                 });
         },
         displayAvailablePlayer() {
-            /** Start server.js and databank for a functional post-request
-             *  Display all available player-IDs in the select-option-field
-             */
+            // Display all available player-IDs in the select-option-field
             fetch('http://localhost:3000/getActivePlayer')
                 .then(response => response.json())
                 .then(activePlayerData => {

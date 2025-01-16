@@ -120,7 +120,6 @@ export default {
     },
     methods: {
         displayTeamsTable() {
-            // Start server.js and databank for a functional get-request
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
                 .then(data => {
@@ -176,9 +175,7 @@ export default {
             this.textSuccessMessage = '';
 
             if (this.openDeleteTeamPopUpWindow) {
-                /** Start server.js and databank for a functional post-request
-                 *  Display all available player in the select-option-fields
-                 */
+                //  Display all available player in the select-option-fields
                 fetch('http://localhost:3000/getActiveTeams')
                     .then(response => response.json())
                     .then(data => {
@@ -199,9 +196,7 @@ export default {
             this.availablePlayer = [];
 
             if (this.openEditTeamForm) {
-                /** Start server.js and databank for a functional post-request
-                 *  Display all available player in the select-option-field
-                 */
+                // Display all available player in the select-option-field
                 fetch('http://localhost:3000/getTeams')
                     .then(response => response.json())
                     .then(data => {
@@ -269,7 +264,6 @@ export default {
             let selectElement = document.getElementById('selectTeamname');
             let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
 
-            // Start server.js and databank for a functional patch-request
             fetch('http://localhost:3000/deleteTeam', {
                 method: 'PATCH',
                 headers: {
@@ -341,7 +335,6 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            // Start server.js and databank for a functional put-request
             fetch('http://localhost:3000/updateTeam', {
                 method: 'PUT',
                 headers: {

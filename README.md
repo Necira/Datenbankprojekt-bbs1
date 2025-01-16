@@ -37,3 +37,4 @@ cd teamverwaltungssoftware
 docker compose build
 docker compose up -d
 ```
+Falls der backend-Container nach der Eingabe der Befehlszeilen nicht läuft, muss dieser nochmal manuell in Docker gestartet werden.
