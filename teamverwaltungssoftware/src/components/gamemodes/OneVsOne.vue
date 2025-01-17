@@ -1,25 +1,140 @@
 <template>
   <div class="buttons">
-     <button> Player One </button>
-     <button> Player Two </button>
-     <button>  Play </button>
+    <div class="playerOne">
+      <label for="playerOne">Player One</label>
+      <select v-model="playerOne" id="playerOne">
+        <option v-for="player in availablePlayer" :key="player.id" :value="player.playername">
+        {{ player.playername }}
+        </option>
+      </select>
+     <button @click="setPlayerOne(playerOne)"> Set Player One </button>
+    </div>
+    <div class="playerTwo">
+      <label for="playerTwo">Player Two</label>
+        <select v-model="playerTwo" id="playerTwo">
+          <option v-for="player in availablePlayer" :key="player.id" :value="player.playername">
+          {{ player.playername }}
+          </option>
+        </select>
+      <button @click="setPlayerTwo(playerTwo)"> Set Player Two </button>
+    </div>
+    <button @click="startGame" v-if="!winner"> Play Randomly </button>
+    <div class="chooseWinner">
+    <label for="chooseWinner">choose Winner</label>
+        <select v-model="chooseWinner" id="chooseWinner">
+          <option>
+            {{ playerOne }}
+          </option>
+          <option>
+            {{ playerTwo }}
+          </option>
+        </select>
+        <button @click="setWinner(chooseWinner)"> set winner </button>
+        <h1 v-if="winner"> {{winner}} won </h1>
+      </div>
   </div>
   <RouterLink to="/"> Back </RouterLink>
 </template>
 
 <script>
+import axios from 'axios';
+import {gameLogic} from '../GameLogic/GameLogic.js'
 export default {
   name: 'OneVsOne',
-};
+  data() {
+    return {
+      playerOne: '', 
+      playerTwo: '', 
+      availablePlayer: [],
+      winner: '',
+    };
+  },
+  created() {
+    this.fetchPlayers(); 
+  },
+  methods: {
+    async fetchPlayers() {
+      try {
+        const response = await axios.get('http://localhost:3000/getActivePlayer'); 
+        console.log('Fetched players:', response.data); 
+        this.availablePlayer = response.data; 
+      } catch (error) {
+        console.error('Error fetching players:', error.message);
+      }
+    },
+    setPlayerOne(playerName) {
+      this.playerOne = playerName;
+      console.log(`Player One set to: ${playerName}`);
+    },
+    setPlayerTwo(playerName) {
+      this.playerTwo = playerName;
+      console.log(`Player Two set to: ${playerName}`);
+    },
+    async setWinner(winner) {
+      if (this.playerOne != this.playerTwo) {
+        let loser = '';
+        if (winner) {
+          if (winner === this.playerOne) {
+            loser = this.playerTwo;
+          } else {
+            loser =  this.playerOne;
+          }
+        } else {
+          alert("nice try..choose Winner!! ;)")
+        }
+        try {
+            await axios.post('http://localhost:3000/updateElo', { winner, loser });
+
+            console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+            alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          } catch (error) {
+            console.error('Error updating Elo points:', error.message);
+          }
+          this.winner = winner
+        } else {(`choose two different players`);
+          alert
+        }
+      },
+    async startGame() {
+      if (this.playerOne && this.playerTwo) {
+        const { winner, loser } = gameLogic(this.playerOne, this.playerTwo);
+        try {
+          await axios.post('http://localhost:3000/updateElo', { winner, loser });
+
+          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        } catch (error) {
+          console.error('Error updating Elo points:', error.message);
+        }
+      } else {
+        alert('Please select both players.');
+      }
+    }
+  }
+}
+
+
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .buttons {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  margin: 30px;
+}
+
+.playerOne {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+
+.playerTwo {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 }
 
 </style>
