@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const cors = require('cors');
 
 const app = express();
@@ -8,14 +8,13 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 app.listen(port, () => {
-    // Databank must run in the background in order run server.js successfully
     console.log('server runs on http://localhost:' + port);
 });
 
 let connection = mysql.createConnection({
-    host: 'mysql',  // Hier den Container-Namen verwenden
+    host: 'mysql', // Hier den Container-Namen verwenden
     user: 'root',
-    password: 'root',  // Falls du ein Passwort gesetzt hast, gebe es hier an
+    password: 'root', // Falls du ein Passwort gesetzt hast, gebe es hier an
     database: 'Datenbankprojekt-BBS1',
 });
 

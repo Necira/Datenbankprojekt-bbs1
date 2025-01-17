@@ -103,7 +103,6 @@ export default {
             let selectElement = document.getElementById('SelectPlayername');
             let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
 
-            // Start server.js and databank for a functional patch-request
             fetch('http://localhost:3000/deletePlayer', {
                 method: 'PATCH',
                 headers: {
@@ -133,9 +132,7 @@ export default {
             this.textSuccessMessage = '';
             this.deleteablePlayer = [];
 
-            /** Start server.js and databank for a functional post-request
-             *  Display all available player-IDs in the select-option-field
-             */
+            // Display all available player-IDs in the select-option-field
             if (this.openDeletePlayerPopUpWindow) {
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
@@ -157,9 +154,7 @@ export default {
             this.editablePlayer = [];
 
             if (this.openEditPlayerForm) {
-                /** Start server.js and databank for a functional post-request
-                 *  Display all available player in the select-option-field
-                 */
+                // Display all available player in the select-option-field
                 fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
@@ -238,7 +233,6 @@ export default {
                 this.textErrorMessage = '';
             }
 
-            // Start server.js and databank for a functional put-request
             fetch('http://localhost:3000/updatePlayer', {
                 method: 'PUT',
                 headers: {
@@ -272,7 +266,6 @@ export default {
         displayPlayerTable() {
             this.tablePlayer = [];
 
-            // Start server.js and databank for a functional get-request
             fetch('http://localhost:3000/getPlayer')
                 .then(response => response.json())
                 .then(data => {
