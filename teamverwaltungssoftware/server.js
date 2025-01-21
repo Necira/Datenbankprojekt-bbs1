@@ -175,3 +175,68 @@ app.patch('/deleteTeam', (req, res) => {
         },
     );
 });
+app.post('/updateElo', (req, res) => {
+    const { winner, loser } = req.body;
+  
+    // Increase Elo for the winner
+    connection.query(
+      'UPDATE `player` SET `eloPoints` = `eloPoints` + 10 WHERE `playername` = ?',
+      [winner],
+      (err) => {
+        if (err) {
+          console.error('Error updating winner Elo:', err);
+          res.status(500).send('Error updating winner Elo');
+          return;
+        }
+  
+        // Decrease Elo for the loser
+        connection.query(
+          'UPDATE `player` SET `eloPoints` = `eloPoints` - 10 WHERE `playername` = ?',
+          [loser],
+          (err) => {
+            if (err) {
+              console.error('Error updating loser Elo:', err);
+              res.status(500).send('Error updating loser Elo');
+              return;
+            }
+  
+            res.send('Elo points updated successfully');
+          }
+        );
+      }
+    );
+  });
+// API-Endpoint to update a specific team
+app.put('/updateTeam', (req, res) => {
+    let {
+        changedTeamname,
+        changedDeletedValue,
+        changedFirstMember,
+        changedSecondMember,
+        changedThirdMember,
+        changedFourthMember,
+        changedFifthMember,
+        teamId,
+    } = req.body;
+
+    connection.query(
+        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
+        [
+            changedTeamname,
+            changedDeletedValue,
+            changedFirstMember,
+            changedSecondMember,
+            changedThirdMember,
+            changedFourthMember,
+            changedFifthMember,
+            teamId,
+        ],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});

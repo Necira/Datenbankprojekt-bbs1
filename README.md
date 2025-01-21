@@ -28,8 +28,10 @@ Das Framework Vue wurde gewählt, um eine übersichtliche Arbeitsweise mit vorte
 ## Teamverwaltungssoftware starten
 
 ### Voraussetzungen
-
-Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) installiert sein, damit das Projekt ohne Probleme im Container startet.
+Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) sowie [die aktuellste Version von axios](https://axios-http.com/docs/intro) installiert sein, damit das Projekt ohne Probleme startet. Das geht einfach mit der folgenden Befehlszeile: 
+```
+npm install axios
+```
 
 Zudem müssen die Nutzerrechte des root-Nutzers vor dem eigentlich start des Projektes manuell angepasst werden, damit die Datenbankverbindung korrekt eingerichtet ist.
 
