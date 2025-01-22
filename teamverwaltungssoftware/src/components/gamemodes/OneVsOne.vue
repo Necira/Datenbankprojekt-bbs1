@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {gameLogic} from '../GameLogic/GameLogic.js'
 export default {
   name: 'OneVsOne',
@@ -55,9 +54,10 @@ export default {
   methods: {
     async fetchPlayers() {
       try {
-        const response = await axios.get('http://localhost:3000/getActivePlayer'); 
-        console.log('Fetched players:', response.data); 
-        this.availablePlayer = response.data; 
+        const response = await fetch('http://localhost:3000/getActivePlayer');
+        const data = await response.json();
+        console.log('Fetched players:', data); 
+        this.availablePlayer = data; 
       } catch (error) {
         console.error('Error fetching players:', error.message);
       }
@@ -83,23 +83,35 @@ export default {
           alert("nice try..choose Winner!! ;)")
         }
         try {
-            await axios.post('http://localhost:3000/updateElo', { winner, loser });
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ winner, loser })
+          });
 
-            console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-            alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          } catch (error) {
-            console.error('Error updating Elo points:', error.message);
-          }
-          this.winner = winner
-        } else {(`choose two different players`);
-          alert
+          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        } catch (error) {
+          console.error('Error updating Elo points:', error.message);
         }
-      },
+        this.winner = winner
+      } else {
+        alert('Choose two different players');
+      }
+    },
     async startGame() {
       if (this.playerOne && this.playerTwo) {
         const { winner, loser } = gameLogic(this.playerOne, this.playerTwo);
         try {
-          await axios.post('http://localhost:3000/updateElo', { winner, loser });
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ winner, loser })
+          });
 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
           alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
@@ -112,8 +124,6 @@ export default {
     }
   }
 }
-
-
 
 </script>
 

@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import {gameLogic} from '../GameLogic/GameLogic.js'
 export default {
   name: 'TeamVsTeam',
@@ -55,9 +54,10 @@ export default {
   methods: {
     async fetchteams() {
       try {
-        const response = await axios.get('http://localhost:3000/getActiveteams'); 
-        console.log('Fetched teams:', response.data); 
-        this.availableteam = response.data; 
+        const response = await fetch('http://localhost:3000/getActiveteams');
+        const data = await response.json();
+        console.log('Fetched teams:', data); 
+        this.availableteam = data; 
       } catch (error) {
         console.error('Error fetching teams:', error.message);
       }
@@ -72,7 +72,7 @@ export default {
     },
     async setWinner(winner) {
       if (this.teamOne != this.teamTwo) {
-     
+      
       let loser = '';
       if (winner) {
         if (winner === this.teamOne) {
@@ -84,7 +84,13 @@ export default {
         alert("nice try..choose Winner!! ;)")
       }
       try {
-          await axios.post('http://localhost:3000/updateElo', { winner, loser });
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ winner, loser })
+          });
 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
           alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
@@ -92,8 +98,8 @@ export default {
           console.error('Error updating Elo points:', error.message);
         }
         this.winner = winner
-        } else {(`choose two different teams`);
-          alert
+        } else {
+          alert('Choose two different teams');
         }
       },
     async startGame() {
@@ -101,7 +107,13 @@ export default {
         const { winner, loser } = gameLogic(this.teamOne, this.teamTwo);
         try {
 
-          await axios.post('http://localhost:3000/updateElo', { winner, loser });
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ winner, loser })
+          });
 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
           alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
