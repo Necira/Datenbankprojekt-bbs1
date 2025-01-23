@@ -1,0 +1,108 @@
+
+Projektdokumentation - Kundenauftrag
+
+
+-Projektarbeit an der BBS1 Mainz-
+Schuljahr 2024/2025
+
+Thema:
+Teamverwaltungssoftware für ein MOBA-Spiel
+
+
+Fach: LF8
+Abgabedatum: Bitte einfügen
+Betreuende Lehrkraft: Herr Schumacher
+Gruppenmitglieder: 
+-	Louis Lohmer (Anwendungsentwickler)
+-	Oliver Skronn (Systemintegrator)
+-	Dominik Krauberger (Systemintegrator)
+-	Maria Neciporenko (Anwendungsentwickler)
+
+
+
+
+
+
+Erklärung über die selbständige Anfertigung
+Hiermit erklären wir, dass wir die vorliegende Dokumentation und das Projekt selbstständig angefertigt, keine anderen als die angegebenen Hilfsmittel benutzt und die Stellen der Arbeit und Dokumentation, die im Wortlaut oder im wesentlichen Inhalt aus anderen Werken entnommen wurden, mit genauer Quellenangabe kenntlich gemacht  haben.
+
+Ort: Bitte einfügen
+Datum: Bitte einfügen
+Inhaltsverzeichnis
+AUFGABENSTELLUNG	3
+VORGEHENSWEISE UND RELEVANTE KENNDATEN	3
+ER-MODELL	4
+DATENBANKSTRUKTUR	5
+VERWENDETE SOFTWARE UND TECHNOLOGIEN	5
+BERECHNUNG DER ARBEITSSTUNDEN	6
+
+
+
+
+
+
+
+
+
+
+
+
+
+Aufgabenstellung
+Ziel der Aufgabe besteht darin, eine lauffähige Teamverwaltungssoftware für MOBA-Spiele im Rahmen des zweiten Lehrjahres an der BBS1 zu entwickeln, welche die folgenden Anforderung hat:
+1.	Neue Mitglieder sollen in der angebundenen Datenbank mit Spielernamen, Vornamen, Nachnamen, E-Mailadresse, Spielposition, Elo-Punkte und co. angelegt werden können. Zudem sollen diese auch nachträglich verändert oder gelöscht werden können
+2.	Es können Teams mit maximal fünf Spielern erstellt werden
+3.	1 vs 1 Matchmaking-Modus
+4.	Team vs Team Matchmaking-Modus
+5.	Turniermodus
+6.	Suchfunktion mit Filteroptionen, beispielsweise für eine spezifische Spielposition
+
+Grundvoraussetzung sind eine Datenbank sowie eine GUI, wobei die Gruppe über die dafür verwendete Technologie entscheiden kann.
+
+Vorgehensweise und relevante Kenndaten
+Unsere Planung findet in einer Word-Datei statt, in welcher alle notwendigen Aufgaben und deren aktueller Status festgelegt wird:
+
+ 
+
+Zuerst haben wir die Datenbank erstellt und final zum Laufen gebracht, dabei haben wir die vier notwendigen Schritte beachtet:
+1.	In der Informationsanalyse wurde anhand des Arbeitsauftrages zuerst ermittelt, welche Daten in welcher Form gespeichert werden müssen
+2.	In der Konzeptionellen Phase haben wir in Zusammenarbeit das ER-Modell besprochen und erstellt
+3.	Das relationale Datenmodell wurde in der logischen Phase zuerst entsprechend der ersten drei Normalformen normalisiert und schlussendlich skizziert
+4.	In der letzten Phase, die physische Phase, wurde die Datenbank schlussendlich anhand des relationalen Datenmodells erstellen
+
+
+ER-Modell 
+ 
+Datenbankstruktur
+ 
+
+Darauffolgend begann die Entwicklung nach dem top-down Prinzip. Die Übersichtsseiten wurden erstellt, worauf die einzelnen Unterkategorien und letztlich Inhalte folgten. Es hat sich ein trunk-based Workflow entwickelt. Nachdem die Anforderungen erfüllt waren, wurden mögliche Fehlerquellen beseitigt und das Nutzererlebnis durch das Styling aufgewertet. 
+Wir haben Verbesserungsvorschläge und Bugs stets festgehalten, worauf sich die Gruppenmitglieder Diese dann frei aussuchen konnten.
+
+Verwendete Software und Technologien
+Für das Entwickeln der Teamverwaltungssoftware wurde das JavaScript-Framework Vue.js verwendet, welches mit dem Web-Stack, sprich HTML, CSS und JavaScript, arbeitet. Grund dafür ist, das Frameworks die Softwareentwicklung bei komplexeren Projekten  beispielsweise über eingebaute Funktionen und Unit-Tests vereinfachen. Vue.js bietet zudem den Vorteil, dass es vergleichsweise einfach und intuitiv zu erlernen ist, auch wenn man bisher noch nicht so viel Erfahrung mit Frameworks hatte.
+
+Die Datenbank wurde mit MySQL-Queries mithilfe von phpMyAdmin erstellt und verwaltet, da dieses im Vergleich zu den verschiedenen Datenbankverwaltungssystemen von SQL sehr stark verbreitet ist und die Erstellung der Datenbank sehr Nutzerfreundlich ist. Daraufhin wurde sie in das Projekt importiert, um alle Projektabhängigkeiten beisammenzuhaben. 
+
+Damit Frontend und die Datenbank miteinander kommunizieren können, braucht es Node.js und das Framework Express.js. Mithilfe von Node.js kann über eine REST-API mit Endpoints eine Verbindung zur Datenbank hergestellt werden. Allerdings läuft Node.js nur auf dem Client-Gerät und kann nicht direkt mit der Anwendung, die auf einem Server läuft, kommunizieren. Daher wird mit Express.js ein http-Server bereitgestellt, sodass man von der Anwendung direkte http-Anfragen an die Datenbank stellen kann.
+
+Schlussendlich wurde die Container-Software Docker verwendet, um das Frontend und das Backend zu containerisieren. Der Vorteil für die Entwickler ist dabei, dass die gesamte Entwicklung vereinfacht wird. Beispielsweise muss die Datenbank nach neuen Änderungen nicht mehr manuell geteilt werden. Der Nutzer hingegen hat den Vorteil, das die Anwendung nutzerfreundlicher ist, weil alle notwendigen Abhängigkeiten schon installiert sind.
+
+Berechnung der Arbeitsstunden
+-	5 Stunden – Planen und Erstellen der Datenbank 
+-	1,5 Stunden – Dokumentation schreiben
+-	1 Stunde – Vue.js-Projekt aufsetzen + Einführung
+-	2 Stunden – Containerisierung
+-	1 Stunde  –  Aufbau der Grundstruktur aller Seiten mit Routern
+-	4 Stunden – Player Vs Player + Team Vs Team Modi
+-	2 Stunden - Turniermodus
+-	4 Stunden – Einstellungen 
+-	5 Stunden – CRUD-Operationen
+-	1 Stunde – Suchfunktion für Spieler
+-	1 Stunde - Styling
+-	2 Stunden - Bugbehebung
+
+
+
+
+
