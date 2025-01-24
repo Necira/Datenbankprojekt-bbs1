@@ -115,10 +115,10 @@ INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`
 
 CREATE TABLE `tournament` (
   `tournament-ID` int(11) NOT NULL,
-  `teamname` varchar(255), FOREIGN KEY (`teamname`) REFERENCES `team` (`teamname`)
-  `FirstRound` boolean
-  `SecondRound` boolean
-  `ThirdRound`boolean
+  `teamname` varchar(255) NOT NULL,
+  `FirstRound` tinyint(1) DEFAULT 0,
+  `SecondRound` tinyint(1) DEFAULT 0,
+  `ThirdRound`tinyint(1) DEFAULT 0,
   `winner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -173,6 +173,7 @@ ALTER TABLE `teams`
 --
 ALTER TABLE `tournament`
   ADD PRIMARY KEY (`tournament-ID`);
+  ADD CONSTRAINT `rounds_ibfk_1` FOREIGN KEY (`teamname`) REFERENCES `teams` (`teamname`)
 
 --
 -- Indizes für die Tabelle `TvsT`
