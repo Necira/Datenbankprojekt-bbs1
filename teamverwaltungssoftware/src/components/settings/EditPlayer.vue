@@ -303,11 +303,11 @@ export default {
             if (searchvalue.length === 0) {
                 this.textResultMessage = '';
 
-                for (let i = 1; i < 9; i++) {
+                for (let i = 1; i <= this.tablePlayer.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i < 9; i++) {
+                for (let i = 1; i <= this.tablePlayer.length; i++) {
                     let currentRow = tbodyRows[i];
 
                     for (let i = 0; i < currentRow.cells.length; i++) {

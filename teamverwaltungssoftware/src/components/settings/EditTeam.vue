@@ -375,12 +375,13 @@ export default {
             if (searchvalue.length === 0) {
                 this.textResultMessage = '';
 
-                for (let i = 1; i < 5; i++) {
+                for (let i = 1; i <= this.tableTeams.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i < 5; i++) {
+                for (let i = 1; i <= this.tableTeams.length; i++) {
                     let currentRow = tbodyRows[i];
+                    console.log(currentRow);
 
                     for (let i = 0; i < currentRow.cells.length; i++) {
                         let currentTableDataCell = currentRow.cells[i];
