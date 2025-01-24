@@ -98,7 +98,7 @@ export default {
                         if (response.ok) {
                             let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
 
-                            // Set Values of user input to defautl
+                            // Set Values of user input to default
                             createPlayerForm[1].value = '';
                             createPlayerForm[3].value = '';
                             createPlayerForm[5].value = '';

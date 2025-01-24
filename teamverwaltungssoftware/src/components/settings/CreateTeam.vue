@@ -1,12 +1,12 @@
 <template>
     <h1>Create a new team</h1>
-    <form class="create-team-form">
+    <form class="createTeamForm" id="createTeamForm">
         <label for="teamname">teamname</label>
         <input id="teamname" name="teamname" />
         <label for="member">member</label>
         <div id="availabe-player">
             <div v-for="player in availablePlayer" :key="player">
-                <input type="checkbox" :id="player.id" />
+                <input type="checkbox" :id="player.id" class="playeroptions" />
                 <label :for="player.id">{{ player.name }}</label>
             </div>
         </div>
@@ -89,7 +89,6 @@ export default {
                     .then(data => {
                         for (let i = 0; i < data.length; i++) {
                             if (teamname === data[i].teamname) {
-                                console.log('found it');
                                 return true;
                             }
                         }
@@ -125,6 +124,15 @@ export default {
             })
                 .then(response => {
                     if (response.ok) {
+                        let createTeamForm = document.getElementById('createTeamForm').childNodes;
+                        let playeroptions = document.getElementsByClassName('playeroptions');
+
+                        // Set Values of user input to defautl
+                        createTeamForm[1].value = '';
+                        for (let i = 0; i < playeroptions.length; i++) {
+                            playeroptions[i].checked = false;
+                        }
+
                         this.textSuccessMessage = 'Added new team successfully!';
                         return response.json();
                     }
