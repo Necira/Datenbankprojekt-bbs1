@@ -7,7 +7,6 @@
         {{ player.playername }}
         </option>
       </select>
-     <button @click="setPlayerOne(playerOne)"> Set Player One </button>
     </div>
     <div class="playerTwo">
       <label for="playerTwo">Player Two</label>
@@ -16,7 +15,6 @@
           {{ player.playername }}
           </option>
         </select>
-      <button @click="setPlayerTwo(playerTwo)"> Set Player Two </button>
     </div>
     <button @click="startGame" v-if="!winner"> Play Randomly </button>
     <div class="chooseWinner">
@@ -62,16 +60,8 @@ export default {
         console.error('Error fetching players:', error.message);
       }
     },
-    setPlayerOne(playerName) {
-      this.playerOne = playerName;
-      console.log(`Player One set to: ${playerName}`);
-    },
-    setPlayerTwo(playerName) {
-      this.playerTwo = playerName;
-      console.log(`Player Two set to: ${playerName}`);
-    },
     async setWinner(winner) {
-      if (this.playerOne != this.playerTwo) {
+      if (this.playerOne != this.playerTwo && this.playerOne && this.playerTwo) {
         let loser = '';
         if (winner) {
           if (winner === this.playerOne) {
@@ -98,11 +88,11 @@ export default {
         }
         this.winner = winner
       } else {
-        alert('Choose two different players');
+        alert('Choose two different players and no dublicates');
       }
     },
     async startGame() {
-      if (this.playerOne && this.playerTwo) {
+      if (this.playerOne && this.playerTwo && this.playerOne != this.playerTwo) {
         const { winner, loser } = gameLogic(this.playerOne, this.playerTwo);
         try {
           await fetch('http://localhost:3000/updateElo', {
@@ -119,7 +109,7 @@ export default {
           console.error('Error updating Elo points:', error.message);
         }
       } else {
-        alert('Please select both players.');
+        alert('Please select both players and no dublicates.');
       }
     }
   }

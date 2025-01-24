@@ -7,7 +7,6 @@
         {{ team.teamname }}
         </option>
       </select>
-     <button @click="setteamOne(teamOne)"> Set team one </button>
     </div>
     <div class="teamTwo">
       <label for="teamTwo">team two</label>
@@ -16,7 +15,6 @@
           {{ team.teamname }}
           </option>
         </select>
-      <button @click="setteamTwo(teamTwo)"> Set team two </button>
     </div>
     <button @click="startGame"> Play Randomly </button>
     <div class="chooseWinner">
@@ -71,39 +69,38 @@ export default {
       console.log(`team two set to: ${teamName}`);
     },
     async setWinner(winner) {
-      if (this.teamOne != this.teamTwo) {
-      
-      let loser = '';
-      if (winner) {
-        if (winner === this.teamOne) {
-          loser = this.teamTwo;
+      if (this.teamOne && this.teamTwo && this.teamOne != this.teamTwo) {
+        let loser = '';
+        if (winner) {
+          if (winner === this.teamOne) {
+            loser = this.teamTwo;
+          } else {
+            loser =  this.teamOne;
+          }
         } else {
-          loser =  this.teamOne;
+          alert("nice try..choose Winner!! ;)")
         }
-      } else {
-        alert("nice try..choose Winner!! ;)")
-      }
-      try {
-          await fetch('http://localhost:3000/updateElo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, loser })
-          });
+        try {
+            await fetch('http://localhost:3000/updateElo', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ winner, loser })
+            });
 
-          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        } catch (error) {
-          console.error('Error updating Elo points:', error.message);
-        }
+            console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+            alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          } catch (error) {
+            console.error('Error updating Elo points:', error.message);
+          }
         this.winner = winner
         } else {
           alert('Choose two different teams');
         }
       },
     async startGame() {
-      if (this.teamOne && this.teamTwo) {
+      if (this.teamOne && this.teamTwo && this.teamOne != this.teamTwo) {
         const { winner, loser } = gameLogic(this.teamOne, this.teamTwo);
         try {
 
@@ -121,7 +118,7 @@ export default {
           console.error('Error updating Elo points:', error.message);
         }
       } else {
-        alert('Please select both players.');
+        alert('Please select both players and no dublicates.');
       }
     }
   }
