@@ -57,7 +57,7 @@
             <label for="position">Position:</label>
             <input type="text" id="position" name="position" />
             <label for="eloPoints">Elo-Points:</label>
-            <input type="number" min="0" id="eloPoints" name="eloPoints" />
+            <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <button type="button" @click="editPlayer">Edit player</button>

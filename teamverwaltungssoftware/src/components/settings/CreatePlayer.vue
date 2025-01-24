@@ -13,7 +13,8 @@ export default {
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
             let email = document.getElementById('email').value;
-            let position = document.getElementById('position').value;
+            let selectElement = document.getElementById('position');
+            let position = selectElement.options[selectElement.selectedIndex].value;
             let eloPoints = document.getElementById('eloPoints').value;
 
             if (
@@ -21,7 +22,6 @@ export default {
                 firstname.length === 0 ||
                 lastname.length === 0 ||
                 email.length === 0 ||
-                position.length === 0 ||
                 eloPoints.length === 0
             ) {
                 this.textErrorMessage = 'Please fill out the entire form!';
@@ -115,9 +115,15 @@ export default {
         <label for="email">E-Mail:</label>
         <input type="email" id="email" name="email" />
         <label for="position">Position:</label>
-        <input type="text" id="position" name="position" />
+        <select id="position" name="position">
+            <option value="Top-Lane">Top-Lane</option>
+            <option value="Jungle">Jungle</option>
+            <option value="Mid-lane">Mid-lane</option>
+            <option value="Bot-Lane">Bot-Lane</option>
+            <option value="Support">Support</option>
+        </select>
         <label for="eloPoints">Elo-Points:</label>
-        <input type="number" min="0" id="eloPoints" name="eloPoints" />
+        <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
         <button type="button" @click="saveNewPlayer">Save player</button>
     </form>
     <span class="success-message"> {{ textSuccessMessage }}</span>
