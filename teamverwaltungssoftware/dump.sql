@@ -115,6 +115,10 @@ INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`
 
 CREATE TABLE `tournament` (
   `tournament-ID` int(11) NOT NULL,
+  `teamname` varchar(255), FOREIGN KEY (`teamname`) REFERENCES `team` (`teamname`)
+  `FirstRound` boolean
+  `SecondRound` boolean
+  `ThirdRound`boolean
   `winner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
