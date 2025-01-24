@@ -195,6 +195,13 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            if (eloPoints > 4000) {
+                this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                return;
+            } else {
+                this.textErrorMessage = '';
+            }
+
             if (firstname.length > 0) {
                 let splittedFirstname = firstname.split('');
                 const onlyLettersRegEx = /^[a-zA-Z]+$/;

@@ -9,6 +9,8 @@ export default {
     },
     methods: {
         async saveNewPlayer() {
+            this.textSuccessMessage = '';
+
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
@@ -28,6 +30,11 @@ export default {
                 return;
             } else {
                 this.textErrorMessage = '';
+
+                if (eloPoints > 4000) {
+                    this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                    return;
+                }
 
                 let playernameExists = await fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
@@ -89,6 +96,15 @@ export default {
                 })
                     .then(response => {
                         if (response.ok) {
+                            let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
+
+                            // Set Values of user input to defautl
+                            createPlayerForm[1].value = '';
+                            createPlayerForm[3].value = '';
+                            createPlayerForm[5].value = '';
+                            createPlayerForm[7].value = '';
+                            createPlayerForm[11].value = '';
+
                             this.textSuccessMessage = 'Added new player successfully!';
                             return response.json();
                         }
@@ -105,7 +121,7 @@ export default {
 
 <template>
     <h1>Create a new player</h1>
-    <form class="create-player-form">
+    <form class="createPlayerForm" id="createPlayerForm">
         <label for="playername">Playername:</label>
         <input type="text" id="playername" name="playername" />
         <label for="firstname">firstname:</label>
@@ -133,7 +149,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.create-player-form {
+.createPlayerForm {
     display: flex;
     justify-content: center;
     flex-direction: column;
