@@ -61,7 +61,9 @@ export default {
                             }
                         }
 
-                        return calculatedEloPoints;
+                        let finalEloPoints = calculatedEloPoints / 5;
+
+                        return finalEloPoints;
                     })
                     .catch(error => {
                         console.error(error);

@@ -233,6 +233,17 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            if (playername.length > 0) {
+                for (let i = 0; i < this.tablePlayer.length; i++) {
+                    if (this.tablePlayer[i].tableDataCellPlayername === playername) {
+                        this.textErrorMessage = 'Playername already exists!';
+                        return;
+                    }
+                }
+            } else {
+                this.textErrorMessage = '';
+            }
+
             fetch('http://localhost:3000/updatePlayer', {
                 method: 'PUT',
                 headers: {

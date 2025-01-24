@@ -29,6 +29,25 @@ export default {
             } else {
                 this.textErrorMessage = '';
 
+                let playernameExists = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+                            if (playername === data[i].playername) {
+                                return true;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+
+                if (playernameExists) {
+                    this.textErrorMessage = 'Playername already exists!';
+                    return;
+                }
+
                 const regExEmail = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,4}$/;
                 if (!email.match(regExEmail)) {
                     this.textErrorMessage = 'Invalid E-mail!';
