@@ -60,9 +60,7 @@ export default {
                                 }
                             }
                         }
-
                         let finalEloPoints = calculatedEloPoints / 5;
-
                         return finalEloPoints;
                     })
                     .catch(error => {
@@ -85,8 +83,28 @@ export default {
                 this.textErrorMessage = 'Please fill out the entire form!';
                 this.textSuccessMessage = '';
                 return;
-            } else {
-                this.textErrorMessage = '';
+            } else if (teamname.length > 0) {
+                let teamnameExists = await fetch('http://localhost:3000/getTeams')
+                    .then(response => response.json())
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+                            if (teamname === data[i].teamname) {
+                                console.log('found it');
+                                return true;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+
+                if (teamnameExists) {
+                    this.textErrorMessage = 'Teamname already exists!';
+                    return;
+                } else {
+                    this.textErrorMessage = '';
+                }
             }
 
             fetch('http://localhost:3000/createNewTeam', {
@@ -155,16 +173,28 @@ export default {
                                 }
                             }
 
-                            if (availableTeammemberIDs.length === 0) {
+                            if (availableTeammemberIDs.length > 0) {
+                                for (let i = 0; i < availableTeammemberIDs.length; i++) {
+                                    // Push data into array in order to display it with v-for
+                                    this.availablePlayer.push({
+                                        id: availableTeammemberIDs[i],
+                                        name: availableTeammemberNames[i],
+                                    });
+                                }
+                            } else if (
+                                availableTeammemberIDs.length === 0 &&
+                                activePlayerIDs.length > 0 &&
+                                activePlayernames.length > 0
+                            ) {
+                                for (let i = 0; i < activePlayerIDs.length; i++) {
+                                    // Push data into array in order to display it with v-for
+                                    this.availablePlayer.push({
+                                        id: activePlayerIDs[i],
+                                        name: activePlayernames[i],
+                                    });
+                                }
+                            } else {
                                 document.getElementById('availabe-player').innerHTML = 'No player available!';
-                            }
-
-                            for (let i = 0; i < availableTeammemberIDs.length; i++) {
-                                // Push data into array in order to display it with v-for
-                                this.availablePlayer.push({
-                                    id: availableTeammemberIDs[i],
-                                    name: availableTeammemberNames[i],
-                                });
                             }
                         })
                         .catch(error => {

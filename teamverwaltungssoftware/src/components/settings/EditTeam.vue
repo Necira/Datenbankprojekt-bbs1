@@ -175,6 +175,7 @@ export default {
             this.textSuccessMessage = '';
 
             if (this.openDeleteTeamPopUpWindow) {
+                this.deleteableTeams = [];
                 //  Display all available player in the select-option-fields
                 fetch('http://localhost:3000/getActiveTeams')
                     .then(response => response.json())
@@ -193,9 +194,11 @@ export default {
         openAndCloseEditTeamForm() {
             this.openEditTeamForm = !this.openEditTeamForm;
             this.textSuccessMessage = '';
-            this.availablePlayer = [];
+            this.textErrorMessage = '';
 
             if (this.openEditTeamForm) {
+                this.availablePlayer = [];
+                this.editableTeams = [];
                 // Display all available player in the select-option-field
                 fetch('http://localhost:3000/getTeams')
                     .then(response => response.json())
@@ -240,13 +243,24 @@ export default {
                                     }
                                 }
 
-                                this.availablePlayer.push({ id: 'NULL', name: 'no player' });
-                                for (let i = 0; i < availableTeammember.length; i++) {
-                                    // Push data into array in order to display it with v-for
-                                    this.availablePlayer.push({
-                                        id: availableTeammember[i],
-                                        name: availableTeammember[i],
-                                    });
+                                if (availableTeammember.length > 0) {
+                                    this.availablePlayer.push({ id: 'NULL', name: 'no player' });
+                                    for (let i = 0; i < availableTeammember.length; i++) {
+                                        // Push data into array in order to display it with v-for
+                                        this.availablePlayer.push({
+                                            id: availableTeammember[i],
+                                            name: availableTeammember[i],
+                                        });
+                                    }
+                                } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
+                                    this.availablePlayer.push({ id: 'NULL', name: 'no player' });
+                                    for (let i = 0; i < activePlayer.length; i++) {
+                                        // Push data into array in order to display it with v-for
+                                        this.availablePlayer.push({
+                                            id: activePlayer[i],
+                                            name: activePlayer[i],
+                                        });
+                                    }
                                 }
                             })
                             .catch(error => {
@@ -331,6 +345,17 @@ export default {
             ) {
                 this.textErrorMessage = 'Cannot add the same player twice!';
                 return;
+            } else {
+                this.textErrorMessage = '';
+            }
+
+            if (teamname.length > 0) {
+                for (let i = 0; i < this.tableTeams.length; i++) {
+                    if (this.tableTeams[i].tableDataCellTeamname === teamname) {
+                        this.textErrorMessage = 'Teamname already exists!';
+                        return;
+                    }
+                }
             } else {
                 this.textErrorMessage = '';
             }
