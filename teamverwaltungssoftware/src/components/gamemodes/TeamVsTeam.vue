@@ -15,18 +15,20 @@
         </option>
       </select>
       <button @click="setWinner(chooseWinner)"> set winner </button>
-      <h1 v-if="winner"> {{winner}} won </h1>
+      <WinnerMessage v-if='winner' :winner="winner" :eloPoints="eloPoints"/> 
     <RouterLink to="/"> Back </RouterLink>
   </div>
 </template>
 
 <script>
 import {gameLogic} from '../GameLogic/GameLogic.js'
-import TeamPicks from '../Molecules/TeamPicks.vue'
+import TeamPicks from '../Atoms/TeamPicks.vue'
+import WinnerMessage from '../Atoms/WinnerMessage.vue'
 
 export default {
   components: {
     TeamPicks,
+    WinnerMessage,
   },
   name: 'TeamVsTeam',
   data() {
@@ -60,14 +62,13 @@ export default {
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
     async setWinner(winner) {
-      console.log(this.teamOne, this.teamTwo, "TEAMS")
       if (this.teamOne && this.teamTwo && this.teamOne != this.teamTwo) {
         let loser = '';
         if (winner) {
           if (winner === this.teamOne) {
             loser = this.teamTwo;
           } else {
-            loser =  this.teamOne;
+            loser = this.teamOne;
           }
         } else {
           alert("nice try..choose Winner!! ;)")

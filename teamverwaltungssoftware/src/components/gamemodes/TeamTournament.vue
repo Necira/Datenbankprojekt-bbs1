@@ -4,7 +4,7 @@
     <div v-for="(teamPair, matchIndex) in matches" :key="matchIndex">
       <TeamPicks :team="teamPair.teamOne" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamOne, $event)" />
       <TeamPicks :team="teamPair.teamTwo" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamTwo, $event)" />
-      <button @click="startGame(teamPair.teamOne, teamPair.teamTwo)">Play Randomly</button>
+      <button @click="setRandomWinner(teamPair.teamOne, teamPair.teamTwo)">Play Randomly</button>
       <div class="chooseWinner">
         <label for="chooseWinner">Choose Winner</label>
         <select v-model="chooseWinner">
@@ -12,7 +12,7 @@
           <option>{{ teams[teamPair.teamTwo] }}</option>
         </select>
         <button @click="setWinner(chooseWinner)">Set Winner</button>
-        <h1 v-if="winner">{{ winner }} won</h1>
+        <WinnerMessage v-if='winner' :winner="winner" :eloPoints="eloPoints"/> 
       </div>
     </div>
   </div>
@@ -21,12 +21,14 @@
 
 <script>
 import { gameLogic } from '../GameLogic/GameLogic.js'
-import TeamPicks from '../Molecules/TeamPicks.vue'
+import TeamPicks from '../Atoms/TeamPicks.vue'
+import WinnerMessage from '../Atoms/WinnerMessage.vue'
 
 export default {
   name: 'TeamTournament',
   components: {
     TeamPicks,
+    WinnerMessage,
   },
   data() {
     return {
@@ -72,12 +74,29 @@ export default {
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
 
-    startGame(teamOne, teamTwo) {
+    async setRandomWinner(teamOne, teamTwo) {
       if (this.teams[teamOne] && this.teams[teamTwo]) {
         const { winner, loser } = gameLogic(this.teams[teamOne], this.teams[teamTwo]);
         this.winner = winner;
         console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
         alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        try {
+          const response = await fetch('http://localhost:3000/updateWinner', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ winner, teamOne, teamTwo })
+          });
+
+          if (response.ok) {
+            alert(`Spiel beendet! Gewinner: ${winner}`);
+          } else {
+            alert('Fehler beim Speichern des Ergebnisses');
+          }
+        } catch (error) {
+          console.error('Fehler beim Senden des Ergebnisses:', error.message);
+        }
       } else {
         alert('Please select both players.');
       }
@@ -92,17 +111,21 @@ export default {
       }
       
       try {
-        await fetch('http://localhost:3000/updateWinner', {
+        const response = await fetch('http://localhost:3000/updateWinner', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ winner, loser })
+          body: JSON.stringify({ winner, teamOne, teamTwo })
         });
-        console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+
+        if (response.ok) {
+          alert(`Spiel beendet! Gewinner: ${winner}`);
+        } else {
+          alert('Fehler beim Speichern des Ergebnisses');
+        }
       } catch (error) {
-        console.error('Error updating Elo points:', error.message);
+        console.error('Fehler beim Senden des Ergebnisses:', error.message);
       }
     },
   }

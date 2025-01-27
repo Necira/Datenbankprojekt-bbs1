@@ -131,7 +131,6 @@ CREATE TABLE `TvsT` (
 --
 ALTER TABLE `1vs1`
   ADD PRIMARY KEY (`1vs1-ID`);
-
 --
 -- Indizes für die Tabelle `player`
 --
@@ -147,10 +146,6 @@ ALTER TABLE `teams`
   ADD KEY `thirdMember` (`thirdMember`),
   ADD KEY `fourthMember` (`fourthMember`),
   ADD KEY `fifthMember` (`fifthMember`);
-
---
--- Indizes für die Tabelle `tournament`
---
 
 --  Änderung der Tabelle teams (z. B. Ändern der Spalte teamID)
 ALTER TABLE teams MODIFY teamID INT(11) NOT NULL AUTO_INCREMENT;
