@@ -11,8 +11,8 @@
           <option>{{ teams[teamPair.teamOne] }}</option>
           <option>{{ teams[teamPair.teamTwo] }}</option>
         </select>
-        <button @click="setWinner(chooseWinner)">Set Winner</button>
-        <WinnerMessage v-if='winner' :winner="winner" :eloPoints="eloPoints"/> 
+        <button @click="setWinner(chooseWinner, teamPair.teamOne, teamPair.teamTwo)">Set Winner</button>
+        <WinnerMessage v-if='winner' :winner="winner" :eloPoints="'reputation'"/> 
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@ export default {
     };
   },
   created() {
-    this.fetchteams();  // Beim Laden der Komponente Teams abrufen
+    this.fetchteams(); 
   },
   methods: {
     async fetchteams() {
@@ -102,27 +102,28 @@ export default {
       }
     },
 
-    async setWinner(winner) {
-      const loser = winner === this.teams.teamOne ? this.teams.teamTwo : this.teams.teamOne;
-      
+    async setWinner(winner, teamOne, teamTwo) {   
       if (!winner) {
         alert("Please choose a winner!");
         return;
       }
-      
+      console.log('Winner:', winner, 'TeamOne:', teamOne, 'TeamTwo:', teamTwo); // Debugging
       try {
         const response = await fetch('http://localhost:3000/updateWinner', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ winner, teamOne, teamTwo })
+          body: JSON.stringify({ winner, teamOne, teamTwo }),
         });
 
+        console.log('Response status:', response.status); // Debugging
         if (response.ok) {
           alert(`Spiel beendet! Gewinner: ${winner}`);
         } else {
-          alert('Fehler beim Speichern des Ergebnisses');
+          const errorDetails = await response.json();
+          console.error('Fehler beim Speichern des Ergebnisses:', errorDetails);
+          alert(`Fehler: ${errorDetails.message || 'Unbekannter Fehler'}`);
         }
       } catch (error) {
         console.error('Fehler beim Senden des Ergebnisses:', error.message);

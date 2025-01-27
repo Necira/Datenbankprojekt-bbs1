@@ -150,6 +150,9 @@ ALTER TABLE `teams`
 --  Änderung der Tabelle teams (z. B. Ändern der Spalte teamID)
 ALTER TABLE teams MODIFY teamID INT(11) NOT NULL AUTO_INCREMENT;
 
+-- Primary key mit automatischem Aufsteigen für tournament Tabelle
+ALTER TABLE `tournament`
+MODIFY COLUMN tournament_ID INT AUTO_INCREMENT PRIMARY KEY;
 --  Hinzufügen des Fremdschlüssels
 ALTER TABLE `tournament`
   ADD CONSTRAINT `tournament_ibfk_1` FOREIGN KEY (`team_ID`) REFERENCES `teams` (`teamID`)
