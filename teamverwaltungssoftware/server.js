@@ -175,6 +175,26 @@ app.patch('/deleteTeam', (req, res) => {
         },
     );
 });
+app.post('/updateWinner', (req, res) => {
+    const { winner, teamOne, teamTwo } = req.body;
+    const winnerTeam = winner;
+
+    const query = `
+        INSERT INTO tournament (teamname, winner, team_ID) 
+        VALUES (?, ?, ?)
+    `;
+
+    connection.query(query, [teamOne, winnerTeam, 1], (err, result) => {
+        if (err) {
+            console.error('Error saving winner:', err);
+            return res.status(500).json({ error: 'Error saving winner', details: err.message });
+        }
+
+        console.log('Game result saved:', result);
+        res.status(200).json({ message: 'Game result saved', result });
+    });
+});
+  
 app.post('/updateElo', (req, res) => {
     const { winner, loser } = req.body;
   
