@@ -68,20 +68,6 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `rounds`
---
-
-CREATE TABLE `rounds` (
-  `tournament-ID` int(11) NOT NULL,
-  `round` int(11) NOT NULL,
-  `firstParticipant` varchar(255) NOT NULL,
-  `secondParticipant` varchar(255) NOT NULL,
-  `result` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `teams`
 --
 
@@ -114,7 +100,12 @@ INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`
 --
 
 CREATE TABLE `tournament` (
-  `tournament-ID` int(11) NOT NULL,
+  `tournament_ID` int(11) NOT NULL,
+  `team_ID` int(11) NOT NULL,
+  `teamname` varchar(255) NOT NULL,
+  `FirstRound` tinyint(1) DEFAULT 0,
+  `SecondRound` tinyint(1) DEFAULT 0,
+  `ThirdRound` tinyint(1) DEFAULT 0,
   `winner` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -140,19 +131,11 @@ CREATE TABLE `TvsT` (
 --
 ALTER TABLE `1vs1`
   ADD PRIMARY KEY (`1vs1-ID`);
-
 --
 -- Indizes für die Tabelle `player`
 --
 ALTER TABLE `player`
   ADD PRIMARY KEY (`playerID`);
-
---
--- Indizes für die Tabelle `rounds`
---
-ALTER TABLE `rounds`
-  ADD PRIMARY KEY (`tournament-ID`,`round`);
-
 --
 -- Indizes für die Tabelle `teams`
 --
@@ -164,11 +147,16 @@ ALTER TABLE `teams`
   ADD KEY `fourthMember` (`fourthMember`),
   ADD KEY `fifthMember` (`fifthMember`);
 
---
--- Indizes für die Tabelle `tournament`
---
+--  Änderung der Tabelle teams (z. B. Ändern der Spalte teamID)
+ALTER TABLE teams MODIFY teamID INT(11) NOT NULL AUTO_INCREMENT;
+
+-- Primary key mit automatischem Aufsteigen für tournament Tabelle
 ALTER TABLE `tournament`
-  ADD PRIMARY KEY (`tournament-ID`);
+MODIFY COLUMN tournament_ID INT AUTO_INCREMENT PRIMARY KEY;
+--  Hinzufügen des Fremdschlüssels
+ALTER TABLE `tournament`
+  ADD CONSTRAINT `tournament_ibfk_1` FOREIGN KEY (`team_ID`) REFERENCES `teams` (`teamID`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Indizes für die Tabelle `TvsT`
@@ -199,12 +187,6 @@ ALTER TABLE `teams`
   MODIFY `teamID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
--- AUTO_INCREMENT für Tabelle `tournament`
---
-ALTER TABLE `tournament`
-  MODIFY `tournament-ID` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT für Tabelle `TvsT`
 --
 ALTER TABLE `TvsT`
@@ -213,12 +195,6 @@ ALTER TABLE `TvsT`
 --
 -- Constraints der exportierten Tabellen
 --
-
---
--- Constraints der Tabelle `rounds`
---
-ALTER TABLE `rounds`
-  ADD CONSTRAINT `rounds_ibfk_1` FOREIGN KEY (`tournament-ID`) REFERENCES `tournament` (`tournament-ID`);
 
 --
 -- Constraints der Tabelle `teams`

@@ -10,13 +10,14 @@ import CreateTeam from './components/settings/CreateTeam.vue';
 import EditTeam from './components/settings/EditTeam.vue';
 import OneVsOne from './components/gamemodes/OneVsOne.vue';
 import TeamVsTeam from './components/gamemodes/TeamVsTeam.vue';
-import TournamentMode from './components/gamemodes/TournamentMode.vue';
+import TeamTournament from './components/gamemodes/TeamTournament.vue';
 import EditPlayer from './components/settings/EditPlayer.vue';
 
 const router = createRouter({
     routes: [
         { path: '/', component: HomeScreen },
         { path: '/SettingScreen', component: SettingScreen },
+        { path: '/TeamTournament', component: TeamTournament },
         { path: '/TeamSettings', component: TeamSettings },
         { path: '/PlayerSettings', component: PlayerSettings },
         { path: '/CreateTeam', component: CreateTeam },
@@ -25,7 +26,7 @@ const router = createRouter({
         { path: '/CreatePlayer', component: CreatePlayer },
         { path: '/OneVsOne', component: OneVsOne },
         { path: '/TeamVsTeam', component: TeamVsTeam },
-        { path: '/TournamentMode ', component: TournamentMode },
+       
     ],
     history: createWebHistory(),
 });
