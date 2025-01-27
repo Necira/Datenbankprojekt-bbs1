@@ -242,7 +242,16 @@ export default {
 
             if (playername.length > 0) {
                 for (let i = 0; i < this.tablePlayer.length; i++) {
-                    if (this.tablePlayer[i].tableDataCellPlayername === playername) {
+                    if (
+                        this.tablePlayer[i].tableDataCellPlayername === playername &&
+                        this.tablePlayer[i].tableDataCellPlayerId === Number(idSelectedOption)
+                    ) {
+                        this.textErrorMessage = '';
+                        break;
+                    } else if (
+                        this.tablePlayer[i].tableDataCellPlayername === playername &&
+                        this.tablePlayer[i].tableDataCellPlayerId !== Number(idSelectedOption)
+                    ) {
                         this.textErrorMessage = 'Playername already exists!';
                         return;
                     }

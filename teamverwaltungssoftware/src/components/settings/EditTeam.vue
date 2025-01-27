@@ -365,9 +365,20 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            // let teamdata = this.tableTeams.some(element => element.tableDataCellTeamname === teamname);
+
             if (teamname.length > 0) {
                 for (let i = 0; i < this.tableTeams.length; i++) {
-                    if (this.tableTeams[i].tableDataCellTeamname === teamname) {
+                    if (
+                        this.tableTeams[i].tableDataCellTeamname === teamname &&
+                        this.tableTeams[i].tableDataCellTeamID === Number(teamId)
+                    ) {
+                        this.textErrorMessage = '';
+                        break;
+                    } else if (
+                        this.tableTeams[i].tableDataCellTeamname === teamname &&
+                        this.tableTeams[i].tableDataCellTeamID !== Number(teamId)
+                    ) {
                         this.textErrorMessage = 'Teamname already exists!';
                         return;
                     }
