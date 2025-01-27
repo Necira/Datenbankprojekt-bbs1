@@ -5,9 +5,45 @@
         <input id="teamname" name="teamname" />
         <label for="member">member</label>
         <div id="availabe-player">
-            <div v-for="player in availablePlayer" :key="player">
-                <input type="checkbox" :id="player.id" class="playeroptions" />
-                <label :for="player.id">{{ player.name }}</label>
+            <div>
+                <label for="Top-Lane">Top-Lane</label>
+                <select id="Top-Lane" name="Top-Lane">
+                    <option v-for="player in availablePlayerTopLane" :key="player" :id="player.id">
+                        {{ player.name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="Jungle">Jungle</label>
+                <select id="Jungle" name="Jungle">
+                    <option v-for="player in availablePlayerJungle" :key="player" :id="player.id">
+                        {{ player.name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="Mid-Lane">Mid-Lane</label>
+                <select id="Mid-Lane" name="Mid-Lane">
+                    <option v-for="player in availablePlayerMidLane" :key="player" :id="player.id">
+                        {{ player.name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="Support">Support</label>
+                <select id="Support" name="Support">
+                    <option v-for="player in availablePlayerSupport" :key="player" :id="player.id">
+                        {{ player.name }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="Bot-Lane">Bot-Lane</label>
+                <select id="Bot-Lane" name="Bot-Lane">
+                    <option v-for="player in availablePlayerBotLane" :key="player" :id="player.id">
+                        {{ player.name }}
+                    </option>
+                </select>
             </div>
         </div>
         <button type="button" @click="saveNewTeam">Save team</button>
@@ -24,60 +60,53 @@ export default {
             name: 'CreateTeam',
             textErrorMessage: '',
             textSuccessMessage: '',
-            availablePlayer: [],
+            availablePlayerTopLane: [],
+            availablePlayerMidLane: [],
+            availablePlayerBotLane: [],
+            availablePlayerSupport: [],
+            availablePlayerJungle: [],
         };
     },
     methods: {
         async saveNewTeam() {
             let teamname = document.getElementById('teamname').value;
-            let availablePlayerContainer = document.getElementById('availabe-player').childNodes;
-            let eloPointsTeam = 0;
-            let choosenTeamMembers = [];
+            let selectElementTopLane = document.getElementById('Top-Lane');
+            let firstPlayerId = selectElementTopLane.options[selectElementTopLane.selectedIndex].id;
+            let selectElementMidLane = document.getElementById('Mid-Lane');
+            let secondPlayerId = selectElementMidLane.options[selectElementMidLane.selectedIndex].id;
+            let selectElementJungle = document.getElementById('Jungle');
+            let thirdPlayerId = selectElementJungle.options[selectElementJungle.selectedIndex].id;
+            let selectElementSupport = document.getElementById('Support');
+            let fourthPlayerId = selectElementSupport.options[selectElementSupport.selectedIndex].id;
+            let selectElementBotLane = document.getElementById('Bot-Lane');
+            let fifthPlayerId = selectElementBotLane.options[selectElementBotLane.selectedIndex].id;
+            let choosenTeamMembers = [
+                firstPlayerId,
+                secondPlayerId,
+                thirdPlayerId,
+                fourthPlayerId,
+                fifthPlayerId,
+            ];
 
-            let counterCheckedTeammember = 0;
-            for (let i = 0; i < availablePlayerContainer.length; i++) {
-                let checkbox = availablePlayerContainer[i].childNodes[0];
-
-                if (checkbox !== undefined && checkbox.checked) {
-                    counterCheckedTeammember++;
-                    choosenTeamMembers.push(Number(checkbox.id));
-                }
-            }
-
-            if (counterCheckedTeammember > 5) {
-                this.textErrorMessage = 'Cannot add more than five teammember!';
-                return;
-            } else if (counterCheckedTeammember === 5) {
-                // Calculate Elo-Points, if team is complete
-                eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
-                    .then(response => response.json())
-                    .then(data => {
-                        let calculatedEloPoints = 0;
-                        for (let i = 0; i < choosenTeamMembers.length; i++) {
-                            for (let a = 0; a < data.length; a++) {
-                                if (choosenTeamMembers[i] === data[a].playerID) {
-                                    calculatedEloPoints += data[a].eloPoints;
-                                }
+            // Calculate Elo-Points, if team is complete
+            let eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
+                .then(response => response.json())
+                .then(data => {
+                    let calculatedEloPoints = 0;
+                    for (let i = 0; i < choosenTeamMembers.length; i++) {
+                        for (let a = 0; a < data.length; a++) {
+                            if (choosenTeamMembers[i] === data[a].playerID) {
+                                calculatedEloPoints += data[a].eloPoints;
                             }
                         }
-                        let finalEloPoints = calculatedEloPoints / 5;
-                        return finalEloPoints;
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        return;
-                    });
-            } else if (counterCheckedTeammember < 5) {
-                eloPointsTeam += 1;
-
-                // Push null-value into array to prevent error of undefined teammembers
-                let durationLoop = 5 - choosenTeamMembers.length;
-                for (let i = 0; i < durationLoop; i++) {
-                    choosenTeamMembers.push(null);
-                }
-            } else {
-                this.textErrorMessage = '';
-            }
+                    }
+                    let finalEloPoints = calculatedEloPoints / 5;
+                    return finalEloPoints;
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
 
             if (teamname.length === 0) {
                 this.textErrorMessage = 'Please fill out the entire form!';
@@ -115,11 +144,11 @@ export default {
                 body: JSON.stringify({
                     newTeamname: teamname,
                     newEloPoints: eloPointsTeam,
-                    firstMember: choosenTeamMembers[0],
-                    secondMember: choosenTeamMembers[1],
-                    thirdMember: choosenTeamMembers[2],
-                    fourthMember: choosenTeamMembers[3],
-                    fifthMember: choosenTeamMembers[4],
+                    firstMember: firstPlayerId,
+                    secondMember: secondPlayerId,
+                    thirdMember: thirdPlayerId,
+                    fourthMember: fourthPlayerId,
+                    fifthMember: fifthPlayerId,
                 }),
             })
                 .then(response => {
@@ -149,10 +178,12 @@ export default {
                 .then(activePlayerData => {
                     let activePlayerIDs = [];
                     let activePlayernames = [];
+                    let activePlayerPosition = [];
 
                     for (let i = 0; i < activePlayerData.length; i++) {
                         activePlayerIDs.push(activePlayerData[i].playerID);
                         activePlayernames.push(activePlayerData[i].playername);
+                        activePlayerPosition.push(activePlayerData[i].position);
                     }
 
                     fetch('http://localhost:3000/getActiveTeammember')
@@ -167,6 +198,7 @@ export default {
                             // Display only player that are not deleted and are not in a team yet
                             let availableTeammemberIDs = [];
                             let availableTeammemberNames = [];
+                            let availableTeammemberPositions = [];
 
                             for (let i = 0; i < activeTeammemberIDs.length; i++) {
                                 for (let a = 0; a < activePlayerIDs.length; a++) {
@@ -177,17 +209,48 @@ export default {
                                     ) {
                                         availableTeammemberIDs.push(activePlayerIDs[a]);
                                         availableTeammemberNames.push(activePlayernames[a]);
+                                        availableTeammemberPositions.push(activePlayerPosition[a]);
                                     }
                                 }
                             }
 
                             if (availableTeammemberIDs.length > 0) {
-                                for (let i = 0; i < availableTeammemberIDs.length; i++) {
+                                for (let i = 0; i < availableTeammemberPositions.length; i++) {
                                     // Push data into array in order to display it with v-for
-                                    this.availablePlayer.push({
-                                        id: availableTeammemberIDs[i],
-                                        name: availableTeammemberNames[i],
-                                    });
+                                    if (availableTeammemberPositions[i] === 'Top-Lane') {
+                                        this.availablePlayerTopLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Jungle') {
+                                        this.availablePlayerJungle.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Mid-lane') {
+                                        this.availablePlayerMidLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Bot-Lane') {
+                                        this.availablePlayerBotLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Support') {
+                                        this.availablePlayerSupport.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
                                 }
                             } else if (
                                 availableTeammemberIDs.length === 0 &&
@@ -196,10 +259,40 @@ export default {
                             ) {
                                 for (let i = 0; i < activePlayerIDs.length; i++) {
                                     // Push data into array in order to display it with v-for
-                                    this.availablePlayer.push({
-                                        id: activePlayerIDs[i],
-                                        name: activePlayernames[i],
-                                    });
+                                    if (availableTeammemberPositions[i] === 'Top-Lane') {
+                                        this.availablePlayerTopLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Jungle') {
+                                        this.availablePlayerJungle.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Mid-lane') {
+                                        this.availablePlayerMidLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Bot-Lane') {
+                                        this.availablePlayerBotLane.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
+
+                                    if (availableTeammemberPositions[i] === 'Support') {
+                                        this.availablePlayerSupport.push({
+                                            id: availableTeammemberIDs[i],
+                                            name: availableTeammemberNames[i],
+                                        });
+                                    }
                                 }
                             } else {
                                 document.getElementById('availabe-player').innerHTML = 'No player available!';

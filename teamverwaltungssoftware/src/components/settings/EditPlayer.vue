@@ -55,7 +55,13 @@
             <label for="email">E-Mail:</label>
             <input type="email" id="email" name="email" />
             <label for="position">Position:</label>
-            <input type="text" id="position" name="position" />
+            <select id="position" name="position">
+                <option value="Top-Lane">Top-Lane</option>
+                <option value="Jungle">Jungle</option>
+                <option value="Mid-lane">Mid-lane</option>
+                <option value="Bot-Lane">Bot-Lane</option>
+                <option value="Support">Support</option>
+            </select>
             <label for="eloPoints">Elo-Points:</label>
             <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
             <label for="deleted">deleted:</label>
@@ -101,7 +107,7 @@ export default {
     methods: {
         deletePlayer() {
             let selectElement = document.getElementById('SelectPlayername');
-            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+            let playerId = selectElement.options[selectElement.selectedIndex].id;
 
             fetch('http://localhost:3000/deletePlayer', {
                 method: 'PATCH',
@@ -110,7 +116,7 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    deletedPlayerId: idSelectedOption,
+                    deletedPlayerId: playerId,
                     valueDeleted: 1,
                 }),
             })
@@ -171,12 +177,13 @@ export default {
         },
         editPlayer() {
             let selectElement = document.getElementById('selectPlayerID');
-            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+            let playerId = selectElement.options[selectElement.selectedIndex].id;
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
             let email = document.getElementById('email').value;
-            let position = document.getElementById('position').value;
+            let selectElement2 = document.getElementById('position');
+            let position = selectElement2.options[selectElement2.selectedIndex].value;
             let eloPoints = document.getElementById('eloPoints').value;
             let deleted = document.getElementById('deleted').value;
 
@@ -186,7 +193,6 @@ export default {
                 firstname.length === 0 ||
                 lastname.length === 0 ||
                 email.length === 0 ||
-                position.length === 0 ||
                 eloPoints.length === 0
             ) {
                 this.textErrorMessage = 'Please fill out at least one form field!';
@@ -244,13 +250,13 @@ export default {
                 for (let i = 0; i < this.tablePlayer.length; i++) {
                     if (
                         this.tablePlayer[i].tableDataCellPlayername === playername &&
-                        this.tablePlayer[i].tableDataCellPlayerId === Number(idSelectedOption)
+                        this.tablePlayer[i].tableDataCellPlayerId === Number(playerId)
                     ) {
                         this.textErrorMessage = '';
                         break;
                     } else if (
                         this.tablePlayer[i].tableDataCellPlayername === playername &&
-                        this.tablePlayer[i].tableDataCellPlayerId !== Number(idSelectedOption)
+                        this.tablePlayer[i].tableDataCellPlayerId !== Number(playerId)
                     ) {
                         this.textErrorMessage = 'Playername already exists!';
                         return;
@@ -274,7 +280,7 @@ export default {
                     changedPosition: position,
                     changedEloPoints: eloPoints,
                     changedDeletedValue: deleted,
-                    playerId: idSelectedOption,
+                    playerId: playerId,
                 }),
             })
                 .then(response => {
