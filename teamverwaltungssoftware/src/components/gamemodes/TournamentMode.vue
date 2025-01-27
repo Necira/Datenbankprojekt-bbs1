@@ -1,51 +1,53 @@
 <template>
-  <div class="buttons">
-    <div class="teamOne">
-      <label for="teamOne">team one</label>
-      <select v-model="teamOne" id="teamOne">
-        <option v-for="team in availableteam" :key="team.id" :value="team.teamname">
-        {{ team.teamname }}
-        </option>
-      </select>
-     <button @click="setteamOne(teamOne)"> Set team one </button>
-    </div>
-    <div class="teamTwo">
-      <label for="teamTwo">team two</label>
-        <select v-model="teamTwo" id="teamTwo">
-          <option v-for="team in availableteam" :key="team.id" :value="team.teamname">
-          {{ team.teamname }}
-          </option>
+  <div class="selectTeams">
+    <div v-for="(teamPair, matchIndex) in matches" :key="matchIndex">
+      <TeamPicks :team="teamPair.teamOne" @update:teamName="setTeam(teamPair.teamOne, $event)" />
+      <TeamPicks :team="teamPair.teamTwo" @update:teamName="setTeam(teamPair.teamTwo, $event)" />
+      <button @click="startGame(teamPair.teamOne, teamPair.teamTwo)">Play Randomly</button>
+      <div class="chooseWinner">
+        <label for="chooseWinner">Choose Winner</label>
+        <select v-model="chooseWinner">
+          <option>{{ teams[teamPair.teamOne] }}</option>
+          <option>{{ teams[teamPair.teamTwo] }}</option>
         </select>
-      <button @click="setteamTwo(teamTwo)"> Set team two </button>
-    </div>
-    <button @click="startGame"> Play Randomly </button>
-    <div class="chooseWinner">
-      <label for="chooseWinner">choose Winner</label>
-        <select v-model="chooseWinner" id="chooseWinner">
-          <option>
-            {{ teamOne }}
-          </option>
-          <option>
-            {{ teamTwo }}
-          </option>
-        </select>
-        <button @click="setWinner(chooseWinner)"> set winner </button>
-        <h1 v-if="winner"> {{winner}} won </h1>
+        <button @click="setWinner(chooseWinner)">Set Winner</button>
+        <h1 v-if="winner">{{ winner }} won</h1>
       </div>
+    </div>
+
   </div>
-  <RouterLink to="/"> Back </RouterLink>
+  <RouterLink to="/">Back</RouterLink>
 </template>
 
 <script>
-import {gameLogic} from '../GameLogic/GameLogic.js'
+import { gameLogic } from '../GameLogic/GameLogic.js'
+import TeamPicks from '../Molecules/TeamPicks.vue';
+
 export default {
-  name: 'TeamVsTeam',
+  name: 'TournamentMode',
+  components: {
+    TeamPicks,
+  },
   data() {
     return {
-      teamOne: '', 
-      teamTwo: '', 
-      availableteam: [],
+      teams: {
+        teamOne: '',
+        teamTwo: '',
+        teamThree: '',
+        teamFour: '',
+        teamFive: '',
+        teamSix: '',
+        teamSeven: '',
+        teamEight: ''
+      },
       winner: '',
+      chooseWinner: '',
+      matches: [
+        { teamOne: 'teamOne', teamTwo: 'teamTwo' },
+        { teamOne: 'teamThree', teamTwo: 'teamFour' },
+        { teamOne: 'teamFive', teamTwo: 'teamSix' },
+        { teamOne: 'teamSeven', teamTwo: 'teamEight' },
+      ]
     };
   },
   created() {
@@ -57,95 +59,65 @@ export default {
         const response = await fetch('http://localhost:3000/getActiveteams');
         const data = await response.json();
         console.log('Fetched teams:', data); 
-        this.availableteam = data; 
       } catch (error) {
         console.error('Error fetching teams:', error.message);
       }
     },
-    setteamOne(teamName) {
-      this.teamOne = teamName; 
-      console.log(`team one set to: ${teamName}`);
+    
+    setTeam(teamName, selectedTeam) {
+      this.$set(this.teams, teamName, selectedTeam);
+      console.log(`${teamName} set to: ${selectedTeam}`);
     },
-    setteamTwo(teamName) {
-      this.teamTwo = teamName;
-      console.log(`team two set to: ${teamName}`);
-    },
-    async setWinner(winner) {
-      if (this.teamOne != this.teamTwo) {
-      
-      let loser = '';
-      if (winner) {
-        if (winner === this.teamOne) {
-          loser = this.teamTwo;
-        } else {
-          loser =  this.teamOne;
-        }
-      } else {
-        alert("nice try..choose Winner!! ;)")
-      }
-      try {
-          await fetch('http://localhost:3000/updateElo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, loser })
-          });
 
-          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        } catch (error) {
-          console.error('Error updating Elo points:', error.message);
-        }
-        this.winner = winner
-        } else {
-          alert('Choose two different teams');
-        }
-      },
-    async startGame() {
-      if (this.teamOne && this.teamTwo) {
-        const { winner, loser } = gameLogic(this.teamOne, this.teamTwo);
-        try {
-
-          await fetch('http://localhost:3000/updateElo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, loser })
-          });
-
-          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        } catch (error) {
-          console.error('Error updating Elo points:', error.message);
-        }
+    startGame(teamOne, teamTwo) {
+      if (this.teams[teamOne] && this.teams[teamTwo]) {
+        const { winner, loser } = gameLogic(this.teams[teamOne], this.teams[teamTwo]);
+        this.winner = winner;
+        console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
       } else {
         alert('Please select both players.');
       }
-    }
+    },
+
+    async setWinner(winner) {
+      const loser = winner === this.teams.teamOne ? this.teams.teamTwo : this.teams.teamOne;
+      
+      if (!winner) {
+        alert("Please choose a winner!");
+        return;
+      }
+      
+      try {
+        await fetch('http://localhost:3000/updateElo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ winner, loser })
+        });
+        console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+      } catch (error) {
+        console.error('Error updating Elo points:', error.message);
+      }
+    },
   }
 };
 </script>
 
 <style scoped>
-.buttons {
+.selectTeams {
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  margin: 30px;
+  align-items: center;
 }
 
-.teamOne {
-  display: flex;
-  justify-content: center;
+.chooseWinner {
+  margin-top: 10px;
+}
+
+button {
   margin: 10px;
 }
-
-.teamTwo {
-  display: flex;
-  justify-content: center;
-  margin: 10px;
-}
-
 </style>
