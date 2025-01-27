@@ -8,6 +8,7 @@
             <div>
                 <label for="Top-Lane">Top-Lane</label>
                 <select id="Top-Lane" name="Top-Lane">
+                    <option id="NULL">No player</option>
                     <option v-for="player in availablePlayerTopLane" :key="player" :id="player.id">
                         {{ player.name }}
                     </option>
@@ -16,6 +17,7 @@
             <div>
                 <label for="Jungle">Jungle</label>
                 <select id="Jungle" name="Jungle">
+                    <option id="NULL">No player</option>
                     <option v-for="player in availablePlayerJungle" :key="player" :id="player.id">
                         {{ player.name }}
                     </option>
@@ -24,6 +26,7 @@
             <div>
                 <label for="Mid-Lane">Mid-Lane</label>
                 <select id="Mid-Lane" name="Mid-Lane">
+                    <option id="NULL">No player</option>
                     <option v-for="player in availablePlayerMidLane" :key="player" :id="player.id">
                         {{ player.name }}
                     </option>
@@ -32,6 +35,7 @@
             <div>
                 <label for="Support">Support</label>
                 <select id="Support" name="Support">
+                    <option id="NULL">No player</option>
                     <option v-for="player in availablePlayerSupport" :key="player" :id="player.id">
                         {{ player.name }}
                     </option>
@@ -40,6 +44,7 @@
             <div>
                 <label for="Bot-Lane">Bot-Lane</label>
                 <select id="Bot-Lane" name="Bot-Lane">
+                    <option id="NULL">No player</option>
                     <option v-for="player in availablePlayerBotLane" :key="player" :id="player.id">
                         {{ player.name }}
                     </option>
@@ -81,32 +86,13 @@ export default {
             let selectElementBotLane = document.getElementById('Bot-Lane');
             let fifthPlayerId = selectElementBotLane.options[selectElementBotLane.selectedIndex].id;
             let choosenTeamMembers = [
-                firstPlayerId,
-                secondPlayerId,
-                thirdPlayerId,
-                fourthPlayerId,
-                fifthPlayerId,
+                Number(firstPlayerId),
+                Number(secondPlayerId),
+                Number(thirdPlayerId),
+                Number(fourthPlayerId),
+                Number(fifthPlayerId),
             ];
-
-            // Calculate Elo-Points, if team is complete
-            let eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
-                .then(response => response.json())
-                .then(data => {
-                    let calculatedEloPoints = 0;
-                    for (let i = 0; i < choosenTeamMembers.length; i++) {
-                        for (let a = 0; a < data.length; a++) {
-                            if (choosenTeamMembers[i] === data[a].playerID) {
-                                calculatedEloPoints += data[a].eloPoints;
-                            }
-                        }
-                    }
-                    let finalEloPoints = calculatedEloPoints / 5;
-                    return finalEloPoints;
-                })
-                .catch(error => {
-                    console.error(error);
-                    return;
-                });
+            let eloPointsTeam = 0;
 
             if (teamname.length === 0) {
                 this.textErrorMessage = 'Please fill out the entire form!';
@@ -133,6 +119,42 @@ export default {
                 } else {
                     this.textErrorMessage = '';
                 }
+            }
+
+            if (
+                firstPlayerId !== 'NULL' &&
+                secondPlayerId !== 'NULL' &&
+                thirdPlayerId !== 'NULL' &&
+                fourthPlayerId !== 'NULL' &&
+                fifthPlayerId !== 'NULL'
+            ) {
+                // Calculate Elo-Points, if team is complete
+                eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        let calculatedEloPoints = 0;
+                        for (let i = 0; i < choosenTeamMembers.length; i++) {
+                            for (let a = 0; a < data.length; a++) {
+                                if (choosenTeamMembers[i] === data[a].playerID) {
+                                    calculatedEloPoints += data[a].eloPoints;
+                                }
+                            }
+                        }
+
+                        let finalEloPoints = Math.round(calculatedEloPoints / 5);
+                        return finalEloPoints;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+            } else {
+                firstPlayerId = null;
+                secondPlayerId = null;
+                thirdPlayerId = null;
+                fourthPlayerId = null;
+                fifthPlayerId = null;
+                eloPointsTeam++;
             }
 
             fetch('http://localhost:3000/createNewTeam', {
