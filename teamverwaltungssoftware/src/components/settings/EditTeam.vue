@@ -218,7 +218,10 @@ export default {
                     .then(activePlayerData => {
                         let activePlayer = [];
                         for (let i = 0; i < activePlayerData.length; i++) {
-                            activePlayer.push(activePlayerData[i].playerID);
+                            activePlayer.push({
+                                id: activePlayerData[i].playerID,
+                                name: activePlayerData[i].playername,
+                            });
                         }
 
                         fetch('http://localhost:3000/getActiveTeammember')
@@ -226,7 +229,10 @@ export default {
                             .then(activeTeammemberData => {
                                 let activeTeammember = [];
                                 for (let i = 0; i < activeTeammemberData.length; i++) {
-                                    activeTeammember.push(activeTeammemberData[i].playerID);
+                                    activeTeammember.push({
+                                        id: activeTeammemberData[i].playerID,
+                                        name: activeTeammemberData[i].playername,
+                                    });
                                 }
 
                                 // Display only player that are not deleted and are not in a team yet
@@ -234,31 +240,41 @@ export default {
                                 for (let i = 0; i < activeTeammember.length; i++) {
                                     for (let a = 0; a < activePlayer.length; a++) {
                                         if (
-                                            activeTeammember[i] !== activePlayer[a] &&
-                                            !availableTeammember.includes(activePlayer[a]) &&
-                                            !activeTeammember.includes(activePlayer[a])
+                                            activeTeammember[i].id !== activePlayer[a].id &&
+                                            !availableTeammember.some(
+                                                element =>
+                                                    element.id === activePlayer[a].id &&
+                                                    element.name === activePlayer[a].name,
+                                            ) &&
+                                            !activeTeammember.some(
+                                                element =>
+                                                    element.id === activePlayer[a].id &&
+                                                    element.name === activePlayer[a].name,
+                                            )
                                         ) {
-                                            availableTeammember.push(activePlayer[a]);
+                                            availableTeammember.push({
+                                                id: activePlayer[a].id,
+                                                name: activePlayer[a].name,
+                                            });
                                         }
                                     }
                                 }
 
+                                this.availablePlayer.push({ id: 'NULL', name: 'no player' });
                                 if (availableTeammember.length > 0) {
-                                    this.availablePlayer.push({ id: 'NULL', name: 'no player' });
                                     for (let i = 0; i < availableTeammember.length; i++) {
                                         // Push data into array in order to display it with v-for
                                         this.availablePlayer.push({
-                                            id: availableTeammember[i],
-                                            name: availableTeammember[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
                                 } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
-                                    this.availablePlayer.push({ id: 'NULL', name: 'no player' });
                                     for (let i = 0; i < activePlayer.length; i++) {
                                         // Push data into array in order to display it with v-for
                                         this.availablePlayer.push({
-                                            id: activePlayer[i],
-                                            name: activePlayer[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
                                 }
@@ -406,7 +422,6 @@ export default {
             } else {
                 for (let i = 1; i <= this.tableTeams.length; i++) {
                     let currentRow = tbodyRows[i];
-                    console.log(currentRow);
 
                     for (let i = 0; i < currentRow.cells.length; i++) {
                         let currentTableDataCell = currentRow.cells[i];
