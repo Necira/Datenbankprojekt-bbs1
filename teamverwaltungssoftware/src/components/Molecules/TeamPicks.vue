@@ -2,8 +2,8 @@
   <div class="teamPick">
     <label :for="team">Choose {{ team }}</label>
     <select v-model="selectedTeam" :id="team">
-      <option v-for="team in availableTeams" :key="team" :value="team">
-        {{ team }}
+      <option v-for="team in availableTeams" :key="team.teamID" :value="team.teamname">
+        {{ team.teamname }}
       </option>
     </select>
   </div>
@@ -14,10 +14,7 @@ export default {
   name: 'TeamPicks',
   props: {
     team: String, 
-    availableTeams: {
-      type: Array,
-      default: () => []
-    }
+    availableTeams: Array, 
   },
   data() {
     return {
@@ -26,7 +23,7 @@ export default {
   },
   watch: {
     selectedTeam(newTeam) {
-      this.$emit('update:teamName', newTeam);
+      this.$emit('update:teamName', newTeam);  
     }
   }
 };

@@ -37,82 +37,87 @@
 <script>
 import {gameLogic} from '../GameLogic/GameLogic.js'
 export default {
-  name: 'OneVsOne',
-  data() {
-    return {
-      playerOne: '', 
-      playerTwo: '', 
-      availablePlayer: [],
-      winner: '',
-    };
-  },
-  created() {
-    this.fetchPlayers(); 
-  },
-  methods: {
-    async fetchPlayers() {
-      try {
-        const response = await fetch('http://localhost:3000/getActivePlayer');
-        const data = await response.json();
-        console.log('Fetched players:', data); 
-        this.availablePlayer = data; 
-      } catch (error) {
-        console.error('Error fetching players:', error.message);
-      }
+    name: 'OneVsOne',
+    data() {
+        return {
+            playerOne: '',
+            playerTwo: '',
+            availablePlayer: [],
+            winner: '',
+        };
     },
-    async setWinner(winner) {
-      if (this.playerOne != this.playerTwo && this.playerOne && this.playerTwo) {
-        let loser = '';
-        if (winner) {
-          if (winner === this.playerOne) {
-            loser = this.playerTwo;
-          } else {
-            loser =  this.playerOne;
-          }
-        } else {
-          alert("nice try..choose Winner!! ;)")
-        }
-        try {
-          await fetch('http://localhost:3000/updateElo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, loser })
-          });
-
-          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        } catch (error) {
-          console.error('Error updating Elo points:', error.message);
-        }
-        this.winner = winner
-      } else {
-        alert('Choose two different players and no dublicates');
-      }
+    created() {
+        this.fetchPlayers();
     },
-    async startGame() {
-      if (this.playerOne && this.playerTwo && this.playerOne != this.playerTwo) {
-        const { winner, loser } = gameLogic(this.playerOne, this.playerTwo);
-        try {
-          await fetch('http://localhost:3000/updateElo', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, loser })
-          });
-
-          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        } catch (error) {
-          console.error('Error updating Elo points:', error.message);
+    methods: {
+        async fetchPlayers() {
+            try {
+                const response = await fetch('http://localhost:3000/getActivePlayer');
+                const data = await response.json();
+                console.log('Fetched players:', data);
+                this.availablePlayer = data;
+            }
+            catch (error) {
+                console.error('Error fetching players:', error.message);
+            }
+        },
+        async setWinner(winner) {
+            if (this.playerOne != this.playerTwo && this.playerOne && this.playerTwo) {
+                let loser = '';
+                if (winner) {
+                    if (winner === this.playerOne) {
+                        loser = this.playerTwo;
+                    }
+                    else {
+                        loser = this.playerOne;
+                    }
+                }
+                else {
+                    alert("nice try..choose Winner!! ;)");
+                }
+                try {
+                    await fetch('http://localhost:3000/updateElo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ winner, loser })
+                    });
+                    console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+                    alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+                }
+                catch (error) {
+                    console.error('Error updating Elo points:', error.message);
+                }
+                this.winner = winner;
+            }
+            else {
+                alert('Choose two different players and no dublicates');
+            }
+        },
+        async startGame() {
+            if (this.playerOne && this.playerTwo && this.playerOne != this.playerTwo) {
+                const { winner, loser } = gameLogic(this.playerOne, this.playerTwo);
+                try {
+                    await fetch('http://localhost:3000/updateElo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ winner, loser })
+                    });
+                    console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+                    alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+                }
+                catch (error) {
+                    console.error('Error updating Elo points:', error.message);
+                }
+            }
+            else {
+                alert('Please select both players and no dublicates.');
+            }
         }
-      } else {
-        alert('Please select both players and no dublicates.');
-      }
-    }
-  }
+    },
 }
 
 </script>

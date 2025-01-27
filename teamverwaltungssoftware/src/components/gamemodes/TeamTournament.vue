@@ -1,8 +1,9 @@
 <template>
+  <h2> TEST </h2>
   <div class="selectTeams">
     <div v-for="(teamPair, matchIndex) in matches" :key="matchIndex">
-      <TeamPicks :team="teamPair.teamOne" @update:teamName="setTeam(teamPair.teamOne, $event)" />
-      <TeamPicks :team="teamPair.teamTwo" @update:teamName="setTeam(teamPair.teamTwo, $event)" />
+      <TeamPicks :team="teamPair.teamOne" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamOne, $event)" />
+      <TeamPicks :team="teamPair.teamTwo" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamTwo, $event)" />
       <button @click="startGame(teamPair.teamOne, teamPair.teamTwo)">Play Randomly</button>
       <div class="chooseWinner">
         <label for="chooseWinner">Choose Winner</label>
@@ -14,17 +15,16 @@
         <h1 v-if="winner">{{ winner }} won</h1>
       </div>
     </div>
-
   </div>
   <RouterLink to="/">Back</RouterLink>
 </template>
 
 <script>
 import { gameLogic } from '../GameLogic/GameLogic.js'
-import TeamPicks from '../Molecules/TeamPicks.vue';
+import TeamPicks from '../Molecules/TeamPicks.vue'
 
 export default {
-  name: 'TournamentMode',
+  name: 'TeamTournament',
   components: {
     TeamPicks,
   },
@@ -40,6 +40,7 @@ export default {
         teamSeven: '',
         teamEight: ''
       },
+      availableTeams: [],
       winner: '',
       chooseWinner: '',
       matches: [
@@ -51,21 +52,23 @@ export default {
     };
   },
   created() {
-    this.fetchteams(); 
+    this.fetchteams();  // Beim Laden der Komponente Teams abrufen
   },
   methods: {
     async fetchteams() {
+      console.log("fetching teams...");
       try {
         const response = await fetch('http://localhost:3000/getActiveteams');
         const data = await response.json();
         console.log('Fetched teams:', data); 
+        this.availableTeams = data; 
       } catch (error) {
         console.error('Error fetching teams:', error.message);
       }
     },
     
     setTeam(teamName, selectedTeam) {
-      this.$set(this.teams, teamName, selectedTeam);
+      this.teams[teamName] = selectedTeam;  
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
 
@@ -89,7 +92,7 @@ export default {
       }
       
       try {
-        await fetch('http://localhost:3000/updateElo', {
+        await fetch('http://localhost:3000/updateWinner', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
