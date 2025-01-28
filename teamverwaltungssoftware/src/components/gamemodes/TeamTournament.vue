@@ -53,15 +53,13 @@
 </template>
 
 <script>
-import { gameLogic } from '../GameLogic/GameLogic.js';
+import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
-import WinnerMessage from '../Atoms/WinnerMessage.vue';
 
 export default {
   name: 'TeamTournament',
   components: {
     TeamPicks,
-    WinnerMessage,
   },
   data() {
     return {
@@ -114,7 +112,7 @@ export default {
       const teamTwo = match.teamTwo;
 
       if (this.teams[teamOne] && this.teams[teamTwo]) {
-        const { winner } = gameLogic(this.teams[teamOne], this.teams[teamTwo]);
+        const { winner } = randomizer(this.teams[teamOne], this.teams[teamTwo]);
         match.chooseWinner = winner;
         this.advanceToNextRound(roundIndex);
       } else {

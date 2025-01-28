@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import {gameLogic} from '../GameLogic/GameLogic.js'
+import {randomizer} from '../GameLogic/Randomizer.js'
 import TeamPicks from '../Atoms/TeamPicks.vue'
 import WinnerMessage from '../Atoms/WinnerMessage.vue'
 
@@ -94,7 +94,7 @@ export default {
       },
     async setRandomWinner() {
       if (this.teamOne && this.teamTwo && this.teamOne != this.teamTwo) {
-        const { winner, loser } = gameLogic(this.teamOne, this.teamTwo);
+        const { winner, loser } = randomizer(this.teamOne, this.teamTwo);
         try {
 
           await fetch('http://localhost:3000/updateElo', {
