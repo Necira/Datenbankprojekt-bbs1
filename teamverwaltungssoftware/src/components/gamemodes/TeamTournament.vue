@@ -1,56 +1,65 @@
 <template>
-  <h2> Tournament </h2>
-  <div class="selectTeams">
-    <div v-for="(round, roundIndex) in rounds" :key="'round-' + roundIndex" class="round">
-      <h3>Round {{ roundIndex + 1 }}</h3>
-      <div v-for="(teamPair, matchIndex) in round" :key="'match-' + matchIndex">
-        <TeamPicks 
-          :team="teamPair.teamOne" 
-          :availableTeams="availableTeams" 
-          @update:teamName="setTeam(teamPair.teamOne, $event)" 
-        />
-        <TeamPicks 
-          :team="teamPair.teamTwo" 
-          :availableTeams="availableTeams" 
-          @update:teamName="setTeam(teamPair.teamTwo, $event)" 
-        />
-        
-        <button 
-          v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]" 
-          @click="setRandomWinner(roundIndex, matchIndex)"
-        >
-          Play Randomly
-        </button>
-        
+  <div class="tournament">
+    <h2>Tournament</h2>
+    <div class="selectTeams">
+      <div 
+        v-for="(round, roundIndex) in rounds" 
+        :key="'round-' + roundIndex" 
+        class="round"
+      >
+        <h3>Round {{ roundIndex + 1 }}</h3>
         <div 
-          class="chooseWinner" 
-          v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]"
+          v-for="(teamPair, matchIndex) in round" 
+          :key="'match-' + matchIndex" 
+          class="match"
         >
-          <label for="chooseWinner">Choose Winner</label>
-          <select v-model="teamPair.chooseWinner">
-            <option :value="teams[teamPair.teamOne]">
-              {{ teams[teamPair.teamOne] }}
-            </option>
-            <option :value="teams[teamPair.teamTwo]">
-              {{ teams[teamPair.teamTwo] }}
-            </option>
-          </select>
-          <button 
-            @click="setWinner(teamPair.chooseWinner, roundIndex, matchIndex)"
-          >
-            Set Winner
-          </button>
+          <div class="teams">
+            <TeamPicks 
+              :team="teamPair.teamOne" 
+              :availableTeams="availableTeams" 
+              @update:teamName="setTeam(teamPair.teamOne, $event)" 
+            />
+            <TeamPicks 
+              :team="teamPair.teamTwo" 
+              :availableTeams="availableTeams" 
+              @update:teamName="setTeam(teamPair.teamTwo, $event)" 
+            />
+          </div>
+          
+          <div v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]" class="actions">
+            <button @click="setRandomWinner(roundIndex, matchIndex)" class="random-winner">
+              🎲 Play Randomly
+            </button>
+            <div class="chooseWinner">
+              <label for="chooseWinner">Choose Winner</label>
+              <select v-model="teamPair.chooseWinner" class="dropdown">
+                <option :value="teams[teamPair.teamOne]">
+                  {{ teams[teamPair.teamOne] }}
+                </option>
+                <option :value="teams[teamPair.teamTwo]">
+                  {{ teams[teamPair.teamTwo] }}
+                </option>
+              </select>
+              <button 
+                @click="setWinner(teamPair.chooseWinner, roundIndex, matchIndex)" 
+                class="set-winner"
+              >
+                🏆 Set Winner
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div v-if="finalWinner" class="champion">
+        <h3>Champion: {{ finalWinner }}</h3>
       </div>
     </div>
 
-    <div v-if="finalWinner">
-      <h3>Champion: {{ finalWinner }}</h3>
-    </div>
-
-    <RouterLink to="/">Back</RouterLink>
+    <RouterLink to="/" class="back-link">← Back</RouterLink>
   </div>
 </template>
+
 
 <script>
 import { randomizer } from '../GameLogic/Randomizer.js';
@@ -161,21 +170,86 @@ export default {
 </script>
 
 <style scoped>
-.selectTeams {
+.tournament {
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f4f4;
+  border-radius: 12px;
+  max-width: 800px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.round {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.match {
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.round {
-  margin-bottom: 20px;
+.teams {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.random-winner,
+.set-winner {
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.random-winner:hover,
+.set-winner:hover {
+  background-color: #0056b3;
 }
 
 .chooseWinner {
   margin-top: 10px;
 }
 
-button {
-  margin: 10px;
+.dropdown {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.champion {
+  font-size: 18px;
+  font-weight: bold;
+  color: #4caf50;
+  margin-top: 20px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  color: #0056b3;
 }
 </style>

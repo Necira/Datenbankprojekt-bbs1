@@ -1,149 +1,219 @@
 <template>
-  <div class="buttons">
-    <div class="buttons">
-      <PlayerPicks :player="playerOne" :availablePlayers="availablePlayers" @update:playerName="setPlayer('playerOne', $event)" />
-      <PlayerPicks :player="playerTwo" :availablePlayers="availablePlayers" @update:playerName="setPlayer('playerTwo', $event)" />
+  <div class="one-vs-one">
+    <div class="player-picks">
+      <PlayerPicks 
+        :player="'Player One'" 
+        :availablePlayers="availablePlayers" 
+        @update:playerName="setPlayer('playerOne', $event)" 
+      />
+      <PlayerPicks 
+        :player="'Player Two'" 
+        :availablePlayers="availablePlayers" 
+        @update:playerName="setPlayer('playerTwo', $event)" 
+      />
     </div>
+    <div class="actions" v-if="playerOne && playerTwo">
+      <button class="play-randomly" @click="startGame" v-if="!winner">🎲 Play Randomly</button>
+      <div class="choose-winner">
+        <label for="chooseWinner">Choose Winner</label>
+        <select v-model="chooseWinner" id="chooseWinner" class="dropdown">
+          <option :value="playerOne" v-if="playerOne">{{ playerOne }}</option>
+          <option :value="playerTwo" v-if="playerTwo">{{ playerTwo }}</option>
+        </select>
+        <button class="set-winner" @click="setWinner(chooseWinner)">🏆 Set Winner</button>
+      </div>
+    </div>
+    <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />
+    <RouterLink to="/" class="back-link">← Back to Home</RouterLink>
   </div>
-  <button @click="startGame" v-if="!winner"> Play Randomly </button>
-  <div class="chooseWinner">
-  <label for="chooseWinner">choose Winner</label>
-      <select v-model="chooseWinner" id="chooseWinner">
-        <option>
-          {{ playerOne }}
-        </option>
-        <option>
-          {{ playerTwo }}
-        </option>
-      </select>
-      <button @click="setWinner(chooseWinner)"> set winner </button>
-      <WinnerMessage v-if='winner' :winner="winner" :eloPoints="eloPoints"/> 
-    </div>
-  <RouterLink to="/"> Back </RouterLink>
 </template>
 
+
+
 <script>
-import {randomizer} from '../GameLogic/Randomizer.js'
-import PlayerPicks from '../Atoms/PlayerPicks.vue'
-import WinnerMessage from '../Atoms/WinnerMessage.vue'
+import { randomizer } from '../GameLogic/Randomizer.js';
+import PlayerPicks from '../Atoms/PlayerPicks.vue';
+import WinnerMessage from '../Atoms/WinnerMessage.vue';
 
 export default {
-    components: {
-      PlayerPicks,
-      WinnerMessage,
+  components: {
+    PlayerPicks,
+    WinnerMessage,
+  },
+  name: 'OneVsOne',
+  data() {
+    return {
+      playerOne: '',
+      playerTwo: '',
+      availablePlayers: [],
+      winner: '',
+      chooseWinner: '',
+      eloPoints: null,
+    };
+  },
+  created() {
+    this.fetchPlayers();
+  },
+  methods: {
+    async fetchPlayers() {
+      try {
+        const response = await fetch('http://localhost:3000/getActivePlayer');
+        const data = await response.json();
+        console.log('Fetched players:', data);
+        this.availablePlayers = data;
+      } catch (error) {
+        console.error('Error fetching players:', error.message);
+      }
     },
-    name: 'OneVsOne',
-    data() {
-        return {
-            playerOne: '',
-            playerTwo: '',
-            availablePlayers: [],
-            winner: '',
-        };
+    setPlayer(playerName, selectedPlayer) {
+      if (playerName === 'playerOne') {
+        this.playerOne = selectedPlayer;
+      } else if (playerName === 'playerTwo') {
+        this.playerTwo = selectedPlayer;
+      }
+      console.log(`${playerName} set to: ${selectedPlayer}`);
     },
-    created() {
-        this.fetchPlayers();
-    },
-    methods: {
-        async fetchPlayers() {
-            try {
-                const response = await fetch('http://localhost:3000/getActivePlayer');
-                const data = await response.json();
-                console.log('Fetched players:', data);
-                this.availablePlayers = data;
-            }
-            catch (error) {
-                console.error('Error fetching players:', error.message);
-            }
-        },
-        setPlayer(playerName, selectedPlayer) {
-          if (playerName === 'playerOne') {
-            this.playerOne = selectedPlayer;
-          } else if (playerName === 'playerTwo') {
-            this.playerTwo = selectedPlayer;
-          }
-          console.log(`${playerName} set to: ${selectedPlayer}`);
-        },
-        async setWinner(winner) {
-          if (this.playerOne != this.playerTwo && this.playerOne && this.playerTwo) {
-              let loser = '';
-              if (winner) {
-                if (winner === this.playerOne) {
-                    loser = this.playerTwo;
-                }
-                else {
-                    loser = this.playerOne;
-                }
-              }
-              else {
-                  alert("nice try..choose Winner!! ;)");
-              }
-              try {
-                  await fetch('http://localhost:3000/updateElo', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ winner, loser })
-                  });
-                  console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-                  alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-              }
-              catch (error) {
-                  console.error('Error updating Elo points:', error.message);
-              }
-              this.winner = winner;
-          }
-          else {
-              alert('Choose two different players and no dublicates');
-          }
-        },
-        async startGame() {
-            if (this.playerOne && this.playerTwo && this.playerOne != this.playerTwo) {
-                const { winner, loser } = randomizer(this.playerOne, this.playerTwo);
-                try {
-                    await fetch('http://localhost:3000/updateElo', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ winner, loser })
-                    });
-                    this.eloPoints = 'placeholder'
-                    console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-                    alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-                }
-                catch (error) {
-                    console.error('Error updating Elo points:', error.message);
-                }
-            }
-            else {
-                alert('Please select both players and no dublicates.');
-            }
+    async setWinner(winner) {
+      if (this.playerOne !== this.playerTwo && this.playerOne && this.playerTwo) {
+        const loser = winner === this.playerOne ? this.playerTwo : this.playerOne;
+        try {
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ winner, loser }),
+          });
+          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        } catch (error) {
+          console.error('Error updating Elo points:', error.message);
         }
+        this.winner = winner;
+      } else {
+        alert('Choose two different players without duplicates.');
+      }
     },
-}
-
+    async startGame() {
+      if (this.playerOne && this.playerTwo && this.playerOne !== this.playerTwo) {
+        const { winner, loser } = randomizer(this.playerOne, this.playerTwo);
+        try {
+          await fetch('http://localhost:3000/updateElo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ winner, loser }),
+          });
+          this.eloPoints = 'placeholder'; 
+          console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+        } catch (error) {
+          console.error('Error updating Elo points:', error.message);
+        }
+      } else {
+        alert('Please select both players and ensure they are different.');
+      }
+    },
+  },
+};
 </script>
 
+
 <style scoped>
-.buttons {
+.one-vs-one {
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  margin: 30px;
+  align-items: center;
+  font-family: 'Roboto', sans-serif;
+  padding: 30px;
+  gap: 20px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 50px auto;
 }
 
-.playerOne {
+.player-picks {
   display: flex;
-  justify-content: center;
-  margin: 10px;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }
 
-.playerTwo {
+.actions {
   display: flex;
-  justify-content: center;
-  margin: 10px;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
 }
 
+.play-randomly {
+  padding: 15px 25px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.play-randomly:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.choose-winner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choose-winner label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.dropdown {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+}
+
+.set-winner {
+  padding: 12px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.set-winner:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.back-link {
+  font-size: 16px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 20px;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back-link:hover {
+  color: #0056b3;
+  transform: scale(1.05);
+}
 </style>
