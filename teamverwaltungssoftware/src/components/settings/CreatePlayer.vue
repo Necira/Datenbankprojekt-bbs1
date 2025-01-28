@@ -1,25 +1,3 @@
-<template>
-    <h1>Create a new player</h1>
-    <form class="create-player-form">
-        <label for="playername">Playername:</label>
-        <input type="text" id="playername" name="playername" />
-        <label for="firstname">firstname:</label>
-        <input type="text" id="firstname" name="firstname" />
-        <label for="lastname">lastname:</label>
-        <input type="text" id="lastname" name="lastname" />
-        <label for="email">E-Mail:</label>
-        <input type="email" id="email" name="email" />
-        <label for="position">Position:</label>
-        <input type="text" id="position" name="position" />
-        <label for="eloPoints">Elo-Points:</label>
-        <input type="number" min="0" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="saveNewPlayer">Save player</button>
-    </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
-    <RouterLink to="/PlayerSettings"> Back </RouterLink>
-</template>
-
 <script>
 export default {
     data() {
@@ -31,11 +9,14 @@ export default {
     },
     methods: {
         async saveNewPlayer() {
+            this.textSuccessMessage = '';
+
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
             let email = document.getElementById('email').value;
-            let position = document.getElementById('position').value;
+            let selectElement = document.getElementById('position');
+            let position = selectElement.options[selectElement.selectedIndex].value;
             let eloPoints = document.getElementById('eloPoints').value;
 
             if (
@@ -43,13 +24,36 @@ export default {
                 firstname.length === 0 ||
                 lastname.length === 0 ||
                 email.length === 0 ||
-                position.length === 0 ||
                 eloPoints.length === 0
             ) {
                 this.textErrorMessage = 'Please fill out the entire form!';
                 return;
             } else {
                 this.textErrorMessage = '';
+
+                if (eloPoints > 4000) {
+                    this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                    return;
+                }
+
+                let playernameExists = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+                            if (playername === data[i].playername) {
+                                return true;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+
+                if (playernameExists) {
+                    this.textErrorMessage = 'Playername already exists!';
+                    return;
+                }
 
                 const regExEmail = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,4}$/;
                 if (!email.match(regExEmail)) {
@@ -92,6 +96,15 @@ export default {
                 })
                     .then(response => {
                         if (response.ok) {
+                            let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
+
+                            // Set Values of user input to default
+                            createPlayerForm[1].value = '';
+                            createPlayerForm[3].value = '';
+                            createPlayerForm[5].value = '';
+                            createPlayerForm[7].value = '';
+                            createPlayerForm[11].value = '';
+
                             this.textSuccessMessage = 'Added new player successfully!';
                             return response.json();
                         }
@@ -106,11 +119,37 @@ export default {
 };
 </script>
 
-
+<template>
+    <h1>Create a new player</h1>
+    <form class="createPlayerForm" id="createPlayerForm">
+        <label for="playername">Playername:</label>
+        <input type="text" id="playername" name="playername" />
+        <label for="firstname">firstname:</label>
+        <input type="text" id="firstname" name="firstname" />
+        <label for="lastname">lastname:</label>
+        <input type="text" id="lastname" name="lastname" />
+        <label for="email">E-Mail:</label>
+        <input type="email" id="email" name="email" />
+        <label for="position">Position:</label>
+        <select id="position" name="position">
+            <option value="Top-Lane">Top-Lane</option>
+            <option value="Jungle">Jungle</option>
+            <option value="Mid-lane">Mid-lane</option>
+            <option value="Bot-Lane">Bot-Lane</option>
+            <option value="Support">Support</option>
+        </select>
+        <label for="eloPoints">Elo-Points:</label>
+        <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
+        <button type="button" @click="saveNewPlayer">Save player</button>
+    </form>
+    <span class="success-message"> {{ textSuccessMessage }}</span>
+    <span class="error-message">{{ textErrorMessage }}</span>
+    <RouterLink to="/PlayerSettings"> Back </RouterLink>
+</template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.create-player-form {
+.createPlayerForm {
     display: flex;
     justify-content: center;
     flex-direction: column;

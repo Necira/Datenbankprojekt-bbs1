@@ -55,9 +55,15 @@
             <label for="email">E-Mail:</label>
             <input type="email" id="email" name="email" />
             <label for="position">Position:</label>
-            <input type="text" id="position" name="position" />
+            <select id="position" name="position">
+                <option value="Top-Lane">Top-Lane</option>
+                <option value="Jungle">Jungle</option>
+                <option value="Mid-lane">Mid-lane</option>
+                <option value="Bot-Lane">Bot-Lane</option>
+                <option value="Support">Support</option>
+            </select>
             <label for="eloPoints">Elo-Points:</label>
-            <input type="number" min="0" id="eloPoints" name="eloPoints" />
+            <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <button type="button" @click="editPlayer">Edit player</button>
@@ -101,7 +107,7 @@ export default {
     methods: {
         deletePlayer() {
             let selectElement = document.getElementById('SelectPlayername');
-            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+            let playerId = selectElement.options[selectElement.selectedIndex].id;
 
             fetch('http://localhost:3000/deletePlayer', {
                 method: 'PATCH',
@@ -110,7 +116,7 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    deletedPlayerId: idSelectedOption,
+                    deletedPlayerId: playerId,
                     valueDeleted: 1,
                 }),
             })
@@ -171,12 +177,13 @@ export default {
         },
         editPlayer() {
             let selectElement = document.getElementById('selectPlayerID');
-            let idSelectedOption = selectElement.options[selectElement.selectedIndex].id;
+            let playerId = selectElement.options[selectElement.selectedIndex].id;
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
             let lastname = document.getElementById('lastname').value;
             let email = document.getElementById('email').value;
-            let position = document.getElementById('position').value;
+            let selectElement2 = document.getElementById('position');
+            let position = selectElement2.options[selectElement2.selectedIndex].value;
             let eloPoints = document.getElementById('eloPoints').value;
             let deleted = document.getElementById('deleted').value;
 
@@ -186,10 +193,16 @@ export default {
                 firstname.length === 0 ||
                 lastname.length === 0 ||
                 email.length === 0 ||
-                position.length === 0 ||
                 eloPoints.length === 0
             ) {
                 this.textErrorMessage = 'Please fill out at least one form field!';
+                return;
+            } else {
+                this.textErrorMessage = '';
+            }
+
+            if (eloPoints > 4000) {
+                this.textErrorMessage = 'Maximum Elo-Points are 4000';
                 return;
             } else {
                 this.textErrorMessage = '';
@@ -233,6 +246,26 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            if (playername.length > 0) {
+                for (let i = 0; i < this.tablePlayer.length; i++) {
+                    if (
+                        this.tablePlayer[i].tableDataCellPlayername === playername &&
+                        this.tablePlayer[i].tableDataCellPlayerId === Number(playerId)
+                    ) {
+                        this.textErrorMessage = '';
+                        break;
+                    } else if (
+                        this.tablePlayer[i].tableDataCellPlayername === playername &&
+                        this.tablePlayer[i].tableDataCellPlayerId !== Number(playerId)
+                    ) {
+                        this.textErrorMessage = 'Playername already exists!';
+                        return;
+                    }
+                }
+            } else {
+                this.textErrorMessage = '';
+            }
+
             fetch('http://localhost:3000/updatePlayer', {
                 method: 'PUT',
                 headers: {
@@ -247,7 +280,7 @@ export default {
                     changedPosition: position,
                     changedEloPoints: eloPoints,
                     changedDeletedValue: deleted,
-                    playerId: idSelectedOption,
+                    playerId: playerId,
                 }),
             })
                 .then(response => {
@@ -303,11 +336,11 @@ export default {
             if (searchvalue.length === 0) {
                 this.textResultMessage = '';
 
-                for (let i = 1; i < 9; i++) {
+                for (let i = 1; i <= this.tablePlayer.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i < 9; i++) {
+                for (let i = 1; i <= this.tablePlayer.length; i++) {
                     let currentRow = tbodyRows[i];
 
                     for (let i = 0; i < currentRow.cells.length; i++) {

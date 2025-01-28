@@ -175,6 +175,7 @@ export default {
             this.textSuccessMessage = '';
 
             if (this.openDeleteTeamPopUpWindow) {
+                this.deleteableTeams = [];
                 //  Display all available player in the select-option-fields
                 fetch('http://localhost:3000/getActiveTeams')
                     .then(response => response.json())
@@ -193,9 +194,11 @@ export default {
         openAndCloseEditTeamForm() {
             this.openEditTeamForm = !this.openEditTeamForm;
             this.textSuccessMessage = '';
-            this.availablePlayer = [];
+            this.textErrorMessage = '';
 
             if (this.openEditTeamForm) {
+                this.availablePlayer = [];
+                this.editableTeams = [];
                 // Display all available player in the select-option-field
                 fetch('http://localhost:3000/getTeams')
                     .then(response => response.json())
@@ -215,7 +218,10 @@ export default {
                     .then(activePlayerData => {
                         let activePlayer = [];
                         for (let i = 0; i < activePlayerData.length; i++) {
-                            activePlayer.push(activePlayerData[i].playerID);
+                            activePlayer.push({
+                                id: activePlayerData[i].playerID,
+                                name: activePlayerData[i].playername,
+                            });
                         }
 
                         fetch('http://localhost:3000/getActiveTeammember')
@@ -223,7 +229,10 @@ export default {
                             .then(activeTeammemberData => {
                                 let activeTeammember = [];
                                 for (let i = 0; i < activeTeammemberData.length; i++) {
-                                    activeTeammember.push(activeTeammemberData[i].playerID);
+                                    activeTeammember.push({
+                                        id: activeTeammemberData[i].playerID,
+                                        name: activeTeammemberData[i].playername,
+                                    });
                                 }
 
                                 // Display only player that are not deleted and are not in a team yet
@@ -231,22 +240,43 @@ export default {
                                 for (let i = 0; i < activeTeammember.length; i++) {
                                     for (let a = 0; a < activePlayer.length; a++) {
                                         if (
-                                            activeTeammember[i] !== activePlayer[a] &&
-                                            !availableTeammember.includes(activePlayer[a]) &&
-                                            !activeTeammember.includes(activePlayer[a])
+                                            activeTeammember[i].id !== activePlayer[a].id &&
+                                            !availableTeammember.some(
+                                                element =>
+                                                    element.id === activePlayer[a].id &&
+                                                    element.name === activePlayer[a].name,
+                                            ) &&
+                                            !activeTeammember.some(
+                                                element =>
+                                                    element.id === activePlayer[a].id &&
+                                                    element.name === activePlayer[a].name,
+                                            )
                                         ) {
-                                            availableTeammember.push(activePlayer[a]);
+                                            availableTeammember.push({
+                                                id: activePlayer[a].id,
+                                                name: activePlayer[a].name,
+                                            });
                                         }
                                     }
                                 }
 
                                 this.availablePlayer.push({ id: 'NULL', name: 'no player' });
-                                for (let i = 0; i < availableTeammember.length; i++) {
-                                    // Push data into array in order to display it with v-for
-                                    this.availablePlayer.push({
-                                        id: availableTeammember[i],
-                                        name: availableTeammember[i],
-                                    });
+                                if (availableTeammember.length > 0) {
+                                    for (let i = 0; i < availableTeammember.length; i++) {
+                                        // Push data into array in order to display it with v-for
+                                        this.availablePlayer.push({
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
+                                        });
+                                    }
+                                } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
+                                    for (let i = 0; i < activePlayer.length; i++) {
+                                        // Push data into array in order to display it with v-for
+                                        this.availablePlayer.push({
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
+                                        });
+                                    }
                                 }
                             })
                             .catch(error => {
@@ -335,6 +365,28 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            // let teamdata = this.tableTeams.some(element => element.tableDataCellTeamname === teamname);
+
+            if (teamname.length > 0) {
+                for (let i = 0; i < this.tableTeams.length; i++) {
+                    if (
+                        this.tableTeams[i].tableDataCellTeamname === teamname &&
+                        this.tableTeams[i].tableDataCellTeamID === Number(teamId)
+                    ) {
+                        this.textErrorMessage = '';
+                        break;
+                    } else if (
+                        this.tableTeams[i].tableDataCellTeamname === teamname &&
+                        this.tableTeams[i].tableDataCellTeamID !== Number(teamId)
+                    ) {
+                        this.textErrorMessage = 'Teamname already exists!';
+                        return;
+                    }
+                }
+            } else {
+                this.textErrorMessage = '';
+            }
+
             fetch('http://localhost:3000/updateTeam', {
                 method: 'PUT',
                 headers: {
@@ -375,11 +427,11 @@ export default {
             if (searchvalue.length === 0) {
                 this.textResultMessage = '';
 
-                for (let i = 1; i < 5; i++) {
+                for (let i = 1; i <= this.tableTeams.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i < 5; i++) {
+                for (let i = 1; i <= this.tableTeams.length; i++) {
                     let currentRow = tbodyRows[i];
 
                     for (let i = 0; i < currentRow.cells.length; i++) {
