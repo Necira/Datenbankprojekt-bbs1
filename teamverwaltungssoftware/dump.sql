@@ -56,14 +56,16 @@ CREATE TABLE `player` (
 --
 
 INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`, `position`, `eloPoints`, `deleted`) VALUES
-(9, 'NoFPS', 'louis', 'Lohmer', 'louis.lohmer@mediaman.de', 'top', 1300, 0),
-(15, 'test', 'Maria', 'Neciporenko', 'marianeciporenko@gmail.com', 'bot', 1200, 0),
-(16, 'YesFPS', 'Max', 'Mustermann', 'max.mustermann@mediaman.de', 'top', 1230, 0),
-(17, 'NoFPS23', 'What', 'the', 'whatthe@lol.de', 'left', 1200, 0),
-(18, 'test23', 'testfirstname', 'testlastname', 'olaf.scholz@gmail.com', 'top', 1230, 0),
-(19, 'NoFPS2', 'hello', 'world', 'helloworld@mediaman.de', 'top', 1200, 0),
-(20, 'testi', 'testplayer', 'Lohmer', 'louis.lohmer@mediaman.de', 'top', 1200, 0),
-(21, 'testi2', 'louis', 'Lohmer', 'max.mustermann@mediaman.de', 'testTop', 1400, 0);
+(1, 'Louis', 'louis', 'Lohmer', 'louis.lohmer@mediaman.de', 'top', 1300, 0),
+(2, 'Necira', 'Maria', 'Neciporenko', 'marianeciporenko@gmail.com', 'bot', 1200, 0),
+(3, 'Muster', 'Max', 'Mustermann', 'max.mustermann@mediaman.de', 'supp', 1230, 0),
+(4, 'whatThe', 'What', 'the', 'whatthe@lol.de', 'mid', 1200, 1),
+(5, 'test', 'testfirstname', 'testlastname', 'olaf.scholz@gmail.com', 'mid', 1230, 0),
+(6, 'NoFPS2', 'hello', 'world', 'helloworld@mediaman.de', 'top', 1200, 0),
+(7, 'testi', 'testplayer', 'Lohmer', 'louis.lohmer@mediaman.de', 'top', 1200, 0),
+(8, 'lol', 'louis', 'Lohmer', 'max.mustermann@mediaman.de', 'supp', 1400, 0),
+(9, 'Vendetta', 'V', 'forVendetta', 'v.vendetta@gmail.de', 'bot', 1000, 0),
+(10, 'strangePerson', 'strange', 'notsostrange', 'strange.notsostrange@strange.de', 'jgl', 1400, 0);
 
 -- --------------------------------------------------------
 
@@ -88,10 +90,17 @@ CREATE TABLE `teams` (
 --
 
 INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`, `secondMember`, `thirdMember`, `fourthMember`, `fifthMember`) VALUES
-(7, 'testTeam', 1300, 1, NULL, NULL, NULL, NULL, NULL),
-(8, 'testTeam4', 1234, 0, NULL, NULL, NULL, NULL, NULL),
-(23, 'testTeam5', 1569, 0, NULL, NULL, NULL, NULL, NULL),
-(28, 'testTeam6', 6060, 1, 16, 17, 18, 19, 20);
+(1, 'NierAutomata', 1300, 0, NULL, NULL, NULL, NULL, NULL),
+(2, 'LeagueOfLegends', 1234, 0, NULL, NULL, NULL, NULL, NULL),
+(3, 'Persona', 1569, 0, NULL, NULL, NULL, NULL, NULL),
+(4, 'TheWitcher', 6060, 0, 1, 2, 3, 4, 5),
+(5, 'GenshinImpact', 6060, 0, 2, 3, 4, 5, 7),
+(6, 'Cyberpunk', 6060, 0, 2, 3, 4, 5, 7),
+(7, 'BaldursGate', 6060, 0, 2, 3, 4, 5, 7),
+(8, 'Minecraft', 6060, 0, 2, 3, 4, 5, 7),
+(9, 'AssassinsCreed', 6060, 0, 2, 3, 4, 5, 7),
+(10, 'GhostOfTsushima', 6060, 0, 2, 3, 4, 5, 7),
+(11, 'HonkaiStarrail', 6060, 0, 2, 3, 4, 5, 7);
 
 -- --------------------------------------------------------
 
