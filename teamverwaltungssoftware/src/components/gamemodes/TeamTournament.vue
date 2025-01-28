@@ -1,28 +1,61 @@
 <template>
-  <h2> TEST </h2>
+  <h2> Tournament </h2>
   <div class="selectTeams">
-    <div v-for="(teamPair, matchIndex) in matches" :key="matchIndex">
-      <TeamPicks :team="teamPair.teamOne" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamOne, $event)" />
-      <TeamPicks :team="teamPair.teamTwo" :availableTeams="availableTeams" @update:teamName="setTeam(teamPair.teamTwo, $event)" />
-      <button @click="setRandomWinner(teamPair.teamOne, teamPair.teamTwo)">Play Randomly</button>
-      <div class="chooseWinner">
-        <label for="chooseWinner">Choose Winner</label>
-        <select v-model="chooseWinner">
-          <option>{{ teams[teamPair.teamOne] }}</option>
-          <option>{{ teams[teamPair.teamTwo] }}</option>
-        </select>
-        <button @click="setWinner(chooseWinner, teamPair.teamOne, teamPair.teamTwo)">Set Winner</button>
-        <WinnerMessage v-if='winner' :winner="winner" :eloPoints="'reputation'"/> 
+    <div v-for="(round, roundIndex) in rounds" :key="'round-' + roundIndex" class="round">
+      <h3>Round {{ roundIndex + 1 }}</h3>
+      <div v-for="(teamPair, matchIndex) in round" :key="'match-' + matchIndex">
+        <TeamPicks 
+          :team="teamPair.teamOne" 
+          :availableTeams="availableTeams" 
+          @update:teamName="setTeam(teamPair.teamOne, $event)" 
+        />
+        <TeamPicks 
+          :team="teamPair.teamTwo" 
+          :availableTeams="availableTeams" 
+          @update:teamName="setTeam(teamPair.teamTwo, $event)" 
+        />
+        
+        <button 
+          v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]" 
+          @click="setRandomWinner(roundIndex, matchIndex)"
+        >
+          Play Randomly
+        </button>
+        
+        <div 
+          class="chooseWinner" 
+          v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]"
+        >
+          <label for="chooseWinner">Choose Winner</label>
+          <select v-model="teamPair.chooseWinner">
+            <option :value="teams[teamPair.teamOne]">
+              {{ teams[teamPair.teamOne] }}
+            </option>
+            <option :value="teams[teamPair.teamTwo]">
+              {{ teams[teamPair.teamTwo] }}
+            </option>
+          </select>
+          <button 
+            @click="setWinner(teamPair.chooseWinner, roundIndex, matchIndex)"
+          >
+            Set Winner
+          </button>
+        </div>
       </div>
     </div>
+
+    <div v-if="finalWinner">
+      <h3>Champion: {{ finalWinner }}</h3>
+    </div>
+
+    <RouterLink to="/">Back</RouterLink>
   </div>
-  <RouterLink to="/">Back</RouterLink>
 </template>
 
 <script>
-import { gameLogic } from '../GameLogic/GameLogic.js'
-import TeamPicks from '../Atoms/TeamPicks.vue'
-import WinnerMessage from '../Atoms/WinnerMessage.vue'
+import { gameLogic } from '../GameLogic/GameLogic.js';
+import TeamPicks from '../Atoms/TeamPicks.vue';
+import WinnerMessage from '../Atoms/WinnerMessage.vue';
 
 export default {
   name: 'TeamTournament',
@@ -43,93 +76,89 @@ export default {
         teamEight: ''
       },
       availableTeams: [],
-      winner: '',
-      chooseWinner: '',
-      matches: [
-        { teamOne: 'teamOne', teamTwo: 'teamTwo' },
-        { teamOne: 'teamThree', teamTwo: 'teamFour' },
-        { teamOne: 'teamFive', teamTwo: 'teamSix' },
-        { teamOne: 'teamSeven', teamTwo: 'teamEight' },
-      ]
+      rounds: [
+        [
+          { teamOne: 'first Team', teamTwo: 'second Team', chooseWinner: '' },
+          { teamOne: 'third Team', teamTwo: 'fourth Team', chooseWinner: '' },
+          { teamOne: 'fifth Team', teamTwo: 'sixth Team', chooseWinner: '' },
+          { teamOne: 'seventh Team', teamTwo: 'eight Team', chooseWinner: '' },
+        ],
+      ],
+      finalWinner: null,
     };
   },
   created() {
-    this.fetchteams(); 
+    this.fetchteams();
   },
   methods: {
     async fetchteams() {
-      console.log("fetching teams...");
+      console.log("Fetching teams...");
       try {
         const response = await fetch('http://localhost:3000/getActiveteams');
         const data = await response.json();
-        console.log('Fetched teams:', data); 
-        this.availableTeams = data; 
+        console.log('Fetched teams:', data);
+        this.availableTeams = data;
       } catch (error) {
         console.error('Error fetching teams:', error.message);
       }
     },
-    
+
     setTeam(teamName, selectedTeam) {
-      this.teams[teamName] = selectedTeam;  
+      this.teams[teamName] = selectedTeam;
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
 
-    async setRandomWinner(teamOne, teamTwo) {
-      if (this.teams[teamOne] && this.teams[teamTwo]) {
-        const { winner, loser } = gameLogic(this.teams[teamOne], this.teams[teamTwo]);
-        this.winner = winner;
-        console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-        try {
-          const response = await fetch('http://localhost:3000/updateWinner', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ winner, teamOne, teamTwo })
-          });
+    async setRandomWinner(roundIndex, matchIndex) {
+      const match = this.rounds[roundIndex][matchIndex];
+      const teamOne = match.teamOne;
+      const teamTwo = match.teamTwo;
 
-          if (response.ok) {
-            alert(`Spiel beendet! Gewinner: ${winner}`);
-          } else {
-            alert('Fehler beim Speichern des Ergebnisses');
-          }
-        } catch (error) {
-          console.error('Fehler beim Senden des Ergebnisses:', error.message);
-        }
+      if (this.teams[teamOne] && this.teams[teamTwo]) {
+        const { winner } = gameLogic(this.teams[teamOne], this.teams[teamTwo]);
+        match.chooseWinner = winner;
+        this.advanceToNextRound(roundIndex);
       } else {
-        alert('Please select both players.');
+        alert('Please select both teams.');
       }
     },
 
-    async setWinner(winner, teamOne, teamTwo) {   
+    async setWinner(winner, roundIndex, matchIndex) {
       if (!winner) {
         alert("Please choose a winner!");
         return;
       }
-      console.log('Winner:', winner, 'TeamOne:', teamOne, 'TeamTwo:', teamTwo); // Debugging
-      try {
-        const response = await fetch('http://localhost:3000/updateWinner', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ winner, teamOne, teamTwo }),
-        });
 
-        console.log('Response status:', response.status); // Debugging
-        if (response.ok) {
-          alert(`Spiel beendet! Gewinner: ${winner}`);
-        } else {
-          const errorDetails = await response.json();
-          console.error('Fehler beim Speichern des Ergebnisses:', errorDetails);
-          alert(`Fehler: ${errorDetails.message || 'Unbekannter Fehler'}`);
-        }
-      } catch (error) {
-        console.error('Fehler beim Senden des Ergebnisses:', error.message);
-      }
+      const match = this.rounds[roundIndex][matchIndex];
+      match.chooseWinner = winner;
+      this.advanceToNextRound(roundIndex);
     },
-  }
+
+    advanceToNextRound(roundIndex) {
+      const currentRound = this.rounds[roundIndex];
+      if (currentRound.some(match => !match.chooseWinner)) {
+        alert('Please finish all matches in this round first.');
+        return;
+      }
+
+      const winners = currentRound.map(match => match.chooseWinner);
+
+      if (winners.length === 1) {
+        this.finalWinner = winners[0];
+        return;
+      }
+
+      const nextRound = [];
+      for (let i = 0; i < winners.length; i += 2) {
+        nextRound.push({
+          teamOne: winners[i],
+          teamTwo: winners[i + 1] || null,
+          chooseWinner: '',
+        });
+      }
+
+      this.rounds.push(nextRound);
+    },
+  },
 };
 </script>
 
@@ -138,6 +167,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.round {
+  margin-bottom: 20px;
 }
 
 .chooseWinner {
