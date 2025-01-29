@@ -59,7 +59,7 @@ app.get('/getActivePlayer', (req, res) => {
 // API-Endpoint to get all active player that are not in a team yet
 app.get('/getActiveTeammember', (req, res) => {
     connection.query(
-        'SELECT * FROM `player` WHERE `deleted` = 0 AND `playerID` = (SELECT `firstMember` FROM `teams` WHERE `firstMember` = `playerID`) OR `playerID` = (SELECT `secondMember` FROM `teams` WHERE `secondMember` = `playerID`) OR `playerID` = (SELECT `thirdMember` FROM `teams` WHERE `thirdMember` = `playerID`) OR `playerID` = (SELECT `fourthMember` FROM `teams` WHERE `fourthMember` = `playerID`) OR `playerID` = (SELECT `fifthMember` FROM `teams` WHERE `fifthMember` = `playerID`)',
+        'SELECT * FROM `player` INNER JOIN `teams` ON `player`.`playerID` = `teams`.`firstMember` OR `player`.`playerID` = `teams`.`secondMember` OR `player`.`playerID` = `teams`.`thirdMember` OR `player`.`playerID` = `teams`.`fourthMember` OR `player`.`playerID` = `teams`.`fifthMember` WHERE `player`.`deleted` = 0',
         (err, rows) => {
             if (err) {
                 console.error(err);
@@ -194,38 +194,38 @@ app.post('/updateWinner', (req, res) => {
         res.status(200).json({ message: 'Game result saved', result });
     });
 });
-  
+
 app.post('/updateElo', (req, res) => {
     const { winner, loser } = req.body;
-  
+
     // Increase Elo for the winner
     connection.query(
-      'UPDATE `player` SET `eloPoints` = `eloPoints` + 10 WHERE `playername` = ?',
-      [winner],
-      (err) => {
-        if (err) {
-          console.error('Error updating winner Elo:', err);
-          res.status(500).send('Error updating winner Elo');
-          return;
-        }
-  
-        // Decrease Elo for the loser
-        connection.query(
-          'UPDATE `player` SET `eloPoints` = `eloPoints` - 10 WHERE `playername` = ?',
-          [loser],
-          (err) => {
+        'UPDATE `player` SET `eloPoints` = `eloPoints` + 10 WHERE `playername` = ?',
+        [winner],
+        err => {
             if (err) {
-              console.error('Error updating loser Elo:', err);
-              res.status(500).send('Error updating loser Elo');
-              return;
+                console.error('Error updating winner Elo:', err);
+                res.status(500).send('Error updating winner Elo');
+                return;
             }
-  
-            res.send('Elo points updated successfully');
-          }
-        );
-      }
+
+            // Decrease Elo for the loser
+            connection.query(
+                'UPDATE `player` SET `eloPoints` = `eloPoints` - 10 WHERE `playername` = ?',
+                [loser],
+                err => {
+                    if (err) {
+                        console.error('Error updating loser Elo:', err);
+                        res.status(500).send('Error updating loser Elo');
+                        return;
+                    }
+
+                    res.send('Elo points updated successfully');
+                },
+            );
+        },
     );
-  });
+});
 // API-Endpoint to update a specific team
 app.put('/updateTeam', (req, res) => {
     let {

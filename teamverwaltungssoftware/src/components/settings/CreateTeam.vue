@@ -198,14 +198,14 @@ export default {
             fetch('http://localhost:3000/getActivePlayer')
                 .then(response => response.json())
                 .then(activePlayerData => {
-                    let activePlayerIDs = [];
-                    let activePlayernames = [];
-                    let activePlayerPosition = [];
+                    let activePlayer = [];
 
                     for (let i = 0; i < activePlayerData.length; i++) {
-                        activePlayerIDs.push(activePlayerData[i].playerID);
-                        activePlayernames.push(activePlayerData[i].playername);
-                        activePlayerPosition.push(activePlayerData[i].position);
+                        activePlayer.push({
+                            id: activePlayerData[i].playerID,
+                            name: activePlayerData[i].playername,
+                            position: activePlayerData[i].position,
+                        });
                     }
 
                     fetch('http://localhost:3000/getActiveTeammember')
@@ -218,106 +218,104 @@ export default {
                             }
 
                             // Display only player that are not deleted and are not in a team yet
-                            let availableTeammemberIDs = [];
-                            let availableTeammemberNames = [];
-                            let availableTeammemberPositions = [];
+                            let availableTeammember = [];
 
                             for (let i = 0; i < activeTeammemberIDs.length; i++) {
-                                for (let a = 0; a < activePlayerIDs.length; a++) {
+                                for (let a = 0; a < activePlayer.length; a++) {
                                     if (
-                                        activeTeammemberIDs[i] !== activePlayerIDs[a] &&
-                                        !availableTeammemberIDs.includes(activePlayerIDs[a]) &&
-                                        !activeTeammemberIDs.includes(activePlayerIDs[a])
+                                        activeTeammemberIDs[i] !== activePlayer[a].id &&
+                                        !availableTeammember.some(
+                                            element => element.id === activePlayer[a].id,
+                                        ) &&
+                                        !activeTeammemberIDs.some(
+                                            element => element.id === activePlayer[a].id,
+                                        )
                                     ) {
-                                        availableTeammemberIDs.push(activePlayerIDs[a]);
-                                        availableTeammemberNames.push(activePlayernames[a]);
-                                        availableTeammemberPositions.push(activePlayerPosition[a]);
+                                        availableTeammember.push({
+                                            id: activePlayer[a].id,
+                                            name: activePlayer[a].name,
+                                            position: activePlayer[a].position,
+                                        });
                                     }
                                 }
                             }
 
-                            if (availableTeammemberIDs.length > 0) {
-                                for (let i = 0; i < availableTeammemberPositions.length; i++) {
+                            if (availableTeammember.length > 0) {
+                                for (let i = 0; i < availableTeammember.length; i++) {
                                     // Push data into array in order to display it with v-for
-                                    if (availableTeammemberPositions[i] === 'Top-Lane') {
+                                    if (availableTeammember[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Jungle') {
+                                    if (availableTeammember[i].position === 'Jungle') {
                                         this.availablePlayerJungle.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Mid-lane') {
+                                    if (availableTeammember[i].position === 'Mid-lane') {
                                         this.availablePlayerMidLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Bot-Lane') {
+                                    if (availableTeammember[i].position === 'Bot-Lane') {
                                         this.availablePlayerBotLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Support') {
+                                    if (availableTeammember[i].position === 'Support') {
                                         this.availablePlayerSupport.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: availableTeammember[i].id,
+                                            name: availableTeammember[i].name,
                                         });
                                     }
                                 }
-                            } else if (
-                                availableTeammemberIDs.length === 0 &&
-                                activePlayerIDs.length > 0 &&
-                                activePlayernames.length > 0
-                            ) {
-                                for (let i = 0; i < activePlayerIDs.length; i++) {
+                            } else if (activePlayer.length > 0) {
+                                for (let i = 0; i < activePlayer.length; i++) {
                                     // Push data into array in order to display it with v-for
-                                    if (availableTeammemberPositions[i] === 'Top-Lane') {
+                                    if (activePlayerData[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Jungle') {
+                                    if (activePlayerData[i].position === 'Jungle') {
                                         this.availablePlayerJungle.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Mid-lane') {
+                                    if (activePlayerData[i].position === 'Mid-lane') {
                                         this.availablePlayerMidLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Bot-Lane') {
+                                    if (activePlayerData[i].position === 'Bot-Lane') {
                                         this.availablePlayerBotLane.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
 
-                                    if (availableTeammemberPositions[i] === 'Support') {
+                                    if (activePlayerData[i].position === 'Support') {
                                         this.availablePlayerSupport.push({
-                                            id: availableTeammemberIDs[i],
-                                            name: availableTeammemberNames[i],
+                                            id: activePlayer[i].id,
+                                            name: activePlayer[i].name,
                                         });
                                     }
                                 }
-                            } else {
-                                document.getElementById('availabe-player').innerHTML = 'No player available!';
                             }
                         })
                         .catch(error => {
