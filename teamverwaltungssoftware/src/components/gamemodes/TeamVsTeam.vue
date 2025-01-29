@@ -12,7 +12,10 @@
         @update:teamName="setTeam('teamTwo', $event)" 
       />
     </div>
-    <div class="actions" v-if="teamOne && teamTwo">
+    <div class="message">
+      {{ message }}
+    </div>
+    <div class="actions" v-if="teamOne && teamTwo && teamTwo != teamOne">
       <button class="play-randomly" @click="setRandomWinner">🎲 Play Randomly</button>
       <div class="choose-winner">
         <label for="chooseWinner">Choose Winner</label>
@@ -46,6 +49,7 @@ export default {
       teamTwo: '', 
       availableTeams: [],
       winner: '',
+      message: '',
     };
   },
   created() {
@@ -68,6 +72,11 @@ export default {
       } else if (teamName === 'teamTwo') {
         this.teamTwo = selectedTeam;
       }
+      if (this.teamOne === this.teamTwo) {
+        this.message = 'nice try.. select 2 different teams ;)'
+      }  else {
+        this.message = ''
+      }
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
     async setWinner(winner) {
@@ -80,7 +89,7 @@ export default {
             loser = this.teamOne;
           }
         } else {
-          alert("nice try..choose Winner!! ;)")
+          this.message ="nice try..choose Winner!!"
         }
         try {
             await fetch('http://localhost:3000/updateElo', {
@@ -92,13 +101,13 @@ export default {
             });
 
             console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-            alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+            this.message =`Game finished! Winner: ${winner}, Loser: ${loser}`;
           } catch (error) {
             console.error('Error updating Elo points:', error.message);
           }
         this.winner = winner
         } else {
-          alert('Choose two different teams');
+          this.message ='Choose two different teams';
         }
       },
     async setRandomWinner() {
@@ -115,12 +124,12 @@ export default {
           });
 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          this.message =`Game finished! Winner: ${winner}, Loser: ${loser}`;
         } catch (error) {
           console.error('Error updating Elo points:', error.message);
         }
       } else {
-        alert('Please select both players and no dublicates.');
+        this.message ='Please select both players and no dublicates.';
       }
     }
   }

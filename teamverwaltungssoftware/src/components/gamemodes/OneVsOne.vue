@@ -12,7 +12,10 @@
         @update:playerName="setPlayer('playerTwo', $event)" 
       />
     </div>
-    <div class="actions" v-if="playerOne && playerTwo">
+    <div class="message">
+      {{ message }}
+    </div>
+    <div class="actions" v-if="playerOne && playerTwo && playerOne != playerTwo">
       <button class="play-randomly" @click="startGame" v-if="!winner">🎲 Play Randomly</button>
       <div class="choose-winner">
         <label for="chooseWinner">Choose Winner</label>
@@ -49,6 +52,7 @@ export default {
       winner: '',
       chooseWinner: '',
       eloPoints: null,
+      message: '',
     };
   },
   created() {
@@ -71,6 +75,11 @@ export default {
       } else if (playerName === 'playerTwo') {
         this.playerTwo = selectedPlayer;
       }
+      if (this.playerOne === this.playerTwo) {
+        this.message = 'nice try.. select 2 different players ;)'
+      }  else {
+        this.message = '';
+      }
       console.log(`${playerName} set to: ${selectedPlayer}`);
     },
     async setWinner(winner) {
@@ -83,13 +92,13 @@ export default {
             body: JSON.stringify({ winner, loser }),
           });
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          this.message = `Game finished! Winner: ${winner}, Loser: ${loser}`;
         } catch (error) {
           console.error('Error updating Elo points:', error.message);
         }
         this.winner = winner;
       } else {
-        alert('Choose two different players without duplicates.');
+        this.message = 'Choose two different players without duplicates.';
       }
     },
     async startGame() {
@@ -103,12 +112,12 @@ export default {
           });
           this.eloPoints = 'placeholder'; 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          alert(`Game finished! Winner: ${winner}, Loser: ${loser}`);
+          this.message = `Game finished! Winner: ${winner}, Loser: ${loser}`;
         } catch (error) {
           console.error('Error updating Elo points:', error.message);
         }
       } else {
-        alert('Please select both players and ensure they are different.');
+        this.message = 'Please select both players and ensure they are different.';
       }
     },
   },

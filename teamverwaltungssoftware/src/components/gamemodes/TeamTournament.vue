@@ -17,16 +17,18 @@
             <TeamPicks 
               :team="teamPair.teamOne" 
               :availableTeams="availableTeams" 
-              @update:teamName="setTeam(teamPair.teamOne, $event)" 
+              @update:teamName="setTeam(teamPair.teamOne, $event, roundIndex)" 
             />
             <TeamPicks 
               :team="teamPair.teamTwo" 
               :availableTeams="availableTeams" 
-              @update:teamName="setTeam(teamPair.teamTwo, $event)" 
+              @update:teamName="setTeam(teamPair.teamTwo, $event, roundIndex)" 
             />
           </div>
-          
-          <div v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo]" class="actions">
+          <div class="message">
+            {{ message }}
+          </div>
+          <div v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo] && teams[teamPair.teamOne] != teams[teamPair.teamTwo]" class="actions">
             <button @click="setRandomWinner(roundIndex, matchIndex)" class="random-winner">
               🎲 Play Randomly
             </button>
@@ -55,7 +57,6 @@
         <h3>Champion: {{ finalWinner }}</h3>
       </div>
     </div>
-
     <RouterLink to="/" class="back-link">← Back</RouterLink>
   </div>
 </template>
@@ -82,6 +83,7 @@ export default {
         teamSeven: '',
         teamEight: ''
       },
+      message: '',
       availableTeams: [],
       rounds: [
         [
@@ -110,9 +112,17 @@ export default {
       }
     },
 
-    setTeam(teamName, selectedTeam) {
+    setTeam(teamName, selectedTeam, roundIndex) {
+      const currentRoundTeams = this.rounds[roundIndex]
+        .flatMap(match => [this.teams[match.teamOne], this.teams[match.teamTwo]]) 
+        .filter(team => team); 
+      if (currentRoundTeams.includes(selectedTeam)) {
+        this.message = 'Dieses Team wurde in dieser Runde bereits ausgewählt!';
+        return;
+      }
       this.teams[teamName] = selectedTeam;
-      console.log(`${teamName} set to: ${selectedTeam}`);
+      this.message = ''; 
+      console.log(`${teamName} in Runde ${roundIndex + 1} gesetzt auf: ${selectedTeam}`);
     },
 
     async setRandomWinner(roundIndex, matchIndex) {
@@ -125,13 +135,13 @@ export default {
         match.chooseWinner = winner;
         this.advanceToNextRound(roundIndex);
       } else {
-        alert('Please select both teams.');
+        this.message ='Please select both teams.';
       }
     },
 
     async setWinner(winner, roundIndex, matchIndex) {
       if (!winner) {
-        alert("Please choose a winner!");
+        this.message ="Please choose a winner!";
         return;
       }
 
@@ -143,7 +153,7 @@ export default {
     advanceToNextRound(roundIndex) {
       const currentRound = this.rounds[roundIndex];
       if (currentRound.some(match => !match.chooseWinner)) {
-        alert('Please finish all matches in this round first.');
+        this.message ='Please finish all matches in this round.';
         return;
       }
 
