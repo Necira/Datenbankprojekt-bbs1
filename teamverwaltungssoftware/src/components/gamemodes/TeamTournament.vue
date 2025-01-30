@@ -28,7 +28,7 @@
           <div class="message">
             {{ message }}
           </div>
-          <div v-if="teams[teamPair.teamOne] && teams[teamPair.teamTwo] && teams[teamPair.teamOne] != teams[teamPair.teamTwo]" class="actions">
+          <div v-if="!winner && teams[teamPair.teamOne] && teams[teamPair.teamTwo] && teams[teamPair.teamOne] != teams[teamPair.teamTwo]" class="actions">
             <button @click="setRandomWinner(roundIndex, matchIndex)" class="random-winner">
               🎲 Play Randomly
             </button>

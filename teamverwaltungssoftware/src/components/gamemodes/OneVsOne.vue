@@ -15,15 +15,15 @@
     <div class="message">
       {{ message }}
     </div>
-    <div class="actions" v-if="playerOne && playerTwo && playerOne != playerTwo">
-      <button class="play-randomly" @click="startGame" v-if="!winner">🎲 Play Randomly</button>
+    <div class="actions" v-if="!winner && playerOne && playerTwo && playerOne != playerTwo">
+      <button class="play-randomly" @click="setRandomizedWinner">🎲 Play Randomly</button>
       <div class="choose-winner">
         <label for="chooseWinner">Choose Winner</label>
         <select v-model="chooseWinner" id="chooseWinner" class="dropdown">
           <option :value="playerOne" v-if="playerOne">{{ playerOne }}</option>
           <option :value="playerTwo" v-if="playerTwo">{{ playerTwo }}</option>
         </select>
-        <button class="set-winner" @click="setWinner(chooseWinner)">🏆 Set Winner</button>
+        <button  class="set-winner" @click="setWinner(chooseWinner)">🏆 Set Winner</button>
       </div>
     </div>
     <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />
@@ -101,9 +101,10 @@ export default {
         this.message = 'Choose two different players without duplicates.';
       }
     },
-    async startGame() {
+    async setRandomizedWinner() {
       if (this.playerOne && this.playerTwo && this.playerOne !== this.playerTwo) {
         const { winner, loser } = randomizer(this.playerOne, this.playerTwo);
+        this.winner = winner;
         try {
           await fetch('http://localhost:3000/updateElo', {
             method: 'POST',
@@ -112,7 +113,6 @@ export default {
           });
           this.eloPoints = 'placeholder'; 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          this.message = `Game finished! Winner: ${winner}, Loser: ${loser}`;
         } catch (error) {
           console.error('Error updating Elo points:', error.message);
         }

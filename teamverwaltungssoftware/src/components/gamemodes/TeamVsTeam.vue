@@ -113,6 +113,7 @@ export default {
     async setRandomWinner() {
       if (this.teamOne && this.teamTwo && this.teamOne != this.teamTwo) {
         const { winner, loser } = randomizer(this.teamOne, this.teamTwo);
+        this.winner = winner;
         try {
 
           await fetch('http://localhost:3000/updateElo', {
