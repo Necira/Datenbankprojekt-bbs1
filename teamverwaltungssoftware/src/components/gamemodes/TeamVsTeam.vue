@@ -15,7 +15,7 @@
     <div class="message">
       {{ message }}
     </div>
-    <div class="actions" v-if="teamOne && teamTwo && teamTwo != teamOne">
+    <div class="actions" v-if=" !winner && teamOne && teamTwo && teamTwo != teamOne">
       <button class="play-randomly" @click="setRandomWinner">🎲 Play Randomly</button>
       <div class="choose-winner">
         <label for="chooseWinner">Choose Winner</label>
@@ -101,7 +101,6 @@ export default {
             });
 
             console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-            this.message =`Game finished! Winner: ${winner}, Loser: ${loser}`;
           } catch (error) {
             console.error('Error updating Elo points:', error.message);
           }
@@ -125,7 +124,6 @@ export default {
           });
 
           console.log(`Game finished! Winner: ${winner}, Loser: ${loser}`);
-          this.message =`Game finished! Winner: ${winner}, Loser: ${loser}`;
         } catch (error) {
           console.error('Error updating Elo points:', error.message);
         }
