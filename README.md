@@ -32,36 +32,32 @@ Auf dem Gerät muss [Docker](https://docs.docker.com/get-started/get-docker/) in
 
 Zudem müssen die Nutzerrechte des root-Nutzers vor dem eigentlich start des Projektes manuell angepasst werden, damit die Datenbankverbindung korrekt eingerichtet ist.
 
-1. Starte den Container "Teamverwaltungssoftware" mit den angegebenen Befehlen im IDE-Terminal und öffne über das Terminal des mysql-Container über das drei-Punkte-Menü
-```
-cd teamverwaltungssoftware
-docker compose build
-docker compose up -d
-```
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/1c30c37a-8a0e-4e42-9c31-acac182dc185" width="40%" height="40%" />
-  <img src="https://github.com/user-attachments/assets/aacc4704-b7c6-4807-9b01-1fe1dcb26c12" width="40%" height="40%" />
-</div>
+1. Starte den Container "Teamverwaltungssoftware"
+    ```
+    cd teamverwaltungssoftware
+    docker compose build
+    docker compose up -d
+    ```
 
 2. Greife auf den mysql root-Nutzer zu und gebe das Passwort "root" ein
-```
-mysql -u root -p
-```
+    ```
+    docker exec -it mysql mysql -u root -p
+    ```
 
 3. Gebe dem root-Nutzer alle benötigten Rechte
-```
-GRANT ALL PRIVILEGES ON Datenbankprojekt-BBS1 TO  'root'@'localhost' IDENTIFIED BY  'root'
-```
+    ```
+    GRANT ALL PRIVILEGES ON Datenbankprojekt-BBS1 TO  'root'@'localhost' IDENTIFIED BY  'root'
+    ```
 
 4. Lade die Berechtigungstabelle neu
-```
-FLUSH PRIVILEGES
-```
+    ```
+    FLUSH PRIVILEGES
+    ```
 
 5. Schließe den mysql root-Nutzer, indem du zuerst die Tastenkombination Ctrl + C (Mac) / Strg + C (Windows) anwendest und den angegebenen Befehl eingibst:
-```
-quit
-```
+    ```
+    quit
+    ```
 
 ### Vue.js-Projekt starten
 
