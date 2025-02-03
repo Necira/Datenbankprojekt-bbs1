@@ -5,6 +5,7 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: Datenbankprojekt-BBS1
+            MYSQL_ROOT_HOST: '%'
         ports:
             - '3306:3306'
         volumes:
@@ -12,11 +13,10 @@ services:
         networks:
             - app-network
         healthcheck:
-            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-proot']
+            test: ['CMD-SHELL', 'exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD']
             interval: 5s
-            retries: 10
-            start_period: 10s
-            timeout: 5s
+            timeout: 20s
+            retries: 30
 
     frontend:
         build:
