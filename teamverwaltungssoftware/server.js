@@ -260,3 +260,28 @@ app.put('/updateTeam', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to get player leaderboard data
+app.get('/getPlayerLeaderboard', (req, res) => {
+    connection.query('SELECT * FROM `player` WHERE `deleted` = 0 ORDER BY `eloPoints` DESC', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to get team leaderboard data
+app.get('/getTeamLeaderboard', (req, res) => {
+    connection.query(
+        'SELECT * FROM `teams` WHERE `deleted` = 0 AND `firstMember` IS NOT NULL AND `secondMember` IS NOT NULL AND `thirdMember` IS NOT NULL AND `fourthMember` IS NOT NULL AND `fifthMember` IS NOT NULL  ORDER BY `eloPoints` DESC',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
+            }
+        },
+    );
+});
