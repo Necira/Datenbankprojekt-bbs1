@@ -318,7 +318,7 @@ export default {
                     return;
                 });
         },
-        editTeam() {
+        async editTeam() {
             this.textSuccessMessage = '';
 
             let selectFieldTeamId = document.getElementById('selectTeamID');
@@ -339,6 +339,8 @@ export default {
             );
             let selectFieldFifthMember = document.getElementById('fifthMember');
             let fifthMember = Number(selectFieldFifthMember.options[selectFieldFifthMember.selectedIndex].id);
+            let eloPointsTeam = 0;
+            let choosenTeamMembers = [firstMember, secondMember, thirdMember, fourthMember, fifthMember];
 
             if (teamname.length === 0 || deleted.length === 0) {
                 this.textErrorMessage = 'Please fill out at least one form field!';
@@ -387,6 +389,39 @@ export default {
                 this.textErrorMessage = '';
             }
 
+            console.log(isNaN(firstMember), isNaN(secondMember));
+            if (
+                !isNaN(firstMember) &&
+                !isNaN(secondMember) &&
+                !isNaN(thirdMember) &&
+                !isNaN(fourthMember) &&
+                !isNaN(fifthMember)
+            ) {
+                // Calculate Elo-Points, if team is complete
+                eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        let calculatedEloPoints = 0;
+                        for (let i = 0; i < choosenTeamMembers.length; i++) {
+                            for (let a = 0; a < data.length; a++) {
+                                if (choosenTeamMembers[i] === data[a].playerID) {
+                                    calculatedEloPoints += data[a].eloPoints;
+                                }
+                            }
+                        }
+
+                        let finalEloPoints = Math.round(calculatedEloPoints / 5);
+                        console.log('if:', finalEloPoints);
+                        return finalEloPoints;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+            } else {
+                eloPointsTeam++;
+            }
+
             fetch('http://localhost:3000/updateTeam', {
                 method: 'PUT',
                 headers: {
@@ -401,6 +436,7 @@ export default {
                     changedThirdMember: thirdMember,
                     changedFourthMember: fourthMember,
                     changedFifthMember: fifthMember,
+                    changedEloPoints: eloPointsTeam,
                     teamId: teamId,
                 }),
             })

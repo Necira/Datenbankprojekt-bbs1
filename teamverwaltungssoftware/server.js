@@ -236,11 +236,12 @@ app.put('/updateTeam', (req, res) => {
         changedThirdMember,
         changedFourthMember,
         changedFifthMember,
+        changedEloPoints,
         teamId,
     } = req.body;
 
     connection.query(
-        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
+        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ?, `eloPoints` = ? WHERE `teamID` = ?',
         [
             changedTeamname,
             changedDeletedValue,
@@ -249,6 +250,7 @@ app.put('/updateTeam', (req, res) => {
             changedThirdMember,
             changedFourthMember,
             changedFifthMember,
+            changedEloPoints,
             teamId,
         ],
         (err, result) => {
