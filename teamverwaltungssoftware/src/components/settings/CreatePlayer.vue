@@ -3,13 +3,13 @@ export default {
     data() {
         return {
             name: 'CreatePlayer',
-            textErrorMessage: '',
-            textSuccessMessage: '',
+            errorMessage: '',
+            successMessage: '',
         };
     },
     methods: {
-        async saveNewPlayer() {
-            this.textSuccessMessage = '';
+        async validateForm() {
+            this.successMessage = '';
 
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
@@ -26,13 +26,13 @@ export default {
                 email.length === 0 ||
                 eloPoints.length === 0
             ) {
-                this.textErrorMessage = 'Please fill out the entire form!';
+                this.errorMessage = 'Please fill out the entire form!';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
 
                 if (eloPoints > 4000) {
-                    this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                    this.errorMessage = 'Maximum Elo-Points are 4000';
                     return;
                 }
 
@@ -51,13 +51,13 @@ export default {
                     });
 
                 if (playernameExists) {
-                    this.textErrorMessage = 'Playername already exists!';
+                    this.errorMessage = 'Playername already exists!';
                     return;
                 }
 
                 const regExEmail = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,4}$/;
                 if (!email.match(regExEmail)) {
-                    this.textErrorMessage = 'Invalid E-mail!';
+                    this.errorMessage = 'Invalid E-mail!';
                     return;
                 }
 
@@ -67,53 +67,64 @@ export default {
 
                 for (let i = 0; i < splittedFirstname.length; i++) {
                     if (!splittedFirstname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid firstname!';
+                        this.errorMessage = 'Invalid firstname!';
                         return;
                     }
                 }
 
                 for (let i = 0; i < splittedLastname.length; i++) {
                     if (!splittedLastname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid lastname!';
+                        this.errorMessage = 'Invalid lastname!';
                         return;
                     }
                 }
 
-                fetch('http://localhost:3000/createNewPlayer', {
-                    method: 'POST',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        newPlayername: playername,
-                        newFirstname: firstname,
-                        newLastname: lastname,
-                        newEmail: email,
-                        newPosition: position,
-                        newEloPoints: eloPoints,
-                    }),
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
-
-                            // Set Values of user input to default
-                            createPlayerForm[1].value = '';
-                            createPlayerForm[3].value = '';
-                            createPlayerForm[5].value = '';
-                            createPlayerForm[7].value = '';
-                            createPlayerForm[11].value = '';
-
-                            this.textSuccessMessage = 'Added new player successfully!';
-                            return response.json();
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        return;
-                    });
+                this.postNewPlayer(playername, firstname, lastname, email, position, eloPoints);
             }
+        },
+        async postNewPlayer(setPlayername, setFirstname, setLastname, setEmail, setPosition, setEloPoints) {
+            fetch('http://localhost:3000/createNewPlayer', {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newPlayername: setPlayername,
+                    newFirstname: setFirstname,
+                    newLastname: setLastname,
+                    newEmail: setEmail,
+                    newPosition: setPosition,
+                    newEloPoints: setEloPoints,
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(
+                            setPlayername,
+                            setFirstname,
+                            setLastname,
+                            setEmail,
+                            setPosition,
+                            setEloPoints,
+                        );
+                        let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
+
+                        // Set Values of user input to default after player is created
+                        createPlayerForm[1].value = '';
+                        createPlayerForm[3].value = '';
+                        createPlayerForm[5].value = '';
+                        createPlayerForm[7].value = '';
+                        createPlayerForm[11].value = '';
+
+                        this.successMessage = 'Added new player successfully!';
+                        return response.json();
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
         },
     },
 };
@@ -140,10 +151,10 @@ export default {
         </select>
         <label for="eloPoints">Elo-Points:</label>
         <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="saveNewPlayer">Save player</button>
+        <button type="button" @click="validateForm">Save player</button>
     </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
+    <span class="success-message"> {{ successMessage }}</span>
+    <span class="error-message">{{ errorMessage }}</span>
     <RouterLink to="/PlayerSettings"> Back </RouterLink>
 </template>
 
