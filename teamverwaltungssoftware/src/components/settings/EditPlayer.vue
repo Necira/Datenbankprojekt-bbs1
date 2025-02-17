@@ -141,10 +141,11 @@ export default {
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Display all available player-IDs in the select-option-field
-                            this.deleteablePlayer.push({ id: data[i].playerID, name: data[i].playername });
-                        }
+                        // Display all available player-IDs in the select-option-field
+                        this.deleteablePlayer = data.map(player => ({
+                            id: player.playerID,
+                            name: player.playername,
+                        }));
                     })
                     .catch(error => {
                         console.error(error);
@@ -161,10 +162,8 @@ export default {
                 fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Display all available player-IDs in the select-option-field
-                            this.editablePlayer.push(data[i].playerID);
-                        }
+                        // Display all available player-IDs in the select-option-field
+                        this.editablePlayer = data.map(player => player.playerID);
                     })
                     .catch(error => {
                         console.error(error);
@@ -323,19 +322,17 @@ export default {
                         document.getElementById('player-table').innerHTML = 'No data available!';
                     }
 
-                    for (let i = 0; i < data.length; i++) {
-                        // Display fetched data in the table above
-                        this.fetchedPlayerdata.push({
-                            playerID: data[i].playerID,
-                            playername: data[i].playername,
-                            firstname: data[i].firstname,
-                            lastname: data[i].lastname,
-                            email: data[i].email,
-                            position: data[i].position,
-                            eloPoints: data[i].eloPoints,
-                            deleted: data[i].deleted,
-                        });
-                    }
+                    // Display fetched data in the table above
+                    this.fetchedPlayerdata = data.map(player => ({
+                        playerID: player.playerID,
+                        playername: player.playername,
+                        firstname: player.firstname,
+                        lastname: player.lastname,
+                        email: player.email,
+                        position: player.position,
+                        eloPoints: player.eloPoints,
+                        deleted: player.deleted,
+                    }));
                 })
                 .catch(error => {
                     console.error(error);

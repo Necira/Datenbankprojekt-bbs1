@@ -66,30 +66,35 @@
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
             <label for="firstMember">firstMember:</label>
             <select id="firstMember" name="firstMember">
+                <option id="NULL">No player</option>
                 <option v-for="player in availablePlayer" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
             <label for="secondMember">secondMember:</label>
             <select id="secondMember" name="secondMember">
+                <option id="NULL">No player</option>
                 <option v-for="player in availablePlayer" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
             <label for="thirdMember">thirdMember:</label>
             <select id="thirdMember" name="thirdMember">
+                <option id="NULL">No player</option>
                 <option v-for="player in availablePlayer" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
             <label for="fourthMember">fourthMember:</label>
             <select id="fourthMember" name="fourthMember">
+                <option id="NULL">No player</option>
                 <option v-for="player in availablePlayer" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
             <label for="fifthMember">fifthMember:</label>
             <select id="fifthMember" name="fifthMember">
+                <option id="NULL">No player</option>
                 <option v-for="player in availablePlayer" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
@@ -180,10 +185,11 @@ export default {
                 fetch('http://localhost:3000/getActiveTeams')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Display fetched data in the table above
-                            this.deleteableTeams.push({ id: data[i].teamID, name: data[i].teamname });
-                        }
+                        // Display fetched data in the table above
+                        this.deleteableTeams = data.map(team => ({
+                            id: team.teamID,
+                            name: team.teamname,
+                        }));
                     })
                     .catch(error => {
                         console.error(error);
@@ -203,10 +209,8 @@ export default {
                 fetch('http://localhost:3000/getTeams')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Display fetched data in the select-option-field above
-                            this.editableTeams.push(data[i].teamID);
-                        }
+                        // Display fetched data in the select-option-field above
+                        this.editableTeams = data.map(team => team.teamID);
                     })
                     .catch(error => {
                         console.error(error);
@@ -216,24 +220,18 @@ export default {
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(activePlayerData => {
-                        let activePlayer = [];
-                        for (let i = 0; i < activePlayerData.length; i++) {
-                            activePlayer.push({
-                                id: activePlayerData[i].playerID,
-                                name: activePlayerData[i].playername,
-                            });
-                        }
+                        let activePlayer = activePlayerData.map(data => ({
+                            id: data.playerID,
+                            name: data.playername,
+                        }));
 
                         fetch('http://localhost:3000/getActiveTeammember')
                             .then(response => response.json())
                             .then(activeTeammemberData => {
-                                let activeTeammember = [];
-                                for (let i = 0; i < activeTeammemberData.length; i++) {
-                                    activeTeammember.push({
-                                        id: activeTeammemberData[i].playerID,
-                                        name: activeTeammemberData[i].playername,
-                                    });
-                                }
+                                let activeTeammember = activeTeammemberData.map(data => ({
+                                    id: data.playerID,
+                                    name: data.playername,
+                                }));
 
                                 let availableTeammember = [];
                                 for (let i = 0; i < activeTeammember.length; i++) {
@@ -251,30 +249,25 @@ export default {
                                                     element.name === activePlayer[a].name,
                                             )
                                         ) {
-                                            availableTeammember.push({
-                                                id: activePlayer[a].id,
-                                                name: activePlayer[a].name,
-                                            });
+                                            availableTeammember = activePlayer.map(player => ({
+                                                id: player.id,
+                                                name: player.name,
+                                            }));
                                         }
                                     }
                                 }
 
                                 // Display not deleted player, that are not in a team yet, in select-option-field
-                                this.availablePlayer.push({ id: 'NULL', name: 'no player' });
                                 if (availableTeammember.length > 0) {
-                                    for (let i = 0; i < availableTeammember.length; i++) {
-                                        this.availablePlayer.push({
-                                            id: availableTeammember[i].id,
-                                            name: availableTeammember[i].name,
-                                        });
-                                    }
+                                    this.availablePlayer = availableTeammember.map(teammember => ({
+                                        id: teammember.id,
+                                        name: teammember.name,
+                                    }));
                                 } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
-                                    for (let i = 0; i < activePlayer.length; i++) {
-                                        this.availablePlayer.push({
-                                            id: activePlayer[i].id,
-                                            name: activePlayer[i].name,
-                                        });
-                                    }
+                                    this.availablePlayer = activePlayer.map(player => ({
+                                        id: player.id,
+                                        name: player.name,
+                                    }));
                                 }
                             })
                             .catch(error => {
