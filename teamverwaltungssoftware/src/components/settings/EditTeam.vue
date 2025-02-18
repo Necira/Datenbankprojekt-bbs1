@@ -16,11 +16,11 @@
                 <th>teamname</th>
                 <th>eloPoints</th>
                 <th>deleted</th>
-                <th>firstMember</th>
-                <th>secondMember</th>
-                <th>thirdMember</th>
-                <th>fourthMember</th>
-                <th>fifthMember</th>
+                <th>Top-Lane</th>
+                <th>Jungle</th>
+                <th>Mid-Lane</th>
+                <th>Support</th>
+                <th>Bot-Lane</th>
             </tr>
         </thead>
         <tbody>
@@ -64,38 +64,38 @@
             <input id="teamname" name="teamname" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
-            <label for="firstMember">firstMember:</label>
+            <label for="firstMember">Top-Lane:</label>
             <select id="firstMember" name="firstMember">
                 <option id="NULL">No player</option>
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option v-for="player in availablePlayerTopLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="secondMember">secondMember:</label>
+            <label for="secondMember">Jungle:</label>
             <select id="secondMember" name="secondMember">
                 <option id="NULL">No player</option>
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option v-for="player in availablePlayerJungle" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="thirdMember">thirdMember:</label>
+            <label for="thirdMember">Mid-Lane:</label>
             <select id="thirdMember" name="thirdMember">
                 <option id="NULL">No player</option>
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option v-for="player in availablePlayerMidLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="fourthMember">fourthMember:</label>
+            <label for="fourthMember">Support:</label>
             <select id="fourthMember" name="fourthMember">
                 <option id="NULL">No player</option>
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option v-for="player in availablePlayerSupport" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="fifthMember">fifthMember:</label>
+            <label for="fifthMember">Bot-Lane:</label>
             <select id="fifthMember" name="fifthMember">
                 <option id="NULL">No player</option>
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option v-for="player in availablePlayerBotLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
@@ -118,7 +118,11 @@ export default {
             errorMessage: '',
             resultMessage: '',
             deleteableTeams: [],
-            availablePlayer: [],
+            availablePlayerTopLane: [],
+            availablePlayerMidLane: [],
+            availablePlayerBotLane: [],
+            availablePlayerSupport: [],
+            availablePlayerJungle: [],
             editableTeams: [],
             fetchedTeamdata: [],
         };
@@ -203,7 +207,11 @@ export default {
             this.errorMessage = '';
 
             if (this.openEditTeamForm) {
-                this.availablePlayer = [];
+                this.availablePlayerBotLane = [];
+                this.availablePlayerJungle = [];
+                this.availablePlayerMidLane = [];
+                this.availablePlayerSupport = [];
+                this.availablePlayerTopLane = [];
                 this.editableTeams = [];
 
                 fetch('http://localhost:3000/getTeams')
@@ -223,6 +231,7 @@ export default {
                         let activePlayer = activePlayerData.map(data => ({
                             id: data.playerID,
                             name: data.playername,
+                            position: data.position,
                         }));
 
                         fetch('http://localhost:3000/getActiveTeammember')
@@ -252,6 +261,7 @@ export default {
                                             availableTeammember = activePlayer.map(player => ({
                                                 id: player.id,
                                                 name: player.name,
+                                                position: player.position,
                                             }));
                                         }
                                     }
@@ -259,15 +269,79 @@ export default {
 
                                 // Display not deleted player, that are not in a team yet, in select-option-field
                                 if (availableTeammember.length > 0) {
-                                    this.availablePlayer = availableTeammember.map(teammember => ({
-                                        id: teammember.id,
-                                        name: teammember.name,
-                                    }));
+                                    for (let i = 0; i < availableTeammember.length; i++) {
+                                        if (availableTeammember[i].position === 'Top-Lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Jungle') {
+                                            this.availablePlayerJungle.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Mid-lane') {
+                                            this.availablePlayerMidLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Bot-Lane') {
+                                            this.availablePlayerBotLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Support') {
+                                            this.availablePlayerSupport.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+                                    }
                                 } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
-                                    this.availablePlayer = activePlayer.map(player => ({
-                                        id: player.id,
-                                        name: player.name,
-                                    }));
+                                    for (let i = 0; i < activePlayer.length; i++) {
+                                        if (activePlayer[i].position === 'Top-Lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Jungle') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Mid-lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Bot-Lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Support') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+                                    }
                                 }
                             })
                             .catch(error => {
