@@ -51,7 +51,7 @@
                 </select>
             </div>
         </div>
-        <button type="button" @click="saveNewTeam">Save team</button>
+        <button type="button" @click="validateForm">Save team</button>
     </form>
     <span class="success-message"> {{ textSuccessMessage }}</span>
     <span class="error-message">{{ textErrorMessage }}</span>
@@ -73,7 +73,7 @@ export default {
         };
     },
     methods: {
-        async saveNewTeam() {
+        async validateForm() {
             let teamname = document.getElementById('teamname').value;
             let selectElementTopLane = document.getElementById('Top-Lane');
             let firstPlayerId = selectElementTopLane.options[selectElementTopLane.selectedIndex].id;
@@ -128,7 +128,6 @@ export default {
                 fourthPlayerId !== 'NULL' &&
                 fifthPlayerId !== 'NULL'
             ) {
-                // Calculate Elo-Points, if team is complete
                 eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
@@ -157,6 +156,25 @@ export default {
                 eloPointsTeam++;
             }
 
+            this.postNewTeam(
+                teamname,
+                firstPlayerId,
+                secondPlayerId,
+                thirdPlayerId,
+                fourthPlayerId,
+                fifthPlayerId,
+                eloPointsTeam,
+            );
+        },
+        async postNewTeam(
+            setTeamname,
+            setFirstPlayer,
+            setSecondPlayer,
+            setThirdPlayer,
+            setFourthPlayer,
+            setFifthPlayer,
+            setEloPoints,
+        ) {
             fetch('http://localhost:3000/createNewTeam', {
                 method: 'POST',
                 headers: {
@@ -164,13 +182,13 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    newTeamname: teamname,
-                    newEloPoints: eloPointsTeam,
-                    firstMember: firstPlayerId,
-                    secondMember: secondPlayerId,
-                    thirdMember: thirdPlayerId,
-                    fourthMember: fourthPlayerId,
-                    fifthMember: fifthPlayerId,
+                    newTeamname: setTeamname,
+                    newEloPoints: setEloPoints,
+                    firstMember: setFirstPlayer,
+                    secondMember: setSecondPlayer,
+                    thirdMember: setThirdPlayer,
+                    fourthMember: setFourthPlayer,
+                    fifthMember: setFifthPlayer,
                 }),
             })
                 .then(response => {
@@ -178,7 +196,7 @@ export default {
                         let createTeamForm = document.getElementById('createTeamForm').childNodes;
                         let playeroptions = document.getElementsByClassName('playeroptions');
 
-                        // Set Values of user input to defautl
+                        // Set Values of user input to default after new team is added successfully
                         createTeamForm[1].value = '';
                         for (let i = 0; i < playeroptions.length; i++) {
                             playeroptions[i].checked = false;
@@ -194,13 +212,13 @@ export default {
                 });
         },
         displayAvailablePlayer() {
-            // Display all available player-IDs in the select-option-field
             fetch('http://localhost:3000/getActivePlayer')
                 .then(response => response.json())
                 .then(activePlayerData => {
                     let activePlayer = [];
 
                     for (let i = 0; i < activePlayerData.length; i++) {
+                        // Display all available player-IDs in the select-option-field
                         activePlayer.push({
                             id: activePlayerData[i].playerID,
                             name: activePlayerData[i].playername,
@@ -217,7 +235,6 @@ export default {
                                 activeTeammemberIDs.push(activeTeammemberData[i].playerID);
                             }
 
-                            // Display only player that are not deleted and are not in a team yet
                             let availableTeammember = [];
 
                             for (let i = 0; i < activeTeammemberIDs.length; i++) {
@@ -240,9 +257,9 @@ export default {
                                 }
                             }
 
+                            // Display not deleted player, that are not in a team yet
                             if (availableTeammember.length > 0) {
                                 for (let i = 0; i < availableTeammember.length; i++) {
-                                    // Push data into array in order to display it with v-for
                                     if (availableTeammember[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
                                             id: availableTeammember[i].id,
@@ -280,7 +297,6 @@ export default {
                                 }
                             } else if (activePlayer.length > 0) {
                                 for (let i = 0; i < activePlayer.length; i++) {
-                                    // Push data into array in order to display it with v-for
                                     if (activePlayerData[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
                                             id: activePlayer[i].id,

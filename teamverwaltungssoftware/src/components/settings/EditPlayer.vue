@@ -7,7 +7,7 @@
             placeholder="search for position,playername..."
             @keyup="getFilteredPlayer"
         />
-        <span class="resultMessage"> {{ textResultMessage }}</span>
+        <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
     <table id="player-table">
         <thead>
@@ -23,15 +23,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="row in tablePlayer" :key="row">
-                <td>{{ row.tableDataCellPlayerId }}</td>
-                <td>{{ row.tableDataCellPlayername }}</td>
-                <td>{{ row.tableDataCellFirstname }}</td>
-                <td>{{ row.tableDataCellLastname }}</td>
-                <td>{{ row.tableDataCellEmail }}</td>
-                <td>{{ row.tableDataCellPosition }}</td>
-                <td>{{ row.tableDataCellEloPoints }}</td>
-                <td>{{ row.tableDataCellDeleted }}</td>
+            <tr v-for="row in fetchedPlayerdata" :key="row">
+                <td>{{ row.playerID }}</td>
+                <td>{{ row.playername }}</td>
+                <td>{{ row.firstname }}</td>
+                <td>{{ row.lastname }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.position }}</td>
+                <td>{{ row.eloPoints }}</td>
+                <td>{{ row.deleted }}</td>
             </tr>
         </tbody>
     </table>
@@ -66,10 +66,10 @@
             <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
-            <button type="button" @click="editPlayer">Edit player</button>
+            <button type="button" @click="validateEditPlayerForm">Edit player</button>
         </form>
-        <span class="success-message"> {{ textSuccessMessage }}</span>
-        <span class="error-message">{{ textErrorMessage }}</span>
+        <span class="success-message"> {{ successMessage }}</span>
+        <span class="error-message">{{ errorMessage }}</span>
     </div>
 
     <div class="popUp-Window" v-if="openDeletePlayerPopUpWindow">
@@ -85,7 +85,7 @@
             </select>
             <button type="button" @click="deletePlayer">Delete player</button>
         </div>
-        <span class="success-message"> {{ textSuccessMessage }}</span>
+        <span class="success-message"> {{ successMessage }}</span>
     </div>
 </template>
 
@@ -94,14 +94,14 @@ export default {
     data() {
         return {
             name: 'EditPlayer',
-            textErrorMessage: '',
-            textSuccessMessage: '',
-            textResultMessage: '',
+            errorMessage: '',
+            successMessage: '',
+            resultMessage: '',
             openDeletePlayerPopUpWindow: false,
             openEditPlayerForm: false,
             deleteablePlayer: [],
             editablePlayer: [],
-            tablePlayer: [],
+            fetchedPlayerdata: [],
         };
     },
     methods: {
@@ -122,9 +122,8 @@ export default {
             })
                 .then(response => {
                     if (response.ok) {
-                        // Update table in frontend after new changes
                         this.displayPlayerTable();
-                        this.textSuccessMessage = 'deleted player successfully!';
+                        this.successMessage = 'deleted player successfully!';
                         return response.json();
                     }
                 })
@@ -135,18 +134,18 @@ export default {
         },
         openAndCloseDeletePlayerPopUpWindow() {
             this.openDeletePlayerPopUpWindow = !this.openDeletePlayerPopUpWindow;
-            this.textSuccessMessage = '';
+            this.successMessage = '';
             this.deleteablePlayer = [];
 
-            // Display all available player-IDs in the select-option-field
             if (this.openDeletePlayerPopUpWindow) {
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Push data into array in order to display it with v-for
-                            this.deleteablePlayer.push({ id: data[i].playerID, name: data[i].playername });
-                        }
+                        // Display all available player-IDs in the select-option-field
+                        this.deleteablePlayer = data.map(player => ({
+                            id: player.playerID,
+                            name: player.playername,
+                        }));
                     })
                     .catch(error => {
                         console.error(error);
@@ -156,18 +155,15 @@ export default {
         },
         openAndCloseEditPlayerForm() {
             this.openEditPlayerForm = !this.openEditPlayerForm;
-            this.textSuccessMessage = '';
+            this.successMessage = '';
             this.editablePlayer = [];
 
             if (this.openEditPlayerForm) {
-                // Display all available player in the select-option-field
                 fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Push data into array in order to display it with v-for
-                            this.editablePlayer.push(data[i].playerID);
-                        }
+                        // Display all available player-IDs in the select-option-field
+                        this.editablePlayer = data.map(player => player.playerID);
                     })
                     .catch(error => {
                         console.error(error);
@@ -175,7 +171,7 @@ export default {
                     });
             }
         },
-        editPlayer() {
+        validateEditPlayerForm() {
             let selectElement = document.getElementById('selectPlayerID');
             let playerId = selectElement.options[selectElement.selectedIndex].id;
             let playername = document.getElementById('playername').value;
@@ -195,17 +191,17 @@ export default {
                 email.length === 0 ||
                 eloPoints.length === 0
             ) {
-                this.textErrorMessage = 'Please fill out at least one form field!';
+                this.errorMessage = 'Please fill out at least one form field!';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
             if (eloPoints > 4000) {
-                this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                this.errorMessage = 'Maximum Elo-Points are 4000';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
             if (firstname.length > 0) {
@@ -214,12 +210,12 @@ export default {
 
                 for (let i = 0; i < splittedFirstname.length; i++) {
                     if (!splittedFirstname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid firstname!';
+                        this.errorMessage = 'Invalid firstname!';
                         return;
                     }
                 }
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
             if (lastname.length > 0) {
@@ -228,44 +224,65 @@ export default {
 
                 for (let i = 0; i < splittedLastname.length; i++) {
                     if (!splittedLastname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid lastname!';
+                        this.errorMessage = 'Invalid lastname!';
                         return;
                     }
                 }
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
             if (email.length > 0) {
                 const regExEmail = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,4}$/;
                 if (!email.match(regExEmail)) {
-                    this.textErrorMessage = 'Invalid E-mail!';
+                    this.errorMessage = 'Invalid E-mail!';
                     return;
                 }
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
             if (playername.length > 0) {
-                for (let i = 0; i < this.tablePlayer.length; i++) {
+                for (let i = 0; i < this.fetchedPlayerdata.length; i++) {
                     if (
-                        this.tablePlayer[i].tableDataCellPlayername === playername &&
-                        this.tablePlayer[i].tableDataCellPlayerId === Number(playerId)
+                        this.fetchedPlayerdata[i].playername === playername &&
+                        this.fetchedPlayerdata[i].playerID === Number(playerId)
                     ) {
-                        this.textErrorMessage = '';
+                        this.errorMessage = '';
                         break;
                     } else if (
-                        this.tablePlayer[i].tableDataCellPlayername === playername &&
-                        this.tablePlayer[i].tableDataCellPlayerId !== Number(playerId)
+                        this.fetchedPlayerdata[i].playername === playername &&
+                        this.fetchedPlayerdata[i].playerID !== Number(playerId)
                     ) {
-                        this.textErrorMessage = 'Playername already exists!';
+                        this.errorMessage = 'Playername already exists!';
                         return;
                     }
                 }
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
+            this.updateExistingPlayer(
+                playername,
+                firstname,
+                lastname,
+                email,
+                position,
+                eloPoints,
+                deleted,
+                playerId,
+            );
+        },
+        async updateExistingPlayer(
+            setPlayername,
+            setFirstname,
+            setLastname,
+            setEmail,
+            setPosition,
+            setEloPoints,
+            setDeleted,
+            setPlayerId,
+        ) {
             fetch('http://localhost:3000/updatePlayer', {
                 method: 'PUT',
                 headers: {
@@ -273,21 +290,20 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    changedPlayername: playername,
-                    changedFirstname: firstname,
-                    changedLastname: lastname,
-                    changedEmail: email,
-                    changedPosition: position,
-                    changedEloPoints: eloPoints,
-                    changedDeletedValue: deleted,
-                    playerId: playerId,
+                    changedPlayername: setPlayername,
+                    changedFirstname: setFirstname,
+                    changedLastname: setLastname,
+                    changedEmail: setEmail,
+                    changedPosition: setPosition,
+                    changedEloPoints: setEloPoints,
+                    changedDeletedValue: setDeleted,
+                    playerId: setPlayerId,
                 }),
             })
                 .then(response => {
                     if (response.ok) {
-                        // display new changes in player table
                         this.displayPlayerTable();
-                        this.textSuccessMessage = 'updated player successfully!';
+                        this.successMessage = 'updated player successfully!';
                         return response.json();
                     }
                 })
@@ -297,7 +313,7 @@ export default {
                 });
         },
         displayPlayerTable() {
-            this.tablePlayer = [];
+            this.fetchedPlayerdata = [];
 
             fetch('http://localhost:3000/getPlayer')
                 .then(response => response.json())
@@ -306,19 +322,17 @@ export default {
                         document.getElementById('player-table').innerHTML = 'No data available!';
                     }
 
-                    for (let i = 0; i < data.length; i++) {
-                        // Push data into array in order to display it with v-for
-                        this.tablePlayer.push({
-                            tableDataCellPlayerId: data[i].playerID,
-                            tableDataCellPlayername: data[i].playername,
-                            tableDataCellFirstname: data[i].firstname,
-                            tableDataCellLastname: data[i].lastname,
-                            tableDataCellEmail: data[i].email,
-                            tableDataCellPosition: data[i].position,
-                            tableDataCellEloPoints: data[i].eloPoints,
-                            tableDataCellDeleted: data[i].deleted,
-                        });
-                    }
+                    // Display fetched data in the table above
+                    this.fetchedPlayerdata = data.map(player => ({
+                        playerID: player.playerID,
+                        playername: player.playername,
+                        firstname: player.firstname,
+                        lastname: player.lastname,
+                        email: player.email,
+                        position: player.position,
+                        eloPoints: player.eloPoints,
+                        deleted: player.deleted,
+                    }));
                 })
                 .catch(error => {
                     console.error(error);
@@ -334,13 +348,13 @@ export default {
             let counterDisplayedRows = 0;
 
             if (searchvalue.length === 0) {
-                this.textResultMessage = '';
+                this.resultMessage = '';
 
-                for (let i = 1; i <= this.tablePlayer.length; i++) {
+                for (let i = 1; i <= this.fetchedPlayerdata.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i <= this.tablePlayer.length; i++) {
+                for (let i = 1; i <= this.fetchedPlayerdata.length; i++) {
                     let currentRow = tbodyRows[i];
 
                     for (let i = 0; i < currentRow.cells.length; i++) {
@@ -356,7 +370,7 @@ export default {
                     }
                 }
 
-                this.textResultMessage =
+                this.resultMessage =
                     'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
             }
         },
