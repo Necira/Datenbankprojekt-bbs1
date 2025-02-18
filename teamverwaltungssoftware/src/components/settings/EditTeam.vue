@@ -315,28 +315,28 @@ export default {
                                         }
 
                                         if (activePlayer[i].position === 'Jungle') {
-                                            this.availablePlayerTopLane.push({
+                                            this.availablePlayerJungle.push({
                                                 id: activePlayer[i].id,
                                                 name: activePlayer[i].name,
                                             });
                                         }
 
                                         if (activePlayer[i].position === 'Mid-lane') {
-                                            this.availablePlayerTopLane.push({
+                                            this.availablePlayerMidLane.push({
                                                 id: activePlayer[i].id,
                                                 name: activePlayer[i].name,
                                             });
                                         }
 
                                         if (activePlayer[i].position === 'Bot-Lane') {
-                                            this.availablePlayerTopLane.push({
+                                            this.availablePlayerBotLane.push({
                                                 id: activePlayer[i].id,
                                                 name: activePlayer[i].name,
                                             });
                                         }
 
                                         if (activePlayer[i].position === 'Support') {
-                                            this.availablePlayerTopLane.push({
+                                            this.availablePlayerSupport.push({
                                                 id: activePlayer[i].id,
                                                 name: activePlayer[i].name,
                                             });
