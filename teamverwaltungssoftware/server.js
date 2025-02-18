@@ -236,11 +236,12 @@ app.put('/updateTeam', (req, res) => {
         changedThirdMember,
         changedFourthMember,
         changedFifthMember,
+        changedEloPoints,
         teamId,
     } = req.body;
 
     connection.query(
-        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ? WHERE `teamID` = ?',
+        'UPDATE `teams` SET `teamname` = ?, `deleted` = ?, `firstMember`= ?, `secondMember` = ?, `thirdMember` = ?, `fourthMember`= ?, `fifthMember`= ?, `eloPoints` = ? WHERE `teamID` = ?',
         [
             changedTeamname,
             changedDeletedValue,
@@ -249,6 +250,7 @@ app.put('/updateTeam', (req, res) => {
             changedThirdMember,
             changedFourthMember,
             changedFifthMember,
+            changedEloPoints,
             teamId,
         ],
         (err, result) => {
@@ -256,6 +258,31 @@ app.put('/updateTeam', (req, res) => {
                 console.error(err);
             } else {
                 res.send(req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to get player leaderboard data
+app.get('/getPlayerLeaderboard', (req, res) => {
+    connection.query('SELECT * FROM `player` WHERE `deleted` = 0 ORDER BY `eloPoints` DESC', (err, rows) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(rows);
+        }
+    });
+});
+
+// API-Endpoint to get team leaderboard data
+app.get('/getTeamLeaderboard', (req, res) => {
+    connection.query(
+        'SELECT * FROM `teams` WHERE `deleted` = 0 AND `firstMember` IS NOT NULL AND `secondMember` IS NOT NULL AND `thirdMember` IS NOT NULL AND `fourthMember` IS NOT NULL AND `fifthMember` IS NOT NULL  ORDER BY `eloPoints` DESC',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
             }
         },
     );
