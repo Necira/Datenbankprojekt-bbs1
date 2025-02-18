@@ -195,13 +195,35 @@ app.post('/updateWinner', (req, res) => {
     });
 });
 
+app.get('/getElo/:playername', (req, res) => {
+    const { playername } = req.params;
+
+    connection.query(
+        'SELECT eloPoints FROM `player` WHERE `playername` = ?',
+        [playername],
+        (err, results) => {
+            if (err) {
+                console.error('Error fetching Elo:', err);
+                res.status(500).send('Error fetching Elo');
+                return;
+            }
+
+            if (results.length === 0) {
+                res.status(404).send('Player not found');
+                return;
+            }
+
+            res.json({ playername, eloPoints: results[0].eloPoints });
+        }
+    );
+});
+
 app.post('/updateElo', (req, res) => {
     const { winner, loser } = req.body;
 
-    // Increase Elo for the winner
     connection.query(
-        'UPDATE `player` SET `eloPoints` = `eloPoints` + 10 WHERE `playername` = ?',
-        [winner],
+        'UPDATE `player` SET `eloPoints` = `eloPoints` + ? WHERE `playername` = ?',
+        [elo, winner],
         err => {
             if (err) {
                 console.error('Error updating winner Elo:', err);
@@ -211,8 +233,8 @@ app.post('/updateElo', (req, res) => {
 
             // Decrease Elo for the loser
             connection.query(
-                'UPDATE `player` SET `eloPoints` = `eloPoints` - 10 WHERE `playername` = ?',
-                [loser],
+                'UPDATE `player` SET `eloPoints` = `eloPoints` - ? WHERE `playername` = ?',
+                [elo,loser],
                 err => {
                     if (err) {
                         console.error('Error updating loser Elo:', err);
