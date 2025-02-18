@@ -148,11 +148,26 @@ export default {
                         return;
                     });
             } else {
-                firstPlayerId = null;
-                secondPlayerId = null;
-                thirdPlayerId = null;
-                fourthPlayerId = null;
-                fifthPlayerId = null;
+                if (firstPlayerId === 'NULL') {
+                    firstPlayerId = null;
+                }
+
+                if (secondPlayerId === 'NULL') {
+                    secondPlayerId = null;
+                }
+
+                if (thirdPlayerId === 'NULL') {
+                    thirdPlayerId = null;
+                }
+
+                if (fourthPlayerId === 'NULL') {
+                    fourthPlayerId = null;
+                }
+
+                if (fifthPlayerId === 'NULL') {
+                    fifthPlayerId = null;
+                }
+
                 eloPointsTeam++;
             }
 
@@ -225,6 +240,7 @@ export default {
                             position: activePlayerData[i].position,
                         });
                     }
+                    console.log('activePlayer', activePlayer);
 
                     fetch('http://localhost:3000/getActiveTeammember')
                         .then(response => response.json())
@@ -232,8 +248,12 @@ export default {
                             let activeTeammemberIDs = [];
 
                             for (let i = 0; i < activeTeammemberData.length; i++) {
-                                activeTeammemberIDs.push(activeTeammemberData[i].playerID);
+                                // console.log(activeTeammemberData[i]);
+                                if (!activeTeammemberIDs.includes(activeTeammemberData[i].playerID)) {
+                                    activeTeammemberIDs.push(activeTeammemberData[i].playerID);
+                                }
                             }
+                            console.log('activeTeammemberIDs', activeTeammemberIDs);
 
                             let availableTeammember = [];
 
@@ -244,10 +264,14 @@ export default {
                                         !availableTeammember.some(
                                             element => element.id === activePlayer[a].id,
                                         ) &&
-                                        !activeTeammemberIDs.some(
-                                            element => element.id === activePlayer[a].id,
-                                        )
+                                        !activeTeammemberIDs.includes(activePlayer[a].id)
                                     ) {
+                                        console.log('activePlayer[a]', {
+                                            id: activePlayer[a].id,
+                                            name: activePlayer[a].name,
+                                            position: activePlayer[a].position,
+                                        });
+                                        console.log('activeTeammemberIDs[i]', activeTeammemberIDs[i]);
                                         availableTeammember.push({
                                             id: activePlayer[a].id,
                                             name: activePlayer[a].name,
@@ -259,6 +283,8 @@ export default {
 
                             // Display not deleted player, that are not in a team yet
                             if (availableTeammember.length > 0) {
+                                console.log('if');
+                                console.log(availableTeammember);
                                 for (let i = 0; i < availableTeammember.length; i++) {
                                     if (availableTeammember[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
@@ -295,7 +321,8 @@ export default {
                                         });
                                     }
                                 }
-                            } else if (activePlayer.length > 0) {
+                            } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
+                                console.log('else if');
                                 for (let i = 0; i < activePlayer.length; i++) {
                                     if (activePlayerData[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({

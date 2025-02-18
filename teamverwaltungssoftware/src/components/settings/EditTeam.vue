@@ -258,11 +258,11 @@ export default {
                                                     element.name === activePlayer[a].name,
                                             )
                                         ) {
-                                            availableTeammember = activePlayer.map(player => ({
-                                                id: player.id,
-                                                name: player.name,
-                                                position: player.position,
-                                            }));
+                                            availableTeammember.push({
+                                                id: activePlayer[a].id,
+                                                name: activePlayer[a].name,
+                                                position: activePlayer[a].position,
+                                            });
                                         }
                                     }
                                 }
