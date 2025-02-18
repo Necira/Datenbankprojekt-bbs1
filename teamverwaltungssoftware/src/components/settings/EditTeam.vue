@@ -403,8 +403,6 @@ export default {
             );
             let selectFieldFifthMember = document.getElementById('fifthMember');
             let fifthMember = Number(selectFieldFifthMember.options[selectFieldFifthMember.selectedIndex].id);
-            let eloPointsTeam = 0;
-            let choosenTeamMembers = [firstMember, secondMember, thirdMember, fourthMember, fifthMember];
 
             if (teamname.length === 0 || deleted.length === 0) {
                 this.errorMessage = 'Please fill out at least one form field!';
@@ -462,7 +460,7 @@ export default {
                 teamId,
             );
         },
-        updateExistingTeam(
+        async updateExistingTeam(
             setTeamname,
             setDeleted,
             setFirstMember,
@@ -472,12 +470,21 @@ export default {
             setFifthMember,
             setTeamId,
         ) {
+            let eloPointsTeam = 0;
+            let choosenTeamMembers = [
+                setFirstMember,
+                setSecondMember,
+                setThirdMember,
+                setFourthMember,
+                setFifthMember,
+            ];
+
             if (
-                !isNaN(firstMember) &&
-                !isNaN(secondMember) &&
-                !isNaN(thirdMember) &&
-                !isNaN(fourthMember) &&
-                !isNaN(fifthMember)
+                !isNaN(setFirstMember) &&
+                !isNaN(setSecondMember) &&
+                !isNaN(setThirdMember) &&
+                !isNaN(setFourthMember) &&
+                !isNaN(setFifthMember)
             ) {
                 // Calculate Elo-Points, if team is complete
                 eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
@@ -493,7 +500,6 @@ export default {
                         }
 
                         let finalEloPoints = Math.round(calculatedEloPoints / 5);
-                        console.log('if:', finalEloPoints);
                         return finalEloPoints;
                     })
                     .catch(error => {
@@ -518,6 +524,7 @@ export default {
                     changedThirdMember: setThirdMember,
                     changedFourthMember: setFourthMember,
                     changedFifthMember: setFifthMember,
+                    changedEloPoints: eloPointsTeam,
                     teamId: setTeamId,
                 }),
             })
