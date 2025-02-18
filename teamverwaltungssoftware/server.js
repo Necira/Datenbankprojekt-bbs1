@@ -217,7 +217,28 @@ app.get('/getElo/:playername', (req, res) => {
         }
     );
 });
+app.get('/getTeamElo/:teamname', (req, res) => {
+    const { teamname } = req.params;
 
+    connection.query(
+        'SELECT eloPoints FROM `teams` WHERE `teamname` = ?',
+        [teamname],
+        (err, results) => {
+            if (err) {
+                console.error('Error fetching team Elo:', err);
+                res.status(500).send('Error fetching team Elo');
+                return;
+            }
+
+            if (results.length === 0) {
+                res.status(404).send('Team not found');
+                return;
+            }
+
+            res.json({ teamname, eloPoints: results[0].eloPoints });
+        }
+    );
+});
 app.post('/updateElo', (req, res) => {
     const { winner, loser } = req.body;
 
@@ -231,7 +252,6 @@ app.post('/updateElo', (req, res) => {
                 return;
             }
 
-            // Decrease Elo for the loser
             connection.query(
                 'UPDATE `player` SET `eloPoints` = `eloPoints` - ? WHERE `playername` = ?',
                 [elo,loser],
@@ -248,7 +268,7 @@ app.post('/updateElo', (req, res) => {
         },
     );
 });
-// API-Endpoint to update a specific team
+
 app.put('/updateTeam', (req, res) => {
     let {
         changedTeamname,

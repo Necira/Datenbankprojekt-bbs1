@@ -79,56 +79,49 @@ export default {
       }
       console.log(`${teamName} set to: ${selectedTeam}`);
     },
-    async updateEloPoints(winner, loser) {
+    async updateTeamEloPoints(winningTeam, losingTeam) {
       try {
-          const responseWinner = await fetch(`http://localhost:3000/getElo/${winner}`);
-          const responseLoser = await fetch(`http://localhost:3000/getElo/${loser}`);
+        const responseWinner = await fetch(`http://localhost:3000/getTeamElo/${winningTeam}`);
+        const responseLoser = await fetch(`http://localhost:3000/getTeamElo/${losingTeam}`);
+        if (!responseWinner.ok || !responseLoser.ok) {
+            throw new Error('Failed to fetch Elo points for teams');
+        }
+        const dataWinner = await responseWinner.json();
+        const dataLoser = await responseLoser.json();
+        const currentEloWinner = dataWinner.eloPoints;
+        const currentEloLoser = dataLoser.eloPoints;
+        const { winner: newEloWinner, loser: newEloLoser } = eloCalculator(currentEloWinner, currentEloLoser);
 
-          if (!responseWinner.ok || !responseLoser.ok) {
-              throw new Error('Failed to fetch Elo points');
-          }
-          const dataWinner = await responseWinner.json();
-          const dataLoser = await responseLoser.json();
-          const currentEloWinner = dataWinner.eloPoints;
-          const currentEloLoser = dataLoser.eloPoints;
-          const { winner: newEloWinner, loser: newEloLoser } = eloCalculator(currentEloWinner, currentEloLoser);
-
-          await fetch('http://localhost:3000/updateElo', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
-                  eloWinner: newEloWinner, 
-                  winner, 
-                  eloLoser: newEloLoser, 
-                  loser 
-              }),
-          });
-
-          console.log(`Updated Elo - Winner: ${newEloWinner} (${winner}), Loser: ${newEloLoser} (${loser})`);
-
-          return { newEloWinner, newEloLoser };
-      } catch (error) {
-          console.error('Error updating Elo points:', error.message);
-          throw new Error('Failed to update Elo points');
-      }
+        await fetch('http://localhost:3000/updateTeamElo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+              eloWinner: newEloWinner, 
+              winningTeam, 
+              eloLoser: newEloLoser, 
+              losingTeam 
+          }),
+        });
+        return { newEloWinner, newEloLoser };
+    } catch (error) {
+        console.error('Error updating team Elo points:', error.message);
+        throw new Error('Failed to update team Elo points');
+    }
   },
   async setWinner(winner) {
     if (this.teamOne && this.teamTwo && this.teamOne !== this.teamTwo) {
         let loser = '';
-
         if (winner) {
             loser = winner === this.teamOne ? this.teamTwo : this.teamOne;
-
             try {
-                const { newEloWinner, newEloLoser } = await this.updateEloPoints(winner, loser);
+                const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
                 console.log(`Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`);
             } catch (error) {
                 console.error('Error updating Elo points:', error.message);
             }
-
             this.winner = winner;
         } else {
-            this.message = "Nice try... choose a winner!";
+          this.message = "Nice try... choose a winner!";
         }
     } else {
         this.message = "Choose two different teams.";
@@ -140,7 +133,7 @@ export default {
           this.winner = winner;
 
           try {
-              const { newEloWinner, newEloLoser } = await this.updateEloPoints(winner, loser);
+              const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
               console.log(`Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`);
           } catch (error) {
               console.error('Error updating Elo points:', error.message);
