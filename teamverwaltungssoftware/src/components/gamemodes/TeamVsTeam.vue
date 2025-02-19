@@ -35,114 +35,121 @@
 import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
-import { eloCalculator } from '../GameLogic/EloCalculator.js'
+import { eloCalculator } from '../GameLogic/EloCalculator.js';
 
 export default {
-  components: {
-    TeamPicks,
-    WinnerMessage,
-  },
-  name: 'TeamVsTeam',
-  data() {
-    return {
-      teamOne: '', 
-      teamTwo: '', 
-      availableTeams: [],
-      winner: '',
-      message: '',
-    };
-  },
-  created() {
-    this.fetchTeams(); 
-  },
-  methods: {
-    async fetchTeams() {
-      try {
-        const response = await fetch('http://localhost:3000/getActiveteams');
-        const data = await response.json();
-        console.log('Fetched teams:', data); 
-        this.availableTeams = data; 
-      } catch (error) {
-        console.error('Error fetching teams:', error.message);
-      }
+    components: {
+        TeamPicks,
+        WinnerMessage,
     },
-    setTeam(teamName, selectedTeam) {
-      if (teamName === 'teamOne') {
-        this.teamOne = selectedTeam;
-      } else if (teamName === 'teamTwo') {
-        this.teamTwo = selectedTeam;
-      }
-      if (this.teamOne === this.teamTwo) {
-        this.message = 'nice try.. select 2 different teams ;)'
-      }  else {
-        this.message = ''
-      }
-      console.log(`${teamName} set to: ${selectedTeam}`);
+    name: 'TeamVsTeam',
+    data() {
+        return {
+            teamOne: '',
+            teamTwo: '',
+            availableTeams: [],
+            winner: '',
+            message: '',
+        };
     },
-    async updateTeamEloPoints(winningTeam, losingTeam) {
-      try {
-        const responseWinner = await fetch(`http://localhost:3000/getTeamElo/${winningTeam}`);
-        const responseLoser = await fetch(`http://localhost:3000/getTeamElo/${losingTeam}`);
-        if (!responseWinner.ok || !responseLoser.ok) {
-            throw new Error('Failed to fetch Elo points for teams');
-        }
-        const dataWinner = await responseWinner.json();
-        const dataLoser = await responseLoser.json();
-        const currentEloWinner = dataWinner.eloPoints;
-        const currentEloLoser = dataLoser.eloPoints;
-        const { winner: newEloWinner, loser: newEloLoser } = eloCalculator(currentEloWinner, currentEloLoser);
-
-        await fetch('http://localhost:3000/updateTeamElo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-              eloWinner: newEloWinner, 
-              winningTeam, 
-              eloLoser: newEloLoser, 
-              losingTeam 
-          }),
-        });
-        return { newEloWinner, newEloLoser };
-    } catch (error) {
-        console.error('Error updating team Elo points:', error.message);
-        throw new Error('Failed to update team Elo points');
-    }
-  },
-  async setWinner(winner) {
-    if (this.teamOne && this.teamTwo && this.teamOne !== this.teamTwo) {
-        let loser = '';
-        if (winner) {
-            loser = winner === this.teamOne ? this.teamTwo : this.teamOne;
+    created() {
+        this.fetchTeams();
+    },
+    methods: {
+        async fetchTeams() {
             try {
-                const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
-                console.log(`Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`);
+                const response = await fetch('http://localhost:3000/getActiveteams');
+                const data = await response.json();
+                console.log('Fetched teams:', data);
+                this.availableTeams = data;
             } catch (error) {
-                console.error('Error updating Elo points:', error.message);
+                console.error('Error fetching teams:', error.message);
             }
-            this.winner = winner;
-        } else {
-          this.message = "Nice try... choose a winner!";
-        }
-    } else {
-        this.message = "Choose two different teams.";
-    }
-},
-  async setRandomWinner() {
-      if (this.teamOne && this.teamTwo && this.teamOne !== this.teamTwo) {
-          const { winner, loser } = randomizer(this.teamOne, this.teamTwo);
-          this.winner = winner;
+        },
+        setTeam(teamName, selectedTeam) {
+            if (teamName === 'teamOne') {
+                this.teamOne = selectedTeam;
+            } else if (teamName === 'teamTwo') {
+                this.teamTwo = selectedTeam;
+            }
+            if (this.teamOne === this.teamTwo) {
+                this.message = 'nice try.. select 2 different teams ;)';
+            } else {
+                this.message = '';
+            }
+            console.log(`${teamName} set to: ${selectedTeam}`);
+        },
+        async updateTeamEloPoints(winningTeam, losingTeam) {
+            try {
+                const responseWinner = await fetch(`http://localhost:3000/getTeamElo/${winningTeam}`);
+                const responseLoser = await fetch(`http://localhost:3000/getTeamElo/${losingTeam}`);
+                if (!responseWinner.ok || !responseLoser.ok) {
+                    throw new Error('Failed to fetch Elo points for teams');
+                }
+                const dataWinner = await responseWinner.json();
+                const dataLoser = await responseLoser.json();
+                const currentEloWinner = dataWinner.eloPoints;
+                const currentEloLoser = dataLoser.eloPoints;
+                const { winner: newEloWinner, loser: newEloLoser } = eloCalculator(
+                    currentEloWinner,
+                    currentEloLoser,
+                );
 
-          try {
-              const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
-              console.log(`Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`);
-          } catch (error) {
-              console.error('Error updating Elo points:', error.message);
-          }
-      } else {
-          this.message = "Please select both teams and ensure they are different.";
-      }
-    }
-  }
+                await fetch('http://localhost:3000/updateTeamElo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        gamewinner: winningTeam,
+                        gameloser: losingTeam,
+                        eloPointsWinner: newEloWinner,
+                        eloPointsLoser: newEloLoser,
+                    }),
+                });
+                return { newEloWinner, newEloLoser };
+            } catch (error) {
+                console.error('Error updating team Elo points:', error.message);
+                throw new Error('Failed to update team Elo points');
+            }
+        },
+        async setWinner(winner) {
+            if (this.teamOne && this.teamTwo && this.teamOne !== this.teamTwo) {
+                let loser = '';
+                if (winner) {
+                    loser = winner === this.teamOne ? this.teamTwo : this.teamOne;
+                    try {
+                        const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
+                        console.log(
+                            `Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`,
+                        );
+                    } catch (error) {
+                        console.error('Error updating Elo points:', error.message);
+                    }
+                    this.winner = winner;
+                } else {
+                    this.message = 'Nice try... choose a winner!';
+                }
+            } else {
+                this.message = 'Choose two different teams.';
+            }
+        },
+        async setRandomWinner() {
+            if (this.teamOne && this.teamTwo && this.teamOne !== this.teamTwo) {
+                const { winner, loser } = randomizer(this.teamOne, this.teamTwo);
+                this.winner = winner;
+
+                try {
+                    const { newEloWinner, newEloLoser } = await this.updateTeamEloPoints(winner, loser);
+                    console.log(
+                        `Game finished! Winner: ${winner} (${newEloWinner}), Loser: ${loser} (${newEloLoser})`,
+                    );
+                } catch (error) {
+                    console.error('Error updating Elo points:', error.message);
+                }
+            } else {
+                this.message = 'Please select both teams and ensure they are different.';
+            }
+        },
+    },
 };
 </script>
 

@@ -214,37 +214,33 @@ app.get('/getElo/:playername', (req, res) => {
             }
 
             res.json({ playername, eloPoints: results[0].eloPoints });
-        }
+        },
     );
 });
 app.get('/getTeamElo/:teamname', (req, res) => {
     const { teamname } = req.params;
 
-    connection.query(
-        'SELECT eloPoints FROM `teams` WHERE `teamname` = ?',
-        [teamname],
-        (err, results) => {
-            if (err) {
-                console.error('Error fetching team Elo:', err);
-                res.status(500).send('Error fetching team Elo');
-                return;
-            }
-
-            if (results.length === 0) {
-                res.status(404).send('Team not found');
-                return;
-            }
-
-            res.json({ teamname, eloPoints: results[0].eloPoints });
+    connection.query('SELECT eloPoints FROM `teams` WHERE `teamname` = ?', [teamname], (err, results) => {
+        if (err) {
+            console.error('Error fetching team Elo:', err);
+            res.status(500).send('Error fetching team Elo');
+            return;
         }
-    );
+
+        if (results.length === 0) {
+            res.status(404).send('Team not found');
+            return;
+        }
+
+        res.json({ teamname, eloPoints: results[0].eloPoints });
+    });
 });
-app.post('/updateElo', (req, res) => {
-    const { winner, loser } = req.body;
+app.post('/updateTeamElo', (req, res) => {
+    const { gamewinner, gameloser, eloPointsWinner, eloPointsLoser } = req.body;
 
     connection.query(
-        'UPDATE `player` SET `eloPoints` = `eloPoints` + ? WHERE `playername` = ?',
-        [elo, winner],
+        'UPDATE `teams` SET `eloPoints` = ? WHERE `teamname` = ?',
+        [eloPointsWinner, gamewinner],
         err => {
             if (err) {
                 console.error('Error updating winner Elo:', err);
@@ -253,8 +249,38 @@ app.post('/updateElo', (req, res) => {
             }
 
             connection.query(
-                'UPDATE `player` SET `eloPoints` = `eloPoints` - ? WHERE `playername` = ?',
-                [elo,loser],
+                'UPDATE `teams` SET `eloPoints` = ? WHERE `teamname` = ?',
+                [eloPointsLoser, gameloser],
+                err => {
+                    if (err) {
+                        console.error('Error updating loser Elo:', err);
+                        res.status(500).send('Error updating loser Elo');
+                        return;
+                    }
+
+                    res.send('Elo points updated successfully');
+                },
+            );
+        },
+    );
+});
+
+app.post('/updatePlayerElo', (req, res) => {
+    const { gamewinner, gameloser, eloPointsWinner, eloPointsLoser } = req.body;
+
+    connection.query(
+        'UPDATE `player` SET `eloPoints` = ? WHERE `playername` = ?',
+        [eloPointsWinner, gamewinner],
+        err => {
+            if (err) {
+                console.error('Error updating winner Elo:', err);
+                res.status(500).send('Error updating winner Elo');
+                return;
+            }
+
+            connection.query(
+                'UPDATE `player` SET `eloPoints` = ? WHERE `playername` = ?',
+                [eloPointsLoser, gameloser],
                 err => {
                     if (err) {
                         console.error('Error updating loser Elo:', err);
