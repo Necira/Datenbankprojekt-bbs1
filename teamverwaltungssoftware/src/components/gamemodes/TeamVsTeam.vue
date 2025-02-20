@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="team-vs-team">
         <div class="buttons">
             <TeamPicks
@@ -36,11 +37,13 @@ import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
 import { eloCalculator } from '../GameLogic/EloCalculator.js';
+import navigationBar from '../Atoms/navigationBar.vue';
 
 export default {
     components: {
         TeamPicks,
         WinnerMessage,
+        navigationBar,
     },
     name: 'TeamVsTeam',
     data() {

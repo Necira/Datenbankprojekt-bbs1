@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="tournament">
         <h2>Tournament</h2>
         <div class="selectTeams">
@@ -64,11 +65,13 @@
 <script>
 import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
+import navigationBar from '../Atoms/navigationBar.vue';
 
 export default {
     name: 'TeamTournament',
     components: {
         TeamPicks,
+        navigationBar,
     },
     data() {
         return {

@@ -1,4 +1,5 @@
 <template>
+  <navigationBar></navigationBar>
   <div class="buttons">
       <RouterLink to="/TeamSettings"> Team </RouterLink>
       <RouterLink to="/PlayerSettings"> Player </RouterLink>
@@ -7,7 +8,12 @@
 </template>
 
 <script>
+import navigationBar from './Atoms/navigationBar.vue';
+
 export default {
+  components:{
+    navigationBar,
+  },
   name: 'SettingScreen',
 };
 </script>

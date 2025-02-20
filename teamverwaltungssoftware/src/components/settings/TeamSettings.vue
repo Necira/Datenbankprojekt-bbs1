@@ -1,4 +1,5 @@
 <template>
+  <navigationBar></navigationBar>
   <div class="buttons">
       <RouterLink to="/CreateTeam"> Create Team </RouterLink>
       <RouterLink to="/EditTeam"> Edit Team </RouterLink>
@@ -7,7 +8,12 @@
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+
 export default {
+  components:{
+    navigationBar,
+  },
   name: 'TeamSettings',
 };
 </script>

@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Edit existing player</h1>
     <div class="column">
         <input
@@ -90,7 +91,12 @@
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+
 export default {
+    components:{
+        navigationBar,
+    },
     data() {
         return {
             name: 'EditPlayer',

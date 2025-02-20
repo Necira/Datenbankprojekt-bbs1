@@ -1,5 +1,10 @@
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+
 export default {
+    components:{
+        navigationBar,
+    },
     data() {
         return {
             name: 'CreatePlayer',
@@ -131,6 +136,8 @@ export default {
 </script>
 
 <template>
+    
+    <navigationBar></navigationBar>
     <h1>Create a new player</h1>
     <form class="createPlayerForm" id="createPlayerForm">
         <label for="playername">Playername:</label>

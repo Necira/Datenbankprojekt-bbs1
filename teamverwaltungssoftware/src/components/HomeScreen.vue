@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="home-container">
         <div class="leaderboard-container">
             <playerLeaderboard></playerLeaderboard>
@@ -16,12 +17,14 @@
 <script>
 import playerLeaderboard from './Atoms/playerLeaderboard.vue';
 import teamLeaderboard from './Atoms/teamLeaderboard.vue';
+import navigationBar from './Atoms/navigationBar.vue';
 
 export default {
     name: 'HomeScreen',
     components: {
         playerLeaderboard,
         teamLeaderboard,
+        navigationBar
     },
 };
 </script>

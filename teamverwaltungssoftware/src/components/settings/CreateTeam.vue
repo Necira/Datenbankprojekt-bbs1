@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Create a new team</h1>
     <form class="createTeamForm" id="createTeamForm">
         <label for="teamname">teamname</label>
@@ -59,7 +60,12 @@
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+
 export default {
+    components:{
+        navigationBar,  
+    },
     data() {
         return {
             name: 'CreateTeam',

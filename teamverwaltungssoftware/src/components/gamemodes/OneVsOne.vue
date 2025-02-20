@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="one-vs-one">
         <div class="player-picks">
             <PlayerPicks
@@ -36,11 +37,13 @@ import { randomizer } from '../GameLogic/Randomizer.js';
 import PlayerPicks from '../Atoms/PlayerPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
 import { eloCalculator } from '../GameLogic/EloCalculator.js';
+import navigationBar from '../Atoms/navigationBar.vue';
 
 export default {
     components: {
         PlayerPicks,
         WinnerMessage,
+        navigationBar
     },
     name: 'OneVsOne',
     data() {
