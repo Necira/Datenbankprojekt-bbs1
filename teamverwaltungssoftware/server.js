@@ -175,6 +175,8 @@ app.patch('/deleteTeam', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to update a winner after a tournament
 app.post('/updateWinner', (req, res) => {
     const { winner, teamOne, teamTwo } = req.body;
     const winnerTeam = winner;
@@ -195,6 +197,7 @@ app.post('/updateWinner', (req, res) => {
     });
 });
 
+// API-Endpoint to get Elo-Points of a specific player
 app.get('/getElo/:playername', (req, res) => {
     const { playername } = req.params;
 
@@ -217,6 +220,8 @@ app.get('/getElo/:playername', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to get Elo-Points of a specific team
 app.get('/getTeamElo/:teamname', (req, res) => {
     const { teamname } = req.params;
 
@@ -235,6 +240,8 @@ app.get('/getTeamElo/:teamname', (req, res) => {
         res.json({ teamname, eloPoints: results[0].eloPoints });
     });
 });
+
+// API-Endpoint to update Elo-Points of the participants of a 1vs1
 app.post('/updateTeamElo', (req, res) => {
     const { gamewinner, gameloser, eloPointsWinner, eloPointsLoser } = req.body;
 
@@ -265,6 +272,7 @@ app.post('/updateTeamElo', (req, res) => {
     );
 });
 
+// API-Endpoint to update Elo-Points of the participants of a TeamVsTeam
 app.post('/updatePlayerElo', (req, res) => {
     const { gamewinner, gameloser, eloPointsWinner, eloPointsLoser } = req.body;
 
@@ -295,6 +303,7 @@ app.post('/updatePlayerElo', (req, res) => {
     );
 });
 
+// API-Endpoint to update a team
 app.put('/updateTeam', (req, res) => {
     let {
         changedTeamname,

@@ -107,6 +107,8 @@ export default {
                     }),
                 });
 
+                this.recalculateTeamEloPoints();
+
                 return { newEloWinner, newEloLoser };
             } catch (error) {
                 console.error('Error updating Elo points:', error.message);
@@ -145,6 +147,89 @@ export default {
             } else {
                 this.message = 'Please select both players and ensure they are different.';
             }
+        },
+        async recalculateTeamEloPoints() {
+            let newEloPoints = 0;
+
+            fetch('http://localhost:3000/getTeams')
+                .then(response => response.json())
+                .then(async data => {
+                    for (let i = 0; i < data.length; i++) {
+                        let currentTeammember = [
+                            data[i].firstMember,
+                            data[i].secondMember,
+                            data[i].thirdMember,
+                            data[i].fourthMember,
+                            data[i].fifthMember,
+                        ];
+                        console.log('currentTeammember', currentTeammember);
+
+                        if (
+                            data[i].firstMember !== null &&
+                            data[i].secondMember !== null &&
+                            data[i].thirdMember !== null &&
+                            data[i].fourthMember !== null &&
+                            data[i].fifthMember !== null
+                        ) {
+                            newEloPoints = await fetch('http://localhost:3000/getPlayer')
+                                .then(response => response.json())
+                                .then(data => {
+                                    let calculatedEloPoints = 0;
+                                    for (let i = 0; i < currentTeammember.length; i++) {
+                                        for (let a = 0; a < data.length; a++) {
+                                            if (currentTeammember[i] === data[a].playerID) {
+                                                calculatedEloPoints += data[a].eloPoints;
+                                            }
+                                        }
+                                    }
+
+                                    let finalEloPoints = Math.round(calculatedEloPoints / 5);
+                                    console.log('finalEloPoints', finalEloPoints);
+                                    return finalEloPoints;
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    return;
+                                });
+                        } else {
+                            newEloPoints = 1;
+                        }
+
+                        console.log('newEloPoints', newEloPoints);
+
+                        fetch('http://localhost:3000/updateTeam', {
+                            method: 'PUT',
+                            headers: {
+                                'Access-Control-Allow-Origin': '*',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                changedTeamname: data[i].teamname,
+                                changedDeletedValue: data[i].deleted,
+                                changedFirstMember: data[i].firstMember,
+                                changedSecondMember: data[i].secondMember,
+                                changedThirdMember: data[i].thirdMember,
+                                changedFourthMember: data[i].fourthMember,
+                                changedFifthMember: data[i].fifthMember,
+                                changedEloPoints: newEloPoints,
+                                teamId: data[i].teamID,
+                            }),
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                return;
+                            });
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
         },
     },
 };
