@@ -387,7 +387,7 @@ app.patch('/updateTeammemberEloLoser', (req, res) => {
     const { eloPointsDifferenceLoser, currentPlayer } = req.body;
 
     connection.query(
-        'UPDATE `player` SET `eloPoints` = `eloPoints` - ? WHERE `playerID` = ?',
+        'UPDATE `player` SET `eloPoints` = `eloPoints` + ? WHERE `playerID` = ?',
         [eloPointsDifferenceLoser, currentPlayer],
         (err, result) => {
             if (err) {
