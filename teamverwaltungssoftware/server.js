@@ -364,3 +364,37 @@ app.get('/getTeamLeaderboard', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to update Elo-Points of winning teamember after a TeamVsTeam
+app.patch('/updateTeammemberEloWinner', (req, res) => {
+    const { eloPointsDifferenceWinner, currentPlayer } = req.body;
+
+    connection.query(
+        'UPDATE `player` SET `eloPoints` = `eloPoints` + ? WHERE `playerID` = ?',
+        [eloPointsDifferenceWinner, currentPlayer],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});
+
+// API-Endpoint to update Elo-Points of losing teamember after a TeamVsTeam
+app.patch('/updateTeammemberEloLoser', (req, res) => {
+    const { eloPointsDifferenceLoser, currentPlayer } = req.body;
+
+    connection.query(
+        'UPDATE `player` SET `eloPoints` = `eloPoints` - ? WHERE `playerID` = ?',
+        [eloPointsDifferenceLoser, currentPlayer],
+        (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.send(req.body);
+            }
+        },
+    );
+});

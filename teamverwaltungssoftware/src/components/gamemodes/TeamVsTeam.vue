@@ -105,6 +105,15 @@ export default {
                         eloPointsLoser: newEloLoser,
                     }),
                 });
+
+                this.recalculatePlayerEloPoints(
+                    currentEloLoser,
+                    newEloLoser,
+                    currentEloWinner,
+                    newEloWinner,
+                    winningTeam,
+                    losingTeam,
+                );
                 return { newEloWinner, newEloLoser };
             } catch (error) {
                 console.error('Error updating team Elo points:', error.message);
@@ -148,6 +157,77 @@ export default {
             } else {
                 this.message = 'Please select both teams and ensure they are different.';
             }
+        },
+        recalculatePlayerEloPoints(
+            oldEloPointsLoser,
+            newEloPointsLoser,
+            oldEloPointsWinner,
+            newEloPointsWinner,
+            winner,
+            loser,
+        ) {
+            let differenceEloPointsWinner = Math.round((newEloPointsWinner - oldEloPointsWinner) / 5);
+            let differenceEloPointsLoser = Math.round((newEloPointsLoser - oldEloPointsLoser) / 5);
+
+            console.log('differenceEloPointsWinner', differenceEloPointsWinner);
+            console.log('differenceEloPointsLoser', differenceEloPointsLoser);
+
+            fetch('http://localhost:3000/getTeams')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        let teammember = [
+                            data[i].firstMember,
+                            data[i].secondMember,
+                            data[i].thirdMember,
+                            data[i].fourthMember,
+                            data[i].fifthMember,
+                        ];
+                        if (data[i].teamname === winner) {
+                            for (let a = 0; a < teammember.length; a++) {
+                                fetch('http://localhost:3000/updateTeammemberEloWinner', {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Access-Control-Allow-Origin': '*',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        currentPlayer: teammember[a],
+                                        eloPointsDifferenceWinner: differenceEloPointsWinner,
+                                    }),
+                                })
+                                    .then(response => response.json())
+                                    .catch(error => {
+                                        console.error(error);
+                                        return;
+                                    });
+                            }
+                        } else if (data[i].teamname === loser) {
+                            for (let a = 0; a < teammember.length; a++) {
+                                fetch('http://localhost:3000/updateTeammemberEloLoser', {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Access-Control-Allow-Origin': '*',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        currentPlayer: teammember[a],
+                                        eloPointsDifferenceLoser: differenceEloPointsLoser,
+                                    }),
+                                })
+                                    .then(response => response.json())
+                                    .catch(error => {
+                                        console.error(error);
+                                        return;
+                                    });
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
         },
     },
 };
