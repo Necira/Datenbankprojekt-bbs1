@@ -12,19 +12,22 @@
             <RouterLink to="/SettingScreen" class="button">Settings</RouterLink>
         </div>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
 import playerLeaderboard from './Atoms/playerLeaderboard.vue';
 import teamLeaderboard from './Atoms/teamLeaderboard.vue';
 import navigationBar from './Atoms/navigationBar.vue';
+import footerBar from './Atoms/footerBar.vue';
 
 export default {
     name: 'HomeScreen',
     components: {
         playerLeaderboard,
         teamLeaderboard,
-        navigationBar
+        navigationBar,
+        footerBar,
     },
 };
 </script>

@@ -88,14 +88,17 @@
         </div>
         <span class="success-message"> {{ successMessage }}</span>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
 import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     components:{
         navigationBar,
+        footerBar,
     },
     data() {
         return {

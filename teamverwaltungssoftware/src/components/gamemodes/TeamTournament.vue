@@ -60,18 +60,21 @@
         </div>
         <RouterLink to="/" class="back-link">← Back</RouterLink>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
 import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
 import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     name: 'TeamTournament',
     components: {
         TeamPicks,
         navigationBar,
+        footerBar,
     },
     data() {
         return {

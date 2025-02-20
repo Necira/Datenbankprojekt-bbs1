@@ -30,6 +30,7 @@
         <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />
         <RouterLink to="/" class="back-link">← Back to Home</RouterLink>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
@@ -38,12 +39,14 @@ import PlayerPicks from '../Atoms/PlayerPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
 import { eloCalculator } from '../GameLogic/EloCalculator.js';
 import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     components: {
         PlayerPicks,
         WinnerMessage,
-        navigationBar
+        navigationBar,
+        footerBar,
     },
     name: 'OneVsOne',
     data() {

@@ -5,14 +5,17 @@
       <RouterLink to="/PlayerSettings"> Player </RouterLink>
       <RouterLink to="/"> Back </RouterLink>
   </div>
+  <footerBar></footerBar>
 </template>
 
 <script>
 import navigationBar from './Atoms/navigationBar.vue';
+import footerBar from './Atoms/footerBar.vue';
 
 export default {
   components:{
     navigationBar,
+    footerBar,
   },
   name: 'SettingScreen',
 };

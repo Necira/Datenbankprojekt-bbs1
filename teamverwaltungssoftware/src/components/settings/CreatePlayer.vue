@@ -1,9 +1,11 @@
 <script>
 import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     components:{
         navigationBar,
+        footerBar,
     },
     data() {
         return {
@@ -163,6 +165,7 @@ export default {
     <span class="success-message"> {{ successMessage }}</span>
     <span class="error-message">{{ errorMessage }}</span>
     <RouterLink to="/PlayerSettings"> Back </RouterLink>
+    <footerBar></footerBar>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
