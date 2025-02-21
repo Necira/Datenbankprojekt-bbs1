@@ -162,7 +162,6 @@ export default {
                             data[i].fourthMember,
                             data[i].fifthMember,
                         ];
-                        console.log('currentTeammember', currentTeammember);
 
                         if (
                             data[i].firstMember !== null &&
@@ -184,7 +183,6 @@ export default {
                                     }
 
                                     let finalEloPoints = Math.round(calculatedEloPoints / 5);
-                                    console.log('finalEloPoints', finalEloPoints);
                                     return finalEloPoints;
                                 })
                                 .catch(error => {
@@ -194,8 +192,6 @@ export default {
                         } else {
                             newEloPoints = 1;
                         }
-
-                        console.log('newEloPoints', newEloPoints);
 
                         fetch('http://localhost:3000/updateTeam', {
                             method: 'PUT',

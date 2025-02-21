@@ -59,7 +59,7 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (1, 'Louis', 'louis', 'Lohmer', 'louis.lohmer@mediaman.de', 'Top-Lane', 1300, 0),
 (2, 'Necira', 'Maria', 'Neciporenko', 'marianeciporenko@gmail.com', 'Bot-Lane', 1200, 0),
 (3, 'Muster', 'Max', 'Mustermann', 'max.mustermann@mediaman.de', 'Support', 1230, 0),
-(4, 'whatThe', 'What', 'the', 'whatthe@lol.de', 'Mid-lane', 1200, 1),
+(4, 'whatThe', 'What', 'the', 'whatthe@lol.de', 'Mid-lane', 1200, 0),
 (5, 'test', 'testfirstname', 'testlastname', 'olaf.scholz@gmail.com', 'Mid-lane', 1230, 0),
 (6, 'NoFPS2', 'hello', 'world', 'helloworld@mediaman.de', 'Top-Lane', 1200, 0),
 (7, 'testi', 'testplayer', 'Lohmer', 'helloworld@mediaman.de', 'Top-Lane', 1200, 0),
@@ -90,17 +90,17 @@ CREATE TABLE `teams` (
 --
 
 INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`, `secondMember`, `thirdMember`, `fourthMember`, `fifthMember`) VALUES
-(1, 'NierAutomata', 1300, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 'LeagueOfLegends', 1234, 0, NULL, NULL, NULL, NULL, NULL),
-(3, 'Persona', 1569, 0, NULL, NULL, NULL, NULL, NULL),
-(4, 'TheWitcher', 6060, 0, 1, 2, 3, 4, 5),
-(5, 'GenshinImpact', 6060, 0, 2, 3, 4, 5, 7),
-(6, 'Cyberpunk', 6060, 0, 2, 3, 4, 5, 7),
-(7, 'BaldursGate', 6060, 0, 2, 3, 4, 5, 7),
-(8, 'Minecraft', 6060, 0, 2, 3, 4, 5, 7),
-(9, 'AssassinsCreed', 6060, 0, 2, 3, 4, 5, 7),
-(10, 'GhostOfTsushima', 6060, 0, 2, 3, 4, 5, 7),
-(11, 'HonkaiStarrail', 6060, 0, 2, 3, 4, 5, 7);
+(1, 'NierAutomata', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(2, 'LeagueOfLegends', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(3, 'Persona', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(4, 'TheWitcher', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(5, 'GenshinImpact', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(6, 'Cyberpunk', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(7, 'BaldursGate', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(8, 'Minecraft', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(9, 'AssassinsCreed', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(10, 'GhostOfTsushima', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(11, 'HonkaiStarrail', 1, 0, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 

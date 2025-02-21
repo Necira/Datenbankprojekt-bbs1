@@ -60,7 +60,6 @@ export default {
             try {
                 const response = await fetch('http://localhost:3000/getActiveteams');
                 const data = await response.json();
-                console.log('Fetched teams:', data);
                 this.availableTeams = data;
             } catch (error) {
                 console.error('Error fetching teams:', error.message);
@@ -77,7 +76,6 @@ export default {
             } else {
                 this.message = '';
             }
-            console.log(`${teamName} set to: ${selectedTeam}`);
         },
         async updateTeamEloPoints(winningTeam, losingTeam) {
             try {
@@ -168,9 +166,6 @@ export default {
         ) {
             let differenceEloPointsWinner = Math.round((newEloPointsWinner - oldEloPointsWinner) / 5);
             let differenceEloPointsLoser = Math.round((newEloPointsLoser - oldEloPointsLoser) / 5);
-
-            console.log('differenceEloPointsWinner', differenceEloPointsWinner);
-            console.log('differenceEloPointsLoser', differenceEloPointsLoser);
 
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
