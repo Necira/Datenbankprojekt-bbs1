@@ -4,17 +4,24 @@
     <router-view></router-view>
 </template>
 
-<script>
-</script>
+<script></script>
 
 <style>
 #app {
-    margin:0;
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+}
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --darkgrey: #3f3f3f;
+    --darkblue: #34495e;
+    --green: #41b883;
+    --lightgrey: #bbbbbb;
 }
 </style>

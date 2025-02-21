@@ -15,7 +15,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #000000;
+    background-color: var(--black);
 }
 
 ul {
@@ -32,18 +32,17 @@ li {
 
 li a {
     display: block;
-    color: rgb(255, 255, 255);
+    color: var(--white);
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
 li a:hover {
-    background-color: #3f3f3f;
+    background-color: var(--green);
 }
 
 li {
-    border-right: 2px solid #bbb;
+    border-right: 2px solid var(--lightgrey);
 }
-
 </style>

@@ -78,7 +78,7 @@ export default {
 
 /* Hover-Effekt für Buttons */
 .button:hover {
-    background-color: #5d5d5d;
+    background-color: var(--green);
     transform: translateY(-4px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
