@@ -59,10 +59,10 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (1, 'Louis', 'louis', 'Lohmer', 'louis.lohmer@mediaman.de', 'Top-Lane', 1300, 0),
 (2, 'Necira', 'Maria', 'Neciporenko', 'marianeciporenko@gmail.com', 'Bot-Lane', 1200, 0),
 (3, 'Muster', 'Max', 'Mustermann', 'max.mustermann@mediaman.de', 'Support', 1230, 0),
-(4, 'whatThe', 'What', 'the', 'whatthe@lol.de', 'Mid-lane', 1200, 0),
+(4, 'whatThe', 'What', 'the', 'whatthe@lol.de', 'Jungle', 1200, 0),
 (5, 'test', 'testfirstname', 'testlastname', 'olaf.scholz@gmail.com', 'Mid-lane', 1230, 0),
 (6, 'NoFPS2', 'hello', 'world', 'helloworld@mediaman.de', 'Top-Lane', 1200, 0),
-(7, 'testi', 'testplayer', 'Lohmer', 'helloworld@mediaman.de', 'Top-Lane', 1200, 0),
+(7, 'testi', 'testplayer', 'Lohmer', 'helloworld@mediaman.de', 'Mid-lane', 1200, 0),
 (8, 'lol', 'louis', 'Lohmer', 'max.mustermann@mediaman.de', 'Support', 1400, 0),
 (9, 'Vendetta', 'V', 'forVendetta', 'v.vendetta@gmail.de', 'Bot-Lane', 1000, 0),
 (10, 'strangePerson', 'strange', 'notsostrange', 'strange.notsostrange@strange.de', 'Jungle', 1400, 0);
