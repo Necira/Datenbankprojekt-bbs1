@@ -38,7 +38,7 @@
     </table>
     <button type="button" @click="openAndCloseDeletePlayerPopUpWindow">Delete player</button>
     <button type="button" @click="openAndCloseEditPlayerForm">Edit player</button>
-    <RouterLink to="/PlayerSettings"> Back </RouterLink>
+    <RouterLink to="/PlayerSettings" class="back">← Back </RouterLink>
 
     <div v-if="openEditPlayerForm" class="popUp-Window">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditPlayerForm">X</button>
@@ -439,5 +439,19 @@ export default {
 
 #searchfield {
     width: 200px;
+}
+
+.back {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: #0056b3;
+    transform: scale(1.05);
 }
 </style>

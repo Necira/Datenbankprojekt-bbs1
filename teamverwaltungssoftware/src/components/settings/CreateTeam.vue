@@ -56,7 +56,7 @@
     </form>
     <span class="success-message"> {{ textSuccessMessage }}</span>
     <span class="error-message">{{ textErrorMessage }}</span>
-    <RouterLink to="/TeamSettings"> Back </RouterLink>
+    <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
     <footerBar></footerBar>
 </template>
 
@@ -399,5 +399,19 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+.back {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: #0056b3;
+    transform: scale(1.05);
 }
 </style>

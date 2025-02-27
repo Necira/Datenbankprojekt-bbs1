@@ -164,7 +164,7 @@ export default {
     </form>
     <span class="success-message"> {{ successMessage }}</span>
     <span class="error-message">{{ errorMessage }}</span>
-    <RouterLink to="/PlayerSettings"> Back </RouterLink>
+    <RouterLink to="/PlayerSettings" class="back">← Back </RouterLink>
     <footerBar></footerBar>
 </template>
 
@@ -185,4 +185,19 @@ export default {
     color: green;
     font-size: 20px;
 }
+
+.back {
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: #0056b3;
+    transform: scale(1.05);
+}
+
 </style>
