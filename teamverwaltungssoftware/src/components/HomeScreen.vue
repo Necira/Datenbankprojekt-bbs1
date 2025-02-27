@@ -1,10 +1,6 @@
 <template>
     <navigationBar></navigationBar>
     <div class="home-container">
-        <div class="leaderboard-container">
-            <playerLeaderboard></playerLeaderboard>
-            <teamLeaderboard></teamLeaderboard>
-        </div>
         <div class="buttons">
             <RouterLink to="/OneVsOne" class="button">Player vs Player</RouterLink>
             <RouterLink to="/TeamVsTeam" class="button">Team vs Team</RouterLink>
@@ -16,16 +12,12 @@
 </template>
 
 <script>
-import playerLeaderboard from './Atoms/playerLeaderboard.vue';
-import teamLeaderboard from './Atoms/teamLeaderboard.vue';
 import navigationBar from './Atoms/navigationBar.vue';
 import footerBar from './Atoms/footerBar.vue';
 
 export default {
     name: 'HomeScreen',
     components: {
-        playerLeaderboard,
-        teamLeaderboard,
         navigationBar,
         footerBar,
     },
@@ -43,13 +35,6 @@ export default {
     background: #f7f7f7;
     padding: 0 20px;
     font-family: 'Arial', sans-serif;
-}
-
-.leaderboard-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
 }
 
 /* Container für die Buttons */

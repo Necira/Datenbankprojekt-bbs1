@@ -5,7 +5,7 @@
         <li><RouterLink to="/TeamVsTeam">Team vs Team</RouterLink></li>
         <li><RouterLink to="/TeamTournament">Tournament</RouterLink></li>
         <li><RouterLink to="/SettingScreen">Settings</RouterLink></li>
-        <li><a href="#about">Leaderboards</a></li>
+        <li><RouterLink to="/Leaderboards">Leaderboards</RouterLink></li>
     </ul>
 </template>
 

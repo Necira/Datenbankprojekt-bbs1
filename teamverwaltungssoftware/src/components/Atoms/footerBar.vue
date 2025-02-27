@@ -13,8 +13,7 @@
                 <div class="teammember-links">
                     <a href="https://github.com/LouisLohmer" target="_blank">Louis</a>
                     <a href="https://github.com/Necira" target="_blank">Maria</a>
-                    <!-- TO-DO: Add link to dominics github account-->
-                    <a href="https://github.com/" target="_blank">Dominik</a>
+                    <a href="https://github.com/Krauseberger" target="_blank">Dominik</a>
                     <a href="https://github.com/Skroli0702" target="_blank">Oliver</a>
                 </div>
             </div>
