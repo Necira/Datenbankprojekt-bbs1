@@ -268,7 +268,7 @@ export default {
                                 }
 
                                 // Display not deleted player, that are not in a team yet, in select-option-field
-                                if (availableTeammember.length > 0) {
+                                if (availableTeammember.length > 0 && activeTeammember.length > 0) {
                                     for (let i = 0; i < availableTeammember.length; i++) {
                                         if (availableTeammember[i].position === 'Top-Lane') {
                                             this.availablePlayerTopLane.push({
@@ -305,7 +305,7 @@ export default {
                                             });
                                         }
                                     }
-                                } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
+                                } else if (activeTeammember.length === 0) {
                                     for (let i = 0; i < activePlayer.length; i++) {
                                         if (activePlayer[i].position === 'Top-Lane') {
                                             this.availablePlayerTopLane.push({
