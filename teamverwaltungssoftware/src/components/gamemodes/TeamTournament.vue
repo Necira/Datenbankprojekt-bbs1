@@ -2,7 +2,7 @@
     <navigationBar></navigationBar>
     <div class="tournament">
         <h2>Tournament</h2>
-        <div class="selectTeams">
+        <div>
             <div v-for="(round, roundIndex) in rounds" :key="'round-' + roundIndex" class="round">
                 <h3>Round {{ roundIndex + 1 }}</h3>
                 <div v-for="(teamPair, matchIndex) in round" :key="'match-' + matchIndex" class="match">
@@ -58,7 +58,7 @@
                 <h3>Champion: {{ finalWinner }}</h3>
             </div>
         </div>
-        <RouterLink to="/" class="back-link">← Back</RouterLink>
+        <RouterLink to="/" class="homescreen-routerlink">← Back</RouterLink>
     </div>
     <footerBar></footerBar>
 </template>
@@ -184,8 +184,7 @@ export default {
 <style scoped>
 .tournament {
     padding: 20px;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--white);
     border-radius: 12px;
     max-width: 800px;
     margin: 50px auto;
@@ -195,9 +194,9 @@ export default {
 .round {
     margin-bottom: 30px;
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px var(--transparentblack);
 }
 
 .match {
@@ -223,7 +222,7 @@ export default {
     font-size: 14px;
     font-weight: bold;
     color: white;
-    background-color: #007bff;
+    background-color: var(--blue);
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -232,7 +231,7 @@ export default {
 
 .random-winner:hover,
 .set-winner:hover {
-    background-color: #0056b3;
+    background-color: var(--hoverblue);
 }
 
 .chooseWinner {
@@ -241,7 +240,7 @@ export default {
 
 .dropdown {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--lightgrey);
     border-radius: 6px;
     margin-right: 10px;
 }
@@ -249,19 +248,19 @@ export default {
 .champion {
     font-size: 18px;
     font-weight: bold;
-    color: #4caf50;
+    color: var(--hovergreen);
     margin-top: 20px;
 }
 
-.back-link {
+.homescreen-routerlink {
     display: inline-block;
     margin-top: 20px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
 }
 
-.back-link:hover {
-    color: #0056b3;
+.homescreen-routerlink:hover {
+    color: var(--hoverblue);
 }
 </style>

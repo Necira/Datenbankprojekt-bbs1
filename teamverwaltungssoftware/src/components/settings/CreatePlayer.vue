@@ -3,7 +3,7 @@ import navigationBar from '../Atoms/navigationBar.vue';
 import footerBar from '../Atoms/footerBar.vue';
 
 export default {
-    components:{
+    components: {
         navigationBar,
         footerBar,
     },
@@ -138,7 +138,6 @@ export default {
 </script>
 
 <template>
-    
     <navigationBar></navigationBar>
     <h1>Create a new player</h1>
     <form class="createPlayerForm" id="createPlayerForm">
@@ -160,7 +159,7 @@ export default {
         </select>
         <label for="eloPoints">Elo-Points:</label>
         <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="validateForm">Save player</button>
+        <button type="button" class="save-player" @click="validateForm">Save player</button>
     </form>
     <span class="success-message"> {{ successMessage }}</span>
     <span class="error-message">{{ errorMessage }}</span>
@@ -171,24 +170,26 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .createPlayerForm {
+    width: 400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .back {
     font-size: 16px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
     margin-top: 20px;
@@ -196,8 +197,59 @@ export default {
 }
 
 .back:hover {
-    color: #0056b3;
+    color: var(--hoverblue);
     transform: scale(1.05);
 }
 
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+select,
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.save-player {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: var(--white);
+    background-color: var(--blue);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 130px;
+}
+
+.save-player:hover {
+    background-color: var(--blue);
+    transform: scale(1.05);
+}
 </style>

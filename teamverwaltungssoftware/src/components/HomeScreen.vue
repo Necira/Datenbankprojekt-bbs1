@@ -1,6 +1,6 @@
 <template>
     <navigationBar></navigationBar>
-    <div class="home-container">
+    <div class="centered-container">
         <div class="buttons">
             <RouterLink to="/OneVsOne" class="button">Player vs Player</RouterLink>
             <RouterLink to="/TeamVsTeam" class="button">Team vs Team</RouterLink>
@@ -26,15 +26,14 @@ export default {
 
 <style scoped>
 /* Container für den gesamten Screen */
-.home-container {
+.centered-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    background: #f7f7f7;
+    background: var(--white);
     padding: 0 20px;
-    font-family: 'Arial', sans-serif;
 }
 
 /* Container für die Buttons */
@@ -50,28 +49,28 @@ export default {
     display: inline-block;
     padding: 15px 25px;
     margin: 5px 0;
-    background-color: #2d2d2d;
-    color: #fff;
+    background-color: var(--darkgrey);
+    color: var(--white);
     font-size: 16px;
     font-weight: 500;
     border-radius: 25px;
     text-decoration: none;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px var(--transparentblack);
     text-transform: uppercase;
 }
 
 /* Hover-Effekt für Buttons */
 .button:hover {
-    background-color: var(--green);
+    background-color: var(--hovergreen);
     transform: translateY(-4px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 15px var(--transparentblack);
 }
 
 /* Fokus-Effekt für Accessibility */
 .button:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #ff6f61;
+    box-shadow: 0 0 0 2px var(--lightred);
 }
 
 /* Responsive Anpassungen */

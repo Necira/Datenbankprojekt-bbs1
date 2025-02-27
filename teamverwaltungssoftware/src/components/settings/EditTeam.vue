@@ -114,7 +114,7 @@ import navigationBar from '../Atoms/navigationBar.vue';
 import footerBar from '../Atoms/footerBar.vue';
 
 export default {
-    components:{
+    components: {
         navigationBar,
         footerBar,
     },
@@ -598,12 +598,12 @@ export default {
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
@@ -628,7 +628,7 @@ export default {
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
@@ -648,7 +648,7 @@ export default {
 
 .back {
     font-size: 16px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
     margin-top: 20px;
@@ -656,7 +656,7 @@ export default {
 }
 
 .back:hover {
-    color: #0056b3;
+    color: var(--hoverblue);
     transform: scale(1.05);
 }
 </style>

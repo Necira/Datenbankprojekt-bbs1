@@ -1,7 +1,7 @@
 <template>
     <div class="player-pick">
-        <label :for="player" class="label">Choose {{ player }}</label>
-        <select v-model="selectedPlayer" :id="player" class="select">
+        <label :for="player">Choose {{ player }}</label>
+        <select v-model="selectedPlayer" :id="player">
             <option v-for="player in availablePlayers" :key="player.playerID" :value="player.playername">
                 {{ player.playername }}
             </option>
@@ -35,36 +35,35 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    font-family: 'Arial', sans-serif;
 }
 
-.label {
+label {
     margin-bottom: 8px;
     font-size: 16px;
-    color: #333;
+    color: var(--black);
     font-weight: 500;
 }
 
-.select {
+select {
     width: 100%;
     max-width: 300px;
     padding: 10px;
     font-size: 16px;
-    color: #333;
-    border: 1px solid #ccc;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
     border-radius: 8px;
-    background-color: #fff;
+    background-color: var(--white);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.select:hover {
-    border-color: #888;
+select:hover {
+    border-color: var(--black);
 }
 
-.select:focus {
+select:focus {
     outline: none;
-    border-color: #5d5dff;
-    box-shadow: 0 0 5px rgba(93, 93, 255, 0.5);
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
 }
 
 option {
@@ -73,7 +72,7 @@ option {
 }
 
 @media (max-width: 768px) {
-    .select {
+    select {
         font-size: 14px;
         padding: 8px;
     }

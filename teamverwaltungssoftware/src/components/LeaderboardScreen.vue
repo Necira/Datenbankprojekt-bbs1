@@ -5,7 +5,7 @@
             <playerLeaderboard></playerLeaderboard>
             <teamLeaderboard></teamLeaderboard>
         </div>
-        <RouterLink to="/" class="back-link">← Back to Home</RouterLink>
+        <RouterLink to="/" class="homescreen-routerlink">← Back to Home</RouterLink>
     </div>
     <footerBar></footerBar>
 </template>
@@ -42,17 +42,17 @@ export default {
     flex-direction: column;
 }
 
-.back-link {
+.homescreen-routerlink {
     font-size: 16px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
     margin-top: 20px;
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.back-link:hover {
-    color: #0056b3;
+.homescreen-routerlink:hover {
+    color: var(--hoverblue);
     transform: scale(1.05);
 }
 </style>

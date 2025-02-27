@@ -56,9 +56,9 @@ li a {
 
 a:hover,
 li a:hover {
-    color: var(--green);
+    color: var(--hovergreen);
     text-decoration: underline;
-    text-decoration-color: var(--green);
+    text-decoration-color: var(--hovergreen);
     font-weight: 900;
 }
 

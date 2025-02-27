@@ -8,20 +8,28 @@
 
 <style>
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: var(--black);
     margin-top: 60px;
 }
 
 :root {
     --black: #000000;
+    --transparentblack: #00000024;
+    --lightred: #ff6f61;
+    --red: #ff0000;
     --white: #ffffff;
-    --darkgrey: #3f3f3f;
+    --lightgrey: #888;
+    --darkgrey: #2d2d2d;
     --darkblue: #34495e;
-    --green: #41b883;
-    --lightgrey: #bbbbbb;
+    --hovergreen: #41b883;
+    --lightgreen: #52e7a4;
+    --green: #008000;
+    --blue: #007bff;
+    --hoverblue: #0056b3;
+    --transparentblue: #5d5dff79;
 }
 </style>
