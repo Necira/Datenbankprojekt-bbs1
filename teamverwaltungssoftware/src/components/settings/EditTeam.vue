@@ -10,34 +10,36 @@
         />
         <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
-    <table id="teams-table">
-        <thead>
-            <tr>
-                <th>teamID</th>
-                <th>teamname</th>
-                <th>eloPoints</th>
-                <th>deleted</th>
-                <th>Top-Lane</th>
-                <th>Jungle</th>
-                <th>Mid-Lane</th>
-                <th>Support</th>
-                <th>Bot-Lane</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in fetchedTeamdata" :key="row">
-                <td>{{ row.teamID }}</td>
-                <td>{{ row.teamname }}</td>
-                <td>{{ row.eloPoints }}</td>
-                <td>{{ row.deleted }}</td>
-                <td>{{ row.firstMember }}</td>
-                <td>{{ row.secondMember }}</td>
-                <td>{{ row.thirdMember }}</td>
-                <td>{{ row.fourthMember }}</td>
-                <td>{{ row.fifthMember }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="scrollable-container">
+        <table id="teams-table">
+            <thead>
+                <tr>
+                    <th>teamID</th>
+                    <th>teamname</th>
+                    <th>eloPoints</th>
+                    <th>deleted</th>
+                    <th>Top-Lane</th>
+                    <th>Jungle</th>
+                    <th>Mid-Lane</th>
+                    <th>Support</th>
+                    <th>Bot-Lane</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in fetchedTeamdata" :key="row">
+                    <td>{{ row.teamID }}</td>
+                    <td>{{ row.teamname }}</td>
+                    <td>{{ row.eloPoints }}</td>
+                    <td>{{ row.deleted }}</td>
+                    <td>{{ row.firstMember }}</td>
+                    <td>{{ row.secondMember }}</td>
+                    <td>{{ row.thirdMember }}</td>
+                    <td>{{ row.fourthMember }}</td>
+                    <td>{{ row.fifthMember }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <button type="button" @click="openAndCloseDeleteTeamPopUpWindow" class="delete-team margin-right">
         Delete team
     </button>
@@ -778,6 +780,12 @@ td {
 
     #teams-table {
         font-size: 15px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+        margin: 0 auto;
     }
 
     .position-delete-player-popup {

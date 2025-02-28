@@ -10,32 +10,34 @@
         />
         <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
-    <table id="player-table">
-        <thead>
-            <tr>
-                <th>playerID</th>
-                <th>playername</th>
-                <th>firstname</th>
-                <th>lastname</th>
-                <th>email</th>
-                <th>position</th>
-                <th>eloPoints</th>
-                <th>deleted</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in fetchedPlayerdata" :key="row">
-                <td>{{ row.playerID }}</td>
-                <td>{{ row.playername }}</td>
-                <td>{{ row.firstname }}</td>
-                <td>{{ row.lastname }}</td>
-                <td>{{ row.email }}</td>
-                <td>{{ row.position }}</td>
-                <td>{{ row.eloPoints }}</td>
-                <td>{{ row.deleted }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="scrollable-container">
+        <table id="player-table">
+            <thead>
+                <tr>
+                    <th>playerID</th>
+                    <th>playername</th>
+                    <th>firstname</th>
+                    <th>lastname</th>
+                    <th>email</th>
+                    <th>position</th>
+                    <th>eloPoints</th>
+                    <th>deleted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in fetchedPlayerdata" :key="row">
+                    <td>{{ row.playerID }}</td>
+                    <td>{{ row.playername }}</td>
+                    <td>{{ row.firstname }}</td>
+                    <td>{{ row.lastname }}</td>
+                    <td>{{ row.email }}</td>
+                    <td>{{ row.position }}</td>
+                    <td>{{ row.eloPoints }}</td>
+                    <td>{{ row.deleted }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <button type="button" class="delete-player margin-right" @click="openAndCloseDeletePlayerPopUpWindow">
         Delete player
     </button>
@@ -582,6 +584,12 @@ td {
 
     #teams-table {
         font-size: 15px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+        margin: 0 auto;
     }
 
     .position-delete-player-popup {
