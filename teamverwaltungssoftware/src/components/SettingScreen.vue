@@ -61,14 +61,15 @@ export default {
     box-shadow: 0 0 0 2px var(----lightred);
 }
 
-/* Responsive Anpassungen */
-@media (max-width: 768px) {
-    .buttons {
-        gap: 10px;
-    }
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
     .button {
-        font-size: 14px;
-        padding: 12px 20px;
+        font-size: 13px;
+        padding: 10px 15px;
     }
 }
 </style>

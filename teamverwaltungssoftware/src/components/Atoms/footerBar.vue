@@ -89,4 +89,31 @@ ul {
     border-left: solid 3px var(--white);
     padding-left: 30px;
 }
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    b {
+        font-size: 14px;
+    }
+
+    a {
+        font-size: 13px;
+    }
+
+    h1 {
+        font-size: 19px;
+    }
+
+    .footer-left-side {
+        padding-right: 15px;
+    }
+
+    .footer-right-side {
+        padding-left: 15px;
+    }
+}
 </style>

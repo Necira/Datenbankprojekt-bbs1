@@ -252,4 +252,12 @@ input:focus {
     background-color: var(--blue);
     transform: scale(1.05);
 }
+
+/* Responsive Anpassungen für Tablets*/
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+}
 </style>
