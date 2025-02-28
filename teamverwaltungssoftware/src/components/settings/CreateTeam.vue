@@ -52,10 +52,10 @@
                 </select>
             </div>
         </div>
+        <span class="success-message"> {{ textSuccessMessage }}</span>
+        <span class="error-message">{{ textErrorMessage }}</span>
         <button type="button" class="save-team" @click="validateForm">Save team</button>
     </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
     <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
     <footerBar></footerBar>
 </template>

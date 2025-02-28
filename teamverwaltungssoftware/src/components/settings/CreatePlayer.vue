@@ -159,10 +159,10 @@ export default {
         </select>
         <label for="eloPoints">Elo-Points:</label>
         <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
+        <span class="success-message"> {{ successMessage }}</span>
+        <span class="error-message">{{ errorMessage }}</span>
         <button type="button" class="save-player" @click="validateForm">Save player</button>
     </form>
-    <span class="success-message"> {{ successMessage }}</span>
-    <span class="error-message">{{ errorMessage }}</span>
     <RouterLink to="/PlayerSettings" class="back">← Back </RouterLink>
     <footerBar></footerBar>
 </template>
