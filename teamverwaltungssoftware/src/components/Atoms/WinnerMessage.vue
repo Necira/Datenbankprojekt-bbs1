@@ -21,5 +21,8 @@ export default {
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    h1 {
+        font-size: 20px;
+    }
 }
 </style>

@@ -233,6 +233,7 @@ export default {
     cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
 }
 
 .set-winner:hover {
@@ -255,10 +256,28 @@ export default {
 }
 
 /* Responsive Anpassungen für Tablets*/
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
-}
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    .dropdown {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .choose-winner label {
+        font-size: 15px;
+    }
+
+    .play-randomly {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .set-winner {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
 }
 </style>

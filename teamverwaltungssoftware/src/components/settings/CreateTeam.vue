@@ -462,6 +462,7 @@ input:focus {
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-left: 135px;
+    margin-bottom: 15px;
 }
 
 .save-team:hover {
@@ -476,10 +477,38 @@ input:focus {
 }
 
 /* Responsive Anpassungen für Tablets*/
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
-}
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .create-team-form {
+        width: 300px;
+    }
+
+    .save-team {
+        padding: 10px 10px;
+        font-size: 13px;
+        margin-left: 104px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

@@ -79,6 +79,7 @@ option {
 @media only screen and (max-width: 767px) {
     select {
         padding: 5px;
+        font-size: 14px;
     }
 
     label {

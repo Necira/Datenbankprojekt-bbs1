@@ -1,20 +1,23 @@
 <template>
-    <table id="team-leaderboard">
-        <thead>
-            <tr>
-                <th>teamID</th>
-                <th>teamname</th>
-                <th>eloPoints</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in leaderboarddata" :key="row">
-                <td>{{ row.tableDataCellTeamId }}</td>
-                <td>{{ row.tableDataCellTeamname }}</td>
-                <td>{{ row.tableDataCellEloPoints }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <h1>Leaderboard - Teams</h1>
+        <table id="team-leaderboard">
+            <thead>
+                <tr>
+                    <th>teamID</th>
+                    <th>teamname</th>
+                    <th>eloPoints</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in leaderboarddata" :key="row">
+                    <td>{{ row.tableDataCellTeamId }}</td>
+                    <td>{{ row.tableDataCellTeamname }}</td>
+                    <td>{{ row.tableDataCellEloPoints }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
@@ -58,11 +61,32 @@ export default {
 </script>
 
 <style scoped>
-/* Responsive Anpassungen für Tablets*/
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
+#team-leaderboard {
+    border-spacing: 10px 0;
 }
+
+th,
+td {
+    text-align: left;
+}
+
+h1 {
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    #team-leaderboard {
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
 }
 </style>

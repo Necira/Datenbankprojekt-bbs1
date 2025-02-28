@@ -72,10 +72,18 @@ option {
 }
 
 /* Responsive Anpassungen für Tablets*/
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
-}
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    select {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
 }
 </style>

@@ -598,6 +598,7 @@ export default {
 #teams-table {
     margin: auto;
     margin-bottom: 15px;
+    border-spacing: 10px 0;
 }
 
 .success-message {
@@ -735,11 +736,63 @@ input:focus {
     transform: scale(1.05);
 }
 
+th,
+td {
+    text-align: left;
+}
+
 /* Responsive Anpassungen für Tablets*/
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .position-delete-player-popup {
+        left: 42%;
+        top: 45%;
+    }
+
+    .position-edit-player-popup {
+        left: 45%;
+        top: 28%;
+    }
 }
 
 /* Responsive Anpassungen für smartphone*/
 @media only screen and (max-width: 767px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .delete-team,
+    .edit-team {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
+
+    #teams-table {
+        font-size: 15px;
+    }
+
+    .position-delete-player-popup {
+        left: 23%;
+        top: 27%;
+    }
+
+    .position-edit-player-popup {
+        left: 20%;
+        top: 10%;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>
