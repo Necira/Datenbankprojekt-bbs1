@@ -23,8 +23,8 @@
     --red: #ff0000;
     --white: #ffffff;
     --lightgrey: #888;
+    --lightgrey2: #d2d2d2;
     --darkgrey: #2d2d2d;
-    --darkblue: #34495e;
     --hovergreen: #41b883;
     --lightgreen: #52e7a4;
     --green: #008000;

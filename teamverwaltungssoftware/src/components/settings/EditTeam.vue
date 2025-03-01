@@ -149,6 +149,7 @@ export default {
 
                     if (data.length === 0) {
                         document.getElementById('teams-table').innerHTML = 'No data available!';
+                        document.getElementById('teams-table').style.border = 'none';
                     }
 
                     for (let i = 0; i < data.length; i++) {
@@ -189,6 +190,7 @@ export default {
                 .catch(error => {
                     console.error(error);
                     document.getElementById('teams-table').innerHTML = 'No data available!';
+                    document.getElementById('teams-table').style.border = 'none';
                     return;
                 });
         },
@@ -601,6 +603,8 @@ export default {
     margin: auto;
     margin-bottom: 15px;
     border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
 }
 
 .success-message {
@@ -740,7 +744,17 @@ input:focus {
 
 th,
 td {
-    text-align: left;
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
 }
 
 /* Responsive Anpassungen für Tablets*/

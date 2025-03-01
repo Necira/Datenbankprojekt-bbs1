@@ -335,6 +335,7 @@ export default {
                 .then(data => {
                     if (data.length === 0) {
                         document.getElementById('player-table').innerHTML = 'No data available!';
+                        document.getElementById('player-table').style.border = 'none';
                     }
 
                     // Display fetched data in the table above
@@ -352,6 +353,7 @@ export default {
                 .catch(error => {
                     console.error(error);
                     document.getElementById('player-table').innerHTML = 'No data available!';
+                    document.getElementById('player-table').style.border = 'none';
                     return;
                 });
         },
@@ -460,6 +462,8 @@ export default {
     margin: auto;
     margin-bottom: 15px;
     border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
 }
 
 .hidden {
@@ -544,7 +548,17 @@ input:focus {
 
 th,
 td {
-    text-align: left;
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
 }
 
 /* Responsive Anpassungen für Tablets*/
@@ -582,7 +596,7 @@ td {
         font-size: 13px;
     }
 
-    #teams-table {
+    #player-table {
         font-size: 15px;
     }
 

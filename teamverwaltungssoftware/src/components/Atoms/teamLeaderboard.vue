@@ -35,6 +35,7 @@ export default {
                 .then(data => {
                     if (data.length === 0) {
                         document.getElementById('team-leaderboard').innerHTML = 'No data available!';
+                        document.getElementById('team-leaderboard').style.border = 'none';
                     }
 
                     for (let i = 0; i < data.length; i++) {
@@ -49,6 +50,7 @@ export default {
                 .catch(error => {
                     console.error(error);
                     document.getElementById('team-leaderboard').innerHTML = 'No data available!';
+                    document.getElementById('team-leaderboard').style.border = 'none';
                     return;
                 });
         },
@@ -63,11 +65,23 @@ export default {
 <style scoped>
 #team-leaderboard {
     border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
 }
 
 th,
 td {
-    text-align: left;
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
 }
 
 h1 {
