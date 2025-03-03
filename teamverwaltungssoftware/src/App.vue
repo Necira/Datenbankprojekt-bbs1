@@ -8,7 +8,10 @@
 
 <style>
 #app {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
