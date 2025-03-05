@@ -21,6 +21,15 @@ export default {
         navigationBar,
         footerBar,
     },
+    methods: {
+        indicateCurrentPage() {
+            let activeRouterlink = document.getElementById('homeComponent-routerlink');
+            activeRouterlink.style.backgroundColor = 'var(--hovergreen)';
+        },
+    },
+    mounted() {
+        this.indicateCurrentPage();
+    },
 };
 </script>
 

@@ -1,11 +1,12 @@
 <template>
     <ul>
-        <li><RouterLink to="/">Home</RouterLink></li>
+        <!--WARNING: Do not remove id of list elements, they are used to indicate the current visited page-->
+        <li><RouterLink to="/" id="homeComponent-routerlink">Home</RouterLink></li>
         <!-- <li><RouterLink to="/OneVsOne">1 vs 1</RouterLink></li>
         <li><RouterLink to="/TeamVsTeam">T vs T</RouterLink></li>
         <li><RouterLink to="/TeamTournament">Tournament</RouterLink></li>
         <li><RouterLink to="/SettingScreen">Settings</RouterLink></li> -->
-        <li><RouterLink to="/Leaderboards">Leaderboards</RouterLink></li>
+        <li><RouterLink to="/Leaderboards" id="leaderboard-routerlink">Leaderboards</RouterLink></li>
     </ul>
 </template>
 

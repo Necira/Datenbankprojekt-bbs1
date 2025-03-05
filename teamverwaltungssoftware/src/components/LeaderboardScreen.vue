@@ -24,6 +24,15 @@ export default {
         teamLeaderboard,
     },
     name: 'LeaderboardScreen',
+    methods: {
+        indicateCurrentPage() {
+            let activeRouterlink = document.getElementById('leaderboard-routerlink');
+            activeRouterlink.style.backgroundColor = 'var(--hovergreen)';
+        },
+    },
+    mounted() {
+        this.indicateCurrentPage();
+    },
 };
 </script>
 
