@@ -64,7 +64,7 @@ export default {
     methods: {
         async fetchTeams() {
             try {
-                const response = await fetch('http://localhost:3000/getActiveteams');
+                const response = await fetch('http://localhost:3000/getActiveAndCompleteTeams');
                 const data = await response.json();
                 this.availableTeams = data;
             } catch (error) {

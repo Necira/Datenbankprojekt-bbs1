@@ -1,6 +1,7 @@
 <template>
     <div class="team-pick">
-        <label :for="team">Choose {{ team }}</label>
+        <label :for="team" v-if="availableTeams.length > 0">Choose {{ team }}</label>
+        <label v-if="availableTeams.length === 0">Currently no teams available!</label>
         <select v-model="selectedTeam" :id="team">
             <option v-for="team in availableTeams" :key="team.teamID" :value="team.teamname">
                 {{ team.teamname }}

@@ -398,3 +398,17 @@ app.patch('/updateTeammemberEloLoser', (req, res) => {
         },
     );
 });
+
+// API-Endpoint to get active and complete teams
+app.get('/getActiveAndCompleteTeams', (req, res) => {
+    connection.query(
+        'SELECT * FROM `teams` WHERE `deleted` = 0 AND `firstMember` IS NOT NULL AND `secondMember` IS NOT NULL AND `thirdMember` IS NOT NULL AND `fourthMember` IS NOT NULL AND `fifthMember` IS NOT NULL',
+        (err, rows) => {
+            if (err) {
+                console.error(err);
+            } else {
+                res.json(rows);
+            }
+        },
+    );
+});
