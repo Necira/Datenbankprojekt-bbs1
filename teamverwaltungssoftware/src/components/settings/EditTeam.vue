@@ -414,7 +414,7 @@ export default {
                 .then(response => {
                     if (response.ok) {
                         this.displayTeamsdata();
-                        this.successMessage = 'deleted player successfully!';
+                        this.successMessage = 'deleted team successfully!';
                         return response.json();
                     }
                 })
@@ -579,7 +579,7 @@ export default {
                 .then(response => {
                     if (response.ok) {
                         this.displayTeamsdata();
-                        this.successMessage = 'updated player successfully!';
+                        this.successMessage = 'updated team successfully!';
                         return response.json();
                     }
                 })
