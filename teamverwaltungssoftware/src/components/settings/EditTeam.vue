@@ -142,6 +142,20 @@ export default {
     },
     methods: {
         displayTeamsdata() {
+            let playerData = [];
+
+            fetch('http://localhost:3000/getPlayer')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        playerData.push({ id: data[i].playerID, name: data[i].playername });
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
+
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
                 .then(data => {
@@ -153,25 +167,37 @@ export default {
                     }
 
                     for (let i = 0; i < data.length; i++) {
-                        // Display fetched data in the select-option-fields above
-                        if (data[i].firstMember === null) {
-                            data[i].firstMember = 'NULL';
-                        }
+                        for (let a = 0; a < playerData.length; a++) {
+                            // Display fetched data in the select-option-fields above
+                            if (data[i].firstMember === null) {
+                                data[i].firstMember = 'NULL';
+                            } else if (playerData[a].id === data[i].firstMember) {
+                                data[i].firstMember = playerData[a].name;
+                            }
 
-                        if (data[i].secondMember === null) {
-                            data[i].secondMember = 'NULL';
-                        }
+                            if (data[i].secondMember === null) {
+                                data[i].secondMember = 'NULL';
+                            } else if (playerData[a].id === data[i].secondMember) {
+                                data[i].secondMember = playerData[a].name;
+                            }
 
-                        if (data[i].thirdMember === null) {
-                            data[i].thirdMember = 'NULL';
-                        }
+                            if (data[i].thirdMember === null) {
+                                data[i].thirdMember = 'NULL';
+                            } else if (playerData[a].id === data[i].thirdMember) {
+                                data[i].thirdMember = playerData[a].name;
+                            }
 
-                        if (data[i].fourthMember === null) {
-                            data[i].fourthMember = 'NULL';
-                        }
+                            if (data[i].fourthMember === null) {
+                                data[i].fourthMember = 'NULL';
+                            } else if (playerData[a].id === data[i].fourthMember) {
+                                data[i].fourthMember = playerData[a].name;
+                            }
 
-                        if (data[i].fifthMember === null) {
-                            data[i].fifthMember = 'NULL';
+                            if (data[i].fifthMember === null) {
+                                data[i].fifthMember = 'NULL';
+                            } else if (playerData[a].id === data[i].fifthMember) {
+                                data[i].fifthMember = playerData[a].name;
+                            }
                         }
 
                         this.fetchedTeamdata.push({
@@ -426,6 +452,13 @@ export default {
                 this.errorMessage = '';
             }
 
+            if (Number(deleted) === 0 || Number(deleted) === 1) {
+                this.errorMessage = '';
+            } else {
+                this.errorMessage = 'Invalid Value!';
+                return;
+            }
+
             if (
                 firstMember === secondMember ||
                 firstMember === thirdMember ||
@@ -554,6 +587,8 @@ export default {
                     console.error(error);
                     return;
                 });
+
+            this.openAndCloseEditTeamForm();
         },
         getFilteredTeam() {
             let searchvalue = document.getElementById('searchfield').value;
@@ -757,6 +792,13 @@ thead {
     border: 2px solid var(--black);
 }
 
+.scrollable-container {
+    width: fit-content;
+    overflow-y: scroll;
+    margin: 0 auto;
+    height: 380px;
+}
+
 /* Responsive Anpassungen für Tablets*/
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
     .position-delete-player-popup {
@@ -799,7 +841,7 @@ thead {
     .scrollable-container {
         width: 300px;
         overflow-x: scroll;
-        margin: 0 auto;
+        height: fit-content;
     }
 
     .position-delete-player-popup {

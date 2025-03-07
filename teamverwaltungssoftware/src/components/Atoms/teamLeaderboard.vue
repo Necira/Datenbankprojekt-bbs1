@@ -1,22 +1,24 @@
 <template>
     <div>
         <h1>Leaderboard - Teams</h1>
-        <table id="team-leaderboard">
-            <thead>
-                <tr>
-                    <th>teamID</th>
-                    <th>teamname</th>
-                    <th>eloPoints</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="row in leaderboarddata" :key="row">
-                    <td>{{ row.tableDataCellTeamId }}</td>
-                    <td>{{ row.tableDataCellTeamname }}</td>
-                    <td>{{ row.tableDataCellEloPoints }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="scrollable-container">
+            <table id="team-leaderboard">
+                <thead>
+                    <tr>
+                        <th>teamID</th>
+                        <th>teamname</th>
+                        <th>eloPoints</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in leaderboarddata" :key="row">
+                        <td>{{ row.tableDataCellTeamId }}</td>
+                        <td>{{ row.tableDataCellTeamname }}</td>
+                        <td>{{ row.tableDataCellEloPoints }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -89,6 +91,13 @@ h1 {
     margin-top: 0;
 }
 
+.scrollable-container {
+    width: fit-content;
+    overflow-y: scroll;
+    height: 350px;
+    margin: 0 auto;
+}
+
 /* Responsive Anpassungen für Tablets*/
 /* @media only screen and (min-width: 768px) and (max-width: 1023px) {
 } */
@@ -101,6 +110,12 @@ h1 {
 
     h1 {
         font-size: 20px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+        height: fit-content;
     }
 }
 </style>

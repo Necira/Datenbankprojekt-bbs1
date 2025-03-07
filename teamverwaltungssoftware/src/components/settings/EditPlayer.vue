@@ -11,32 +11,34 @@
         <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
     <div class="scrollable-container">
-        <table id="player-table">
-            <thead>
-                <tr>
-                    <th>playerID</th>
-                    <th>playername</th>
-                    <th>firstname</th>
-                    <th>lastname</th>
-                    <th>email</th>
-                    <th>position</th>
-                    <th>eloPoints</th>
-                    <th>deleted</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="row in fetchedPlayerdata" :key="row">
-                    <td>{{ row.playerID }}</td>
-                    <td>{{ row.playername }}</td>
-                    <td>{{ row.firstname }}</td>
-                    <td>{{ row.lastname }}</td>
-                    <td>{{ row.email }}</td>
-                    <td>{{ row.position }}</td>
-                    <td>{{ row.eloPoints }}</td>
-                    <td>{{ row.deleted }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="scrollable-container">
+            <table id="player-table">
+                <thead>
+                    <tr>
+                        <th>playerID</th>
+                        <th>playername</th>
+                        <th>firstname</th>
+                        <th>lastname</th>
+                        <th>email</th>
+                        <th>position</th>
+                        <th>eloPoints</th>
+                        <th>deleted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in fetchedPlayerdata" :key="row">
+                        <td>{{ row.playerID }}</td>
+                        <td>{{ row.playername }}</td>
+                        <td>{{ row.firstname }}</td>
+                        <td>{{ row.lastname }}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.position }}</td>
+                        <td>{{ row.eloPoints }}</td>
+                        <td>{{ row.deleted }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <button type="button" class="delete-player margin-right" @click="openAndCloseDeletePlayerPopUpWindow">
         Delete player
@@ -561,6 +563,13 @@ thead {
     border: 2px solid var(--black);
 }
 
+.scrollable-container {
+    width: fit-content;
+    overflow-y: scroll;
+    margin: 0 auto;
+    height: 380px;
+}
+
 /* Responsive Anpassungen für Tablets*/
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
     .position-delete-player-popup {
@@ -619,6 +628,12 @@ thead {
     .error-message,
     .success-message {
         font-size: 15px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+        height: fit-content;
     }
 }
 </style>
