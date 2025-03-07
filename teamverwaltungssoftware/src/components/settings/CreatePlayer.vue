@@ -1,5 +1,12 @@
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'CreatePlayer',
@@ -131,6 +138,7 @@ export default {
 </script>
 
 <template>
+    <navigationBar></navigationBar>
     <h1>Create a new player</h1>
     <form class="createPlayerForm" id="createPlayerForm">
         <label for="playername">Playername:</label>
@@ -151,28 +159,134 @@ export default {
         </select>
         <label for="eloPoints">Elo-Points:</label>
         <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="validateForm">Save player</button>
+        <span class="success-message"> {{ successMessage }}</span>
+        <span class="error-message">{{ errorMessage }}</span>
+        <button type="button" class="save-player" @click="validateForm">Save player</button>
     </form>
-    <span class="success-message"> {{ successMessage }}</span>
-    <span class="error-message">{{ errorMessage }}</span>
-    <RouterLink to="/PlayerSettings"> Back </RouterLink>
+    <RouterLink to="/PlayerSettings" class="back">← Back </RouterLink>
+    <footerBar></footerBar>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .createPlayerForm {
+    width: 400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+select,
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.save-player {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: var(--white);
+    background-color: var(--blue);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 130px;
+    margin-bottom: 15px;
+}
+
+.save-player:hover {
+    background-color: var(--blue);
+    transform: scale(1.05);
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .createPlayerForm {
+        width: 300px;
+    }
+
+    .save-player {
+        padding: 10px 10px;
+        font-size: 13px;
+        margin-left: 104px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

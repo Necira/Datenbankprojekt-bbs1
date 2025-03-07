@@ -1,11 +1,12 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Create a new team</h1>
-    <form class="createTeamForm" id="createTeamForm">
+    <form id="createTeamForm" class="create-team-form">
         <label for="teamname">teamname</label>
         <input id="teamname" name="teamname" />
         <label for="member">member</label>
-        <div id="availabe-player">
-            <div>
+        <div id="available-player">
+            <div class="column">
                 <label for="Top-Lane">Top-Lane</label>
                 <select id="Top-Lane" name="Top-Lane">
                     <option id="NULL">No player</option>
@@ -14,7 +15,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Jungle">Jungle</label>
                 <select id="Jungle" name="Jungle">
                     <option id="NULL">No player</option>
@@ -23,7 +24,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Mid-Lane">Mid-Lane</label>
                 <select id="Mid-Lane" name="Mid-Lane">
                     <option id="NULL">No player</option>
@@ -32,7 +33,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Support">Support</label>
                 <select id="Support" name="Support">
                     <option id="NULL">No player</option>
@@ -41,7 +42,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Bot-Lane">Bot-Lane</label>
                 <select id="Bot-Lane" name="Bot-Lane">
                     <option id="NULL">No player</option>
@@ -51,15 +52,23 @@
                 </select>
             </div>
         </div>
-        <button type="button" @click="validateForm">Save team</button>
+        <span class="success-message"> {{ textSuccessMessage }}</span>
+        <span class="error-message">{{ textErrorMessage }}</span>
+        <button type="button" class="save-team" @click="validateForm">Save team</button>
     </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
-    <RouterLink to="/TeamSettings"> Back </RouterLink>
+    <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
+    <footerBar></footerBar>
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'CreateTeam',
@@ -370,25 +379,136 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .create-team-form {
+    width: 400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
     flex-direction: column;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
-#availabe-player {
+#available-player {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     flex-direction: column;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+select,
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.save-team {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: var(--white);
+    background-color: var(--blue);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 135px;
+    margin-bottom: 15px;
+}
+
+.save-team:hover {
+    background-color: var(--blue);
+    transform: scale(1.05);
+}
+
+.column {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .create-team-form {
+        width: 300px;
+    }
+
+    .save-team {
+        padding: 10px 10px;
+        font-size: 13px;
+        margin-left: 104px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

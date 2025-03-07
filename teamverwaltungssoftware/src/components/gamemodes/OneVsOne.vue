@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="one-vs-one">
         <div class="player-picks">
             <PlayerPicks
@@ -27,8 +28,9 @@
             </div>
         </div>
         <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />
-        <RouterLink to="/" class="back-link">← Back to Home</RouterLink>
+        <RouterLink to="/" class="homescreen-routerlink">← Back to Home</RouterLink>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
@@ -36,11 +38,15 @@ import { randomizer } from '../GameLogic/Randomizer.js';
 import PlayerPicks from '../Atoms/PlayerPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
 import { eloCalculator } from '../GameLogic/EloCalculator.js';
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     components: {
         PlayerPicks,
         WinnerMessage,
+        navigationBar,
+        footerBar,
     },
     name: 'OneVsOne',
     data() {
@@ -236,12 +242,11 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'Roboto', sans-serif;
     padding: 30px;
     gap: 20px;
-    background-color: #f9f9f9;
+    background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--transparentblack);
     max-width: 600px;
     margin: 50px auto;
 }
@@ -263,8 +268,8 @@ export default {
 .play-randomly {
     padding: 15px 25px;
     font-size: 18px;
-    color: #fff;
-    background-color: #4caf50;
+    color: var(--white);
+    background-color: var(--lightgreen);
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -274,7 +279,7 @@ export default {
 }
 
 .play-randomly:hover {
-    background-color: #45a049;
+    background-color: var(--hovergreen);
     transform: scale(1.05);
 }
 
@@ -287,24 +292,24 @@ export default {
 .choose-winner label {
     font-size: 16px;
     font-weight: bold;
-    color: #333;
+    color: var(--black);
 }
 
 .dropdown {
     width: 100%;
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--lightgrey);
     border-radius: 8px;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--white);
+    color: var(--black);
 }
 
 .set-winner {
     padding: 12px 20px;
     font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
+    color: var(--white);
+    background-color: var(--blue);
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -314,21 +319,47 @@ export default {
 }
 
 .set-winner:hover {
-    background-color: #0056b3;
+    background-color: var(--blue);
     transform: scale(1.05);
 }
 
-.back-link {
+.homescreen-routerlink {
     font-size: 16px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
     margin-top: 20px;
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.back-link:hover {
-    color: #0056b3;
+.homescreen-routerlink:hover {
+    color: var(--hoverblue);
     transform: scale(1.05);
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    .dropdown {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .choose-winner label {
+        font-size: 15px;
+    }
+
+    .play-randomly {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .set-winner {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
 }
 </style>

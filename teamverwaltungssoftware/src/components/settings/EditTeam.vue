@@ -1,6 +1,7 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Edit existing team</h1>
-    <div class="column">
+    <div class="centered-column">
         <input
             type="text"
             id="searchfield"
@@ -9,51 +10,55 @@
         />
         <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
-    <table id="teams-table">
-        <thead>
-            <tr>
-                <th>teamID</th>
-                <th>teamname</th>
-                <th>eloPoints</th>
-                <th>deleted</th>
-                <th>Top-Lane</th>
-                <th>Jungle</th>
-                <th>Mid-Lane</th>
-                <th>Support</th>
-                <th>Bot-Lane</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in fetchedTeamdata" :key="row">
-                <td>{{ row.teamID }}</td>
-                <td>{{ row.teamname }}</td>
-                <td>{{ row.eloPoints }}</td>
-                <td>{{ row.deleted }}</td>
-                <td>{{ row.firstMember }}</td>
-                <td>{{ row.secondMember }}</td>
-                <td>{{ row.thirdMember }}</td>
-                <td>{{ row.fourthMember }}</td>
-                <td>{{ row.fifthMember }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" @click="openAndCloseDeleteTeamPopUpWindow">Delete team</button>
-    <button type="button" @click="openAndCloseEditTeamForm">Edit team</button>
-    <RouterLink to="/TeamSettings"> Back </RouterLink>
+    <div class="scrollable-container">
+        <table id="teams-table">
+            <thead>
+                <tr>
+                    <th>teamID</th>
+                    <th>teamname</th>
+                    <th>eloPoints</th>
+                    <th>deleted</th>
+                    <th>Top-Lane</th>
+                    <th>Jungle</th>
+                    <th>Mid-Lane</th>
+                    <th>Support</th>
+                    <th>Bot-Lane</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in fetchedTeamdata" :key="row">
+                    <td>{{ row.teamID }}</td>
+                    <td>{{ row.teamname }}</td>
+                    <td>{{ row.eloPoints }}</td>
+                    <td>{{ row.deleted }}</td>
+                    <td>{{ row.firstMember }}</td>
+                    <td>{{ row.secondMember }}</td>
+                    <td>{{ row.thirdMember }}</td>
+                    <td>{{ row.fourthMember }}</td>
+                    <td>{{ row.fifthMember }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button type="button" @click="openAndCloseDeleteTeamPopUpWindow" class="delete-team margin-right">
+        Delete team
+    </button>
+    <button type="button" @click="openAndCloseEditTeamForm" class="edit-team margin-right">Edit team</button>
+    <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
 
-    <div class="popUp-Window" v-if="openDeleteTeamPopUpWindow">
+    <div class="popUp-Window position-delete-player-popup" v-if="openDeleteTeamPopUpWindow">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseDeleteTeamPopUpWindow">X</button>
         <div class="column">
             <label for="selectTeamname">Choose a team:</label>
             <select id="selectTeamname" name="selectTeamname">
                 <option v-for="team in deleteableTeams" :key="team" :id="team.id">{{ team.name }}</option>
             </select>
-            <button type="button" @click="deleteTeam">Delete team</button>
+            <span class="success-message"> {{ successMessage }}</span>
+            <button type="button" @click="deleteTeam" class="delete-team">Delete team</button>
         </div>
-        <span class="success-message"> {{ successMessage }}</span>
     </div>
 
-    <div v-if="openEditTeamForm" class="popUp-Window">
+    <div v-if="openEditTeamForm" class="popUp-Window position-edit-player-popup">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditTeamForm">X</button>
         <form class="edit-team-form">
             <label for="selectTeamID">TeamID:</label>
@@ -100,15 +105,23 @@
                 </option>
             </select>
 
-            <button type="button" @click="validateEditTeamForm">Edit team</button>
+            <span class="success-message"> {{ successMessage }}</span>
+            <span class="error-message">{{ errorMessage }}</span>
+            <button type="button" @click="validateEditTeamForm" class="edit-team">Edit team</button>
         </form>
-        <span class="success-message"> {{ successMessage }}</span>
-        <span class="error-message">{{ errorMessage }}</span>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'EditTeam',
@@ -136,6 +149,7 @@ export default {
 
                     if (data.length === 0) {
                         document.getElementById('teams-table').innerHTML = 'No data available!';
+                        document.getElementById('teams-table').style.border = 'none';
                     }
 
                     for (let i = 0; i < data.length; i++) {
@@ -176,6 +190,7 @@ export default {
                 .catch(error => {
                     console.error(error);
                     document.getElementById('teams-table').innerHTML = 'No data available!';
+                    document.getElementById('teams-table').style.border = 'none';
                     return;
                 });
         },
@@ -586,46 +601,71 @@ export default {
 <style scoped>
 #teams-table {
     margin: auto;
+    margin-bottom: 15px;
+    border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .popUp-Window {
-    background-color: aquamarine;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px var(--transparentblack);
+    max-width: 600px;
     padding: 15px;
+}
+
+.position-delete-player-popup {
     position: fixed;
-    margin: auto 0;
     left: 45%;
-    top: 25%;
+    top: 40%;
+}
+
+.position-edit-player-popup {
+    position: fixed;
+    left: 45%;
+    top: 5%;
 }
 
 .column {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.centered-column {
+    display: flex;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .close-PopUpWindow {
     display: flex;
+    background: transparent;
+    border: none;
+    padding-bottom: 15px;
+    cursor: pointer;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .edit-team-form {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
     flex-direction: column;
 }
 
@@ -635,5 +675,146 @@ export default {
 
 #searchfield {
     width: 200px;
+    padding: 5px;
+}
+
+select,
+input {
+    padding: 5px;
+    width: 85%;
+    max-width: 250px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.delete-team,
+.edit-team {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: var(--white);
+    background-color: var(--blue);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.delete-team:hover,
+.edit-team:hover {
+    background-color: var(--blue);
+    transform: scale(1.05);
+}
+
+.margin-right {
+    margin-right: 20px;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+th,
+td {
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
+}
+
+/* Responsive Anpassungen für Tablets*/
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .position-delete-player-popup {
+        left: 42%;
+        top: 45%;
+    }
+
+    .position-edit-player-popup {
+        left: 45%;
+        top: 28%;
+    }
+}
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .delete-team,
+    .edit-team {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
+
+    #teams-table {
+        font-size: 15px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+        margin: 0 auto;
+    }
+
+    .position-delete-player-popup {
+        left: 23%;
+        top: 27%;
+    }
+
+    .position-edit-player-popup {
+        left: 20%;
+        top: 10%;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

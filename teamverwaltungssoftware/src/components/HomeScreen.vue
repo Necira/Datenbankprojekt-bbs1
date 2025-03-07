@@ -1,9 +1,6 @@
 <template>
-    <div class="home-container">
-        <div class="leaderboard-container">
-            <playerLeaderboard></playerLeaderboard>
-            <teamLeaderboard></teamLeaderboard>
-        </div>
+    <navigationBar></navigationBar>
+    <div class="centered-container">
         <div class="buttons">
             <RouterLink to="/OneVsOne" class="button">Player vs Player</RouterLink>
             <RouterLink to="/TeamVsTeam" class="button">Team vs Team</RouterLink>
@@ -11,39 +8,40 @@
             <RouterLink to="/SettingScreen" class="button">Settings</RouterLink>
         </div>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
-import playerLeaderboard from './Atoms/playerLeaderboard.vue';
-import teamLeaderboard from './Atoms/teamLeaderboard.vue';
+import navigationBar from './Atoms/navigationBar.vue';
+import footerBar from './Atoms/footerBar.vue';
 
 export default {
     name: 'HomeScreen',
     components: {
-        playerLeaderboard,
-        teamLeaderboard,
+        navigationBar,
+        footerBar,
+    },
+    methods: {
+        indicateCurrentPage() {
+            let activeRouterlink = document.getElementById('homeComponent-routerlink');
+            activeRouterlink.style.backgroundColor = 'var(--hovergreen)';
+        },
+    },
+    mounted() {
+        this.indicateCurrentPage();
     },
 };
 </script>
 
 <style scoped>
 /* Container für den gesamten Screen */
-.home-container {
+.centered-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
-    background: #f7f7f7;
+    background: var(--white);
     padding: 0 20px;
-    font-family: 'Arial', sans-serif;
-}
-
-.leaderboard-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
 }
 
 /* Container für die Buttons */
@@ -59,38 +57,39 @@ export default {
     display: inline-block;
     padding: 15px 25px;
     margin: 5px 0;
-    background-color: #2d2d2d;
-    color: #fff;
+    background-color: var(--darkgrey);
+    color: var(--white);
     font-size: 16px;
     font-weight: 500;
     border-radius: 25px;
     text-decoration: none;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px var(--transparentblack);
     text-transform: uppercase;
 }
 
 /* Hover-Effekt für Buttons */
 .button:hover {
-    background-color: #5d5d5d;
+    background-color: var(--hovergreen);
     transform: translateY(-4px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 15px var(--transparentblack);
 }
 
 /* Fokus-Effekt für Accessibility */
 .button:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #ff6f61;
+    box-shadow: 0 0 0 2px var(--lightred);
 }
 
-/* Responsive Anpassungen */
-@media (max-width: 768px) {
-    .buttons {
-        gap: 10px;
-    }
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
     .button {
-        font-size: 14px;
-        padding: 12px 20px;
+        font-size: 13px;
+        padding: 10px 15px;
     }
 }
 </style>

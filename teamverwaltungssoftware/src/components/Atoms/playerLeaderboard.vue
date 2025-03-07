@@ -1,20 +1,23 @@
 <template>
-    <table id="player-leaderboard">
-        <thead>
-            <tr>
-                <th>playerID</th>
-                <th>playername</th>
-                <th>eloPoints</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in leaderboarddata" :key="row">
-                <td>{{ row.tableDataCellPlayerId }}</td>
-                <td>{{ row.tableDataCellPlayername }}</td>
-                <td>{{ row.tableDataCellEloPoints }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <h1>Leaderboard - Player</h1>
+        <table id="player-leaderboard">
+            <thead>
+                <tr>
+                    <th>playerID</th>
+                    <th>playername</th>
+                    <th>eloPoints</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in leaderboarddata" :key="row">
+                    <td>{{ row.tableDataCellPlayerId }}</td>
+                    <td>{{ row.tableDataCellPlayername }}</td>
+                    <td>{{ row.tableDataCellEloPoints }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
@@ -32,6 +35,7 @@ export default {
                 .then(data => {
                     if (data.length === 0) {
                         document.getElementById('player-leaderboard').innerHTML = 'No data available!';
+                        document.getElementById('player-leaderboard').style.border = 'none';
                     }
 
                     for (let i = 0; i < data.length; i++) {
@@ -46,6 +50,7 @@ export default {
                 .catch(error => {
                     console.error(error);
                     document.getElementById('player-leaderboard').innerHTML = 'No data available!';
+                    document.getElementById('player-leaderboard').style.border = 'none';
                     return;
                 });
         },
@@ -57,4 +62,45 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+#player-leaderboard {
+    border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
+}
+
+h1 {
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    #player-leaderboard {
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+}
+</style>

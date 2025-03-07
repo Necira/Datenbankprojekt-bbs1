@@ -1,4 +1,5 @@
 <template>
+    <navigationBar></navigationBar>
     <div class="team-vs-team">
         <div class="buttons">
             <TeamPicks
@@ -12,7 +13,7 @@
                 @update:teamName="setTeam('teamTwo', $event)"
             />
         </div>
-        <div class="message">
+        <div>
             {{ message }}
         </div>
         <div class="actions" v-if="!winner && teamOne && teamTwo && teamTwo != teamOne">
@@ -27,8 +28,9 @@
             </div>
         </div>
         <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />
-        <RouterLink to="/" class="back-link">← Back</RouterLink>
+        <RouterLink to="/" class="homescreen-routerlink">← Back</RouterLink>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
@@ -36,11 +38,15 @@ import { randomizer } from '../GameLogic/Randomizer.js';
 import TeamPicks from '../Atoms/TeamPicks.vue';
 import WinnerMessage from '../Atoms/WinnerMessage.vue';
 import { eloCalculator } from '../GameLogic/EloCalculator.js';
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
 
 export default {
     components: {
         TeamPicks,
         WinnerMessage,
+        navigationBar,
+        footerBar,
     },
     name: 'TeamVsTeam',
     data() {
@@ -234,10 +240,9 @@ export default {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f9f9f9;
+    background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--transparentblack);
     max-width: 600px;
     margin: 50px auto;
 }
@@ -262,7 +267,7 @@ export default {
     padding: 15px 25px;
     font-size: 18px;
     color: white;
-    background-color: #4caf50;
+    background-color: var(--lightgreen);
     border: none;
     border-radius: 12px;
     font-weight: bold;
@@ -272,7 +277,7 @@ export default {
 }
 
 .play-randomly:hover {
-    background-color: #45a049;
+    background-color: var(--hovergreen);
     transform: scale(1.05);
 }
 
@@ -280,15 +285,15 @@ export default {
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--black);
 }
 
 .dropdown {
     padding: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--lightgrey);
     border-radius: 8px;
-    background-color: white;
+    background-color: var(--white);
     width: 100%;
 }
 
@@ -297,30 +302,57 @@ export default {
     font-size: 16px;
     font-weight: bold;
     color: white;
-    background-color: #007bff;
+    background-color: var(--blue);
     border: none;
     border-radius: 12px;
     cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
 }
 
 .set-winner:hover {
-    background-color: #0056b3;
+    background-color: var(--hoverblue);
     transform: scale(1.05);
 }
 
-.back-link {
+.homescreen-routerlink {
     margin-top: 20px;
     font-size: 16px;
-    color: #007bff;
+    color: var(--blue);
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
-.back-link:hover {
-    color: #0056b3;
+.homescreen-routerlink:hover {
+    color: var(--hoverblue);
     transform: scale(1.05);
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    .dropdown {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .choose-winner label {
+        font-size: 15px;
+    }
+
+    .play-randomly {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+
+    .set-winner {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
 }
 </style>

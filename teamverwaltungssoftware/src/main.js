@@ -12,6 +12,7 @@ import OneVsOne from './components/gamemodes/OneVsOne.vue';
 import TeamVsTeam from './components/gamemodes/TeamVsTeam.vue';
 import TeamTournament from './components/gamemodes/TeamTournament.vue';
 import EditPlayer from './components/settings/EditPlayer.vue';
+import LeaderboardScreen from './components/LeaderboardScreen.vue';
 
 const router = createRouter({
     routes: [
@@ -26,7 +27,7 @@ const router = createRouter({
         { path: '/CreatePlayer', component: CreatePlayer },
         { path: '/OneVsOne', component: OneVsOne },
         { path: '/TeamVsTeam', component: TeamVsTeam },
-       
+        { path: '/Leaderboards', component: LeaderboardScreen },
     ],
     history: createWebHistory(),
 });
