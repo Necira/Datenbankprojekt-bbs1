@@ -42,6 +42,7 @@ export default {
     flex-direction: column;
     background: var(--white);
     padding: 0 20px;
+    margin-top: 200px;
 }
 
 /* Container für die Buttons */
