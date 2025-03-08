@@ -706,22 +706,26 @@ input:focus {
 
 .delete-team,
 .edit-team {
-    padding: 12px 20px;
-    font-size: 16px;
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 5px 0;
+    background-color: var(--darkgrey);
     color: var(--white);
-    background-color: var(--blue);
+    font-size: 16px;
     border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
     text-transform: uppercase;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .delete-team:hover,
 .edit-team:hover {
-    background-color: var(--blue);
-    transform: scale(1.05);
+    background-color: var(--hovergreen);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
 }
 
 .margin-right {

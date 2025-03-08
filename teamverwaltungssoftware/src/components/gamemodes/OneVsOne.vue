@@ -189,10 +189,11 @@ export default {
     padding: 15px 25px;
     margin: 5px 0;
     background-color: var(--darkgrey);
-    color: var(--white);   
+    color: var(--white);
     font-size: 16px;
     font-weight: 500;
     border-radius: 25px;
+    border: none;
     text-decoration: none;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 10px var(--transparentblack);
@@ -232,10 +233,11 @@ export default {
     padding: 15px 25px;
     margin: 5px 0;
     background-color: var(--darkgrey);
-    color: var(--white);   
+    color: var(--white);
     font-size: 16px;
     font-weight: 500;
     border-radius: 25px;
+    border: none;
     text-decoration: none;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 10px var(--transparentblack);

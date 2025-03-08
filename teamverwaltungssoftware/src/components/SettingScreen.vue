@@ -1,9 +1,11 @@
 <template>
     <navigationBar></navigationBar>
-    <div class="buttons">
-        <RouterLink to="/TeamSettings" class="button"> Team </RouterLink>
-        <RouterLink to="/PlayerSettings" class="button"> Player </RouterLink>
-        <RouterLink to="/" class="button"> Back </RouterLink>
+    <div class="centered-container">
+        <div class="buttons">
+            <RouterLink to="/TeamSettings" class="button"> Team </RouterLink>
+            <RouterLink to="/PlayerSettings" class="button"> Player </RouterLink>
+            <RouterLink to="/" class="button"> Back </RouterLink>
+        </div>
     </div>
     <footerBar></footerBar>
 </template>
@@ -22,6 +24,15 @@ export default {
 </script>
 
 <style scoped>
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 20px;
+    margin-top: 200px;
+}
+
 /* Container für die Buttons */
 .buttons {
     display: flex;

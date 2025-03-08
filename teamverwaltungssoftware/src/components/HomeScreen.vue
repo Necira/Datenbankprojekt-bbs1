@@ -40,7 +40,6 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: var(--white);
     padding: 0 20px;
     margin-top: 200px;
 }

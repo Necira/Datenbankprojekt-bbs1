@@ -1,9 +1,11 @@
 <template>
     <navigationBar></navigationBar>
-    <div class="buttons">
-        <RouterLink to="/CreatePlayer" class="button"> Create Player </RouterLink>
-        <RouterLink to="/EditPlayer" class="button"> Edit Player </RouterLink>
-        <RouterLink to="/SettingScreen" class="button"> Back </RouterLink>
+    <div class="centered-container">
+        <div class="buttons">
+            <RouterLink to="/CreatePlayer" class="button"> Create Player </RouterLink>
+            <RouterLink to="/EditPlayer" class="button"> Edit Player </RouterLink>
+            <RouterLink to="/SettingScreen" class="button"> Back </RouterLink>
+        </div>
     </div>
     <footerBar></footerBar>
 </template>
@@ -23,6 +25,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0 20px;
+    margin-top: 200px;
+}
+
 /* Container für die Buttons */
 .buttons {
     display: flex;
