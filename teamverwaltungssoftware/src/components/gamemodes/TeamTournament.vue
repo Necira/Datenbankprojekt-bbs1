@@ -29,6 +29,9 @@
             :isCurrentRound="currentRound === 2"
             @setWinners="handleWinners"
         />
+         <div v-if="sameTeam" class="champion">
+            {{sameTeamMessage}} 
+        </div>
         <div v-if="finalWinner" class="champion">
             <h3>Champion: {{ finalWinner }}</h3>
         </div>
@@ -56,6 +59,8 @@ export default {
             winners: [[], []],
             currentRound: 0,
             finalWinner: null,
+            sameTeamMessage: "",
+            sameTeam: false,
         };
     },
     async created() {
@@ -91,6 +96,22 @@ export default {
         },
         advanceToNextRound(roundIndex) {
             const winners = this.rounds[roundIndex].map(match => match.winner);
+
+            if (roundIndex === 0) {
+                let allTeams = [];   
+                this.rounds[0].forEach(match => {
+                    if (match.teamOne) allTeams.push(match.teamOne);
+                    if (match.teamTwo) allTeams.push(match.teamTwo);
+                });  
+                const uniqueTeams = new Set(allTeams);
+                if (uniqueTeams.size !== allTeams.length) {   
+                    this.sameTeam = true;
+                    this.sameTeamMessage = "Nice try... no duplicate teams allowed ;)";
+                    return; 
+                }
+            }
+            this.sameTeam = false;
+            
             if (winners.length === 1) {
                 this.finalWinner = winners[0];
                 return;
