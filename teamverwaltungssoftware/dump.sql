@@ -65,7 +65,7 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (7, 'testi', 'testplayer', 'Lohmer', 'helloworld@mediaman.de', 'Mid-lane', 1200, 0),
 (8, 'lol', 'louis', 'Lohmer', 'max.mustermann@mediaman.de', 'Support', 1400, 0),
 (9, 'Vendetta', 'V', 'forVendetta', 'v.vendetta@gmail.de', 'Bot-Lane', 1000, 0),
-(10, 'strangePerson', 'strange', 'notsostrange', 'strange.notsostrange@strange.de', 'Jungle', 1400, 0);
+(10, 'strangePerson', 'strange', 'notsostrange', 'strange.notsostrange@strange.de', 'Jungle', 1400, 0),
 (11, 'Travolta', 'Trav', 'olta', 'trav.olter@gmail.de', 'Top-Lane', 1300, 0),
 (12, 'TypeSalty', 'Typ', 'Salzig', 'Salzig@gmail.com', 'Bot-Lane', 1200, 0),
 (13, 'Hello hideous', 'Hello', 'hideous', 'hell.hid@mediaman.de', 'Support', 1230, 0),
@@ -75,7 +75,7 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (17, 'mimimimimi', 'Mi', 'Mimi', 'crying@mediaman.de', 'Mid-lane', 1200, 0),
 (18, 'Instinct9', 'Neun', 'Instinkt', 'Neunter@mediaman.de', 'Support', 1400, 0),
 (19, 'illoru', 'Ill', 'Oru', 'Illoru@gmail.de', 'Bot-Lane', 1000, 0),
-(20, 'Berto Castro', 'Berto', 'Castro', 'Castro@strange.de', 'Jungle', 1400, 0);
+(20, 'Berto Castro', 'Berto', 'Castro', 'Castro@strange.de', 'Jungle', 1400, 0),
 (21, 'MadThroes', 'Mad', 'Throes', 'Mad@mediaman.de', 'Top-Lane', 1300, 0),
 (22, 'Pyke Tyson', 'Pyke', 'Tyson', 'PykeTyson@gmail.com', 'Bot-Lane', 1200, 0),
 (23, 'jacob theher', 'jacob', 'theher', 'jacob@mediaman.de', 'Support', 1230, 0),
@@ -85,7 +85,7 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (27, 'Goonzalz', 'Goon', 'Zalz', 'Goon@mediaman.de', 'Mid-lane', 1200, 0),
 (28, 'Seergii', 'Seer', 'Gii', 'Seergii@mediaman.de', 'Support', 1400, 0),
 (29, 'El Doma', 'El', 'Doma', 'Doma@gmail.de', 'Bot-Lane', 1000, 0),
-(30, 'realTangus', 'real', 'Tangus', 'Tangus@strange.de', 'Jungle', 1400, 0);
+(30, 'realTangus', 'real', 'Tangus', 'Tangus@strange.de', 'Jungle', 1400, 0),
 (31, 'Machs', 'Max', 'Chs', 'Machs@mediaman.de', 'Top-Lane', 1300, 0),
 (32, 'Spork', 'Spoon', 'Fork', 'Spork@gmail.com', 'Bot-Lane', 1200, 0),
 (33, 'Frostraider', 'Frost', 'Raider', 'FrostRaider@mediaman.de', 'Support', 1230, 0),
@@ -95,7 +95,7 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (37, 'Pneumatico', 'Pneu', 'Matico', 'Pneumatico@mediaman.de', 'Mid-lane', 1200, 0),
 (38, 'Amicetta', 'Ami', 'Cetta', 'Amicetta@mediaman.de', 'Support', 1400, 0),
 (39, 'Goldfishing', 'Gold', 'Fishing', 'Gold@gmail.de', 'Bot-Lane', 1000, 0),
-(40, 'geniusBread', 'Genius', 'Bread', 'Bread@strange.de', 'Jungle', 1400, 0);
+(40, 'geniusBread', 'Genius', 'Bread', 'Bread@strange.de', 'Jungle', 1400, 0),
 (41, 'Trickster', 'Trick', 'Ster', 'Trickster@mediaman.de', 'Top-Lane', 1300, 0),
 (42, 'NFC Omega', 'NFC', 'Omega', 'NFCOmega@gmail.com', 'Bot-Lane', 1200, 0),
 (43, 'Another Loss', 'Another', 'Loss', 'AnotherLoss@mediaman.de', 'Support', 1230, 0),

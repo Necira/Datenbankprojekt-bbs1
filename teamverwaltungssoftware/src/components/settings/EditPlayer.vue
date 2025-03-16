@@ -10,7 +10,6 @@
         />
         <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
-    <div class="scrollable-container">
         <div class="scrollable-container">
             <table id="player-table">
                 <thead>
@@ -39,7 +38,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
     <button type="button" class="delete-player margin-right" @click="openAndCloseDeletePlayerPopUpWindow">
         Delete player
     </button>
