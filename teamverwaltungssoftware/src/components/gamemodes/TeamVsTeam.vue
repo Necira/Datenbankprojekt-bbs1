@@ -17,14 +17,14 @@
             {{ message }}
         </div>
         <div class="actions" v-if="!winner && teamOne && teamTwo && teamTwo != teamOne">
-            <button class="play-randomly" @click="setRandomWinner">🎲 Play Randomly</button>
+            <button class="play-randomly" @click="setRandomWinner">Play Randomly</button>
             <div class="choose-winner">
                 <label for="chooseWinner">Choose Winner</label>
                 <select v-model="chooseWinner" id="chooseWinner" class="dropdown">
                     <option :value="teamOne">{{ teamOne }}</option>
                     <option :value="teamTwo">{{ teamTwo }}</option>
                 </select>
-                <button class="set-winner" @click="setWinner(chooseWinner)">🏆 Set Winner</button>
+                <button class="set-winner" @click="setWinner(chooseWinner)">Set Winner</button>
             </div>
         </div>
         <WinnerMessage v-if="winner" :winner="winner" :eloPoints="eloPoints" />

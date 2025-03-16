@@ -116,4 +116,8 @@ export default {
 .set-winners:hover {
   background-color: var(--hovergreen);
 }
+
+label {
+  padding-right: 20px;
+}
 </style>
