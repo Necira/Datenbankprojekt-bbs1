@@ -264,21 +264,25 @@ export default {
 }
 
 .play-randomly {
+    display: inline-block;
     padding: 15px 25px;
-    font-size: 18px;
-    color: white;
-    background-color: var(--lightgreen);
+    margin: 5px 0;
+    background-color: var(--darkgrey);
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 25px;
     border: none;
-    border-radius: 12px;
-    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
     text-transform: uppercase;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .play-randomly:hover {
     background-color: var(--hovergreen);
-    transform: scale(1.05);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
 }
 
 .choose-winner label {
@@ -298,22 +302,25 @@ export default {
 }
 
 .set-winner {
-    padding: 12px 20px;
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 5px 0;
+    background-color: var(--darkgrey);
+    color: var(--white);
     font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background-color: var(--blue);
     border: none;
-    border-radius: 12px;
-    cursor: pointer;
+    font-weight: 500;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
     text-transform: uppercase;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 15px;
 }
 
 .set-winner:hover {
-    background-color: var(--hoverblue);
-    transform: scale(1.05);
+    background-color: var(--hovergreen);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
 }
 
 .homescreen-routerlink {
