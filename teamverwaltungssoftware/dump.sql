@@ -66,6 +66,46 @@ INSERT INTO `player` (`playerID`, `playername`, `firstname`, `lastname`, `email`
 (8, 'lol', 'louis', 'Lohmer', 'max.mustermann@mediaman.de', 'Support', 1400, 0),
 (9, 'Vendetta', 'V', 'forVendetta', 'v.vendetta@gmail.de', 'Bot-Lane', 1000, 0),
 (10, 'strangePerson', 'strange', 'notsostrange', 'strange.notsostrange@strange.de', 'Jungle', 1400, 0);
+(11, 'Travolta', 'Trav', 'olta', 'trav.olter@gmail.de', 'Top-Lane', 1300, 0),
+(12, 'TypeSalty', 'Typ', 'Salzig', 'Salzig@gmail.com', 'Bot-Lane', 1200, 0),
+(13, 'Hello hideous', 'Hello', 'hideous', 'hell.hid@mediaman.de', 'Support', 1230, 0),
+(14, 'dreadcaptain', 'Captain', 'Dredd', 'Cpt@lol.de', 'Jungle', 1200, 0),
+(15, 'Soulcrow', 'Krähe', 'Seele', 'Soulcrow@gmail.com', 'Mid-lane', 1230, 0),
+(16, 'Thuja', 'Thu', 'Ja', 'JaThu@mediaman.de', 'Top-Lane', 1200, 0),
+(17, 'mimimimimi', 'Mi', 'Mimi', 'crying@mediaman.de', 'Mid-lane', 1200, 0),
+(18, 'Instinct9', 'Neun', 'Instinkt', 'Neunter@mediaman.de', 'Support', 1400, 0),
+(19, 'illoru', 'Ill', 'Oru', 'Illoru@gmail.de', 'Bot-Lane', 1000, 0),
+(20, 'Berto Castro', 'Berto', 'Castro', 'Castro@strange.de', 'Jungle', 1400, 0);
+(21, 'MadThroes', 'Mad', 'Throes', 'Mad@mediaman.de', 'Top-Lane', 1300, 0),
+(22, 'Pyke Tyson', 'Pyke', 'Tyson', 'PykeTyson@gmail.com', 'Bot-Lane', 1200, 0),
+(23, 'jacob theher', 'jacob', 'theher', 'jacob@mediaman.de', 'Support', 1230, 0),
+(24, 'RatardChopper', 'Rat', 'Chopper', 'RatChopper@lol.de', 'Jungle', 1200, 0),
+(25, 'Phleip', 'Phl', 'Eip', 'Phleip@gmail.com', 'Mid-lane', 1230, 0),
+(26, 'Chico', 'Chi', 'Co', 'Chico@mediaman.de', 'Top-Lane', 1200, 0),
+(27, 'Goonzalz', 'Goon', 'Zalz', 'Goon@mediaman.de', 'Mid-lane', 1200, 0),
+(28, 'Seergii', 'Seer', 'Gii', 'Seergii@mediaman.de', 'Support', 1400, 0),
+(29, 'El Doma', 'El', 'Doma', 'Doma@gmail.de', 'Bot-Lane', 1000, 0),
+(30, 'realTangus', 'real', 'Tangus', 'Tangus@strange.de', 'Jungle', 1400, 0);
+(31, 'Machs', 'Max', 'Chs', 'Machs@mediaman.de', 'Top-Lane', 1300, 0),
+(32, 'Spork', 'Spoon', 'Fork', 'Spork@gmail.com', 'Bot-Lane', 1200, 0),
+(33, 'Frostraider', 'Frost', 'Raider', 'FrostRaider@mediaman.de', 'Support', 1230, 0),
+(34, 'FCYugo', 'FC', 'Yugo', 'FCYugo@lol.de', 'Jungle', 1200, 0),
+(35, 'Dunkocalypse', 'Dunko', 'Calypse', 'Dunkocalypse@gmail.com', 'Mid-lane', 1230, 0),
+(36, 'Legreb', 'Leg', 'Reb', 'Legreb@mediaman.de', 'Top-Lane', 1200, 0),
+(37, 'Pneumatico', 'Pneu', 'Matico', 'Pneumatico@mediaman.de', 'Mid-lane', 1200, 0),
+(38, 'Amicetta', 'Ami', 'Cetta', 'Amicetta@mediaman.de', 'Support', 1400, 0),
+(39, 'Goldfishing', 'Gold', 'Fishing', 'Gold@gmail.de', 'Bot-Lane', 1000, 0),
+(40, 'geniusBread', 'Genius', 'Bread', 'Bread@strange.de', 'Jungle', 1400, 0);
+(41, 'Trickster', 'Trick', 'Ster', 'Trickster@mediaman.de', 'Top-Lane', 1300, 0),
+(42, 'NFC Omega', 'NFC', 'Omega', 'NFCOmega@gmail.com', 'Bot-Lane', 1200, 0),
+(43, 'Another Loss', 'Another', 'Loss', 'AnotherLoss@mediaman.de', 'Support', 1230, 0),
+(44, 'SO Blue', 'SO', 'Blue', 'SOBlue@lol.de', 'Jungle', 1200, 0),
+(45, 'NFC Jolly', 'NFC', 'Jolly', 'NFC Jolly@gmail.com', 'Mid-lane', 1230, 0),
+(46, 'HideonBush', 'Fake', 'Bush', 'Bush@mediaman.de', 'Top-Lane', 1200, 0),
+(47, 'T1 FakeR', 'Faker', 'teins', 'Fake@mediaman.de', 'Mid-lane', 1200, 0),
+(48, 'aweesde', 'Chris', 'Toph', 'aweesde@mediaman.de', 'Support', 1400, 0),
+(49, 'Skroli', 'Oli', 'Ver', 'Oliver@gmail.de', 'Bot-Lane', 1000, 0),
+(50, 'TinySkillz', 'Tiny', 'Skillz', 'Tiny@strange.de', 'Jungle', 1400, 0);
 
 -- --------------------------------------------------------
 
