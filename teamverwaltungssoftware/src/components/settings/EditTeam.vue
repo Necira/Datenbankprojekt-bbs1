@@ -845,7 +845,6 @@ thead {
     .scrollable-container {
         width: 300px;
         overflow-x: scroll;
-        height: fit-content;
     }
 
     .position-delete-player-popup {
@@ -855,7 +854,8 @@ thead {
 
     .position-edit-player-popup {
         left: 20%;
-        top: 10%;
+        top: 5%;
+        padding: 5px;
     }
 
     .error-message,

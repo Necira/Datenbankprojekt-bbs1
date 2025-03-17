@@ -29,8 +29,8 @@
             :isCurrentRound="currentRound === 2"
             @setWinners="handleWinners"
         />
-         <div v-if="sameTeam" class="champion">
-            {{sameTeamMessage}} 
+        <div v-if="sameTeam" class="champion">
+            {{ sameTeamMessage }}
         </div>
         <div v-if="finalWinner" class="champion">
             <h3>Champion: {{ finalWinner }}</h3>
@@ -59,7 +59,7 @@ export default {
             winners: [[], []],
             currentRound: 0,
             finalWinner: null,
-            sameTeamMessage: "",
+            sameTeamMessage: '',
             sameTeam: false,
         };
     },
@@ -79,7 +79,7 @@ export default {
         },
         setupFirstRound() {
             const firstRound = [];
-            for (let i = 0; i < 8; i += 2) { 
+            for (let i = 0; i < 8; i += 2) {
                 firstRound.push({
                     teamOne: this.availableTeams[i] || '',
                     teamTwo: this.availableTeams[i + 1] || '',
@@ -98,20 +98,20 @@ export default {
             const winners = this.rounds[roundIndex].map(match => match.winner);
 
             if (roundIndex === 0) {
-                let allTeams = [];   
+                let allTeams = [];
                 this.rounds[0].forEach(match => {
                     if (match.teamOne) allTeams.push(match.teamOne);
                     if (match.teamTwo) allTeams.push(match.teamTwo);
-                });  
+                });
                 const uniqueTeams = new Set(allTeams);
-                if (uniqueTeams.size !== allTeams.length) {   
+                if (uniqueTeams.size !== allTeams.length) {
                     this.sameTeam = true;
-                    this.sameTeamMessage = "Nice try... no duplicate teams allowed ;)";
-                    return; 
+                    this.sameTeamMessage = 'Nice try... no duplicate teams allowed ;)';
+                    return;
                 }
             }
             this.sameTeam = false;
-            
+
             if (winners.length === 1) {
                 this.finalWinner = winners[0];
                 return;
@@ -137,12 +137,14 @@ export default {
     margin: 50px auto;
     text-align: center;
 }
+
 .champion {
     font-size: 18px;
     font-weight: bold;
     color: var(--hovergreen);
     margin-top: 20px;
 }
+
 .homescreen-routerlink {
     display: inline-block;
     margin-top: 20px;
@@ -150,7 +152,23 @@ export default {
     text-decoration: none;
     font-weight: bold;
 }
+
 .homescreen-routerlink:hover {
     color: var(--hoverblue);
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    h2 {
+        font-size: 20px;
+    }
+
+    .champion {
+        font-size: 15px;
+    }
 }
 </style>
