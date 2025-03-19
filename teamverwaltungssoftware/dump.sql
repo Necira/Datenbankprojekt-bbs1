@@ -130,8 +130,8 @@ CREATE TABLE `teams` (
 --
 
 INSERT INTO `teams` (`teamID`, `teamname`, `eloPoints`, `deleted`, `firstMember`, `secondMember`, `thirdMember`, `fourthMember`, `fifthMember`) VALUES
-(1, 'NierAutomata', 1, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 'LeagueOfLegends', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(1, 'NierAutomata', 1232, 0, 1, 2, 3, 4, 5),
+(2, 'LeagueOfLegends', 1240, 0, 6, 7, 8, 9, 10),
 (3, 'Persona', 1, 0, NULL, NULL, NULL, NULL, NULL),
 (4, 'TheWitcher', 1, 0, NULL, NULL, NULL, NULL, NULL),
 (5, 'GenshinImpact', 1, 0, NULL, NULL, NULL, NULL, NULL),

@@ -21,8 +21,8 @@
             <div class="choose-winner">
                 <label for="chooseWinner">Choose Winner</label>
                 <select v-model="chooseWinner" id="chooseWinner" class="dropdown">
-                    <option :value="teamOne">{{ teamOne }}</option>
-                    <option :value="teamTwo">{{ teamTwo }}</option>
+                    <option :value="teamOne">{{ teamOne.teamname }}</option>
+                    <option :value="teamTwo">{{ teamTwo.teamname }}</option>
                 </select>
                 <button class="set-winner" @click="setWinner(chooseWinner)">Set Winner</button>
             </div>
@@ -85,8 +85,10 @@ export default {
         },
         async updateTeamEloPoints(winningTeam, losingTeam) {
             try {
-                const responseWinner = await fetch(`http://localhost:3000/getTeamElo/${winningTeam}`);
-                const responseLoser = await fetch(`http://localhost:3000/getTeamElo/${losingTeam}`);
+                const responseWinner = await fetch(
+                    `http://localhost:3000/getTeamElo/${winningTeam.teamname}`,
+                );
+                const responseLoser = await fetch(`http://localhost:3000/getTeamElo/${losingTeam.teamname}`);
                 if (!responseWinner.ok || !responseLoser.ok) {
                     throw new Error('Failed to fetch Elo points for teams');
                 }
@@ -103,8 +105,8 @@ export default {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        gamewinner: winningTeam,
-                        gameloser: losingTeam,
+                        gamewinner: winningTeam.teamname,
+                        gameloser: losingTeam.teamname,
                         eloPointsWinner: newEloWinner,
                         eloPointsLoser: newEloLoser,
                     }),
@@ -115,9 +117,10 @@ export default {
                     newEloLoser,
                     currentEloWinner,
                     newEloWinner,
-                    winningTeam,
-                    losingTeam,
+                    winningTeam.teamname,
+                    losingTeam.teamname,
                 );
+
                 return { newEloWinner, newEloLoser };
             } catch (error) {
                 console.error('Error updating team Elo points:', error.message);

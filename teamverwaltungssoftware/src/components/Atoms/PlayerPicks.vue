@@ -1,6 +1,7 @@
 <template>
     <div class="player-pick">
-        <label :for="player">Choose {{ player }}</label>
+        <label :for="player" v-if="availablePlayers.length > 0">Choose {{ player }}</label>
+        <label v-else>Currently no active player available!</label>
         <select v-model="selectedPlayer" :id="player">
             <option v-for="player in availablePlayers" :key="player.playerID" :value="player.playername">
                 {{ player.playername }}
