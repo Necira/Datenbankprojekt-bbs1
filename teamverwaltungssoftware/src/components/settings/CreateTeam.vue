@@ -1,11 +1,11 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Create a new team</h1>
-    <form class="createTeamForm" id="createTeamForm">
+    <form id="createTeamForm" class="create-team-form">
         <label for="teamname">teamname</label>
         <input id="teamname" name="teamname" />
-        <label for="member">member</label>
-        <div id="availabe-player">
-            <div>
+        <div id="available-player">
+            <div class="column">
                 <label for="Top-Lane">Top-Lane</label>
                 <select id="Top-Lane" name="Top-Lane">
                     <option id="NULL">No player</option>
@@ -14,7 +14,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Jungle">Jungle</label>
                 <select id="Jungle" name="Jungle">
                     <option id="NULL">No player</option>
@@ -23,7 +23,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Mid-Lane">Mid-Lane</label>
                 <select id="Mid-Lane" name="Mid-Lane">
                     <option id="NULL">No player</option>
@@ -32,7 +32,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Support">Support</label>
                 <select id="Support" name="Support">
                     <option id="NULL">No player</option>
@@ -41,7 +41,7 @@
                     </option>
                 </select>
             </div>
-            <div>
+            <div class="column">
                 <label for="Bot-Lane">Bot-Lane</label>
                 <select id="Bot-Lane" name="Bot-Lane">
                     <option id="NULL">No player</option>
@@ -51,15 +51,23 @@
                 </select>
             </div>
         </div>
-        <button type="button" @click="saveNewTeam">Save team</button>
+        <span class="success-message"> {{ textSuccessMessage }}</span>
+        <span class="error-message">{{ textErrorMessage }}</span>
+        <button type="button" class="save-team" @click="validateForm">Save team</button>
     </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
-    <RouterLink to="/TeamSettings"> Back </RouterLink>
+    <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
+    <footerBar></footerBar>
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'CreateTeam',
@@ -73,7 +81,7 @@ export default {
         };
     },
     methods: {
-        async saveNewTeam() {
+        async validateForm() {
             let teamname = document.getElementById('teamname').value;
             let selectElementTopLane = document.getElementById('Top-Lane');
             let firstPlayerId = selectElementTopLane.options[selectElementTopLane.selectedIndex].id;
@@ -128,7 +136,6 @@ export default {
                 fourthPlayerId !== 'NULL' &&
                 fifthPlayerId !== 'NULL'
             ) {
-                // Calculate Elo-Points, if team is complete
                 eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
                     .then(response => response.json())
                     .then(data => {
@@ -149,14 +156,48 @@ export default {
                         return;
                     });
             } else {
-                firstPlayerId = null;
-                secondPlayerId = null;
-                thirdPlayerId = null;
-                fourthPlayerId = null;
-                fifthPlayerId = null;
+                if (firstPlayerId === 'NULL') {
+                    firstPlayerId = null;
+                }
+
+                if (secondPlayerId === 'NULL') {
+                    secondPlayerId = null;
+                }
+
+                if (thirdPlayerId === 'NULL') {
+                    thirdPlayerId = null;
+                }
+
+                if (fourthPlayerId === 'NULL') {
+                    fourthPlayerId = null;
+                }
+
+                if (fifthPlayerId === 'NULL') {
+                    fifthPlayerId = null;
+                }
+
                 eloPointsTeam++;
             }
 
+            this.postNewTeam(
+                teamname,
+                firstPlayerId,
+                secondPlayerId,
+                thirdPlayerId,
+                fourthPlayerId,
+                fifthPlayerId,
+                eloPointsTeam,
+            );
+        },
+        async postNewTeam(
+            setTeamname,
+            setFirstPlayer,
+            setSecondPlayer,
+            setThirdPlayer,
+            setFourthPlayer,
+            setFifthPlayer,
+            setEloPoints,
+        ) {
             fetch('http://localhost:3000/createNewTeam', {
                 method: 'POST',
                 headers: {
@@ -164,13 +205,13 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    newTeamname: teamname,
-                    newEloPoints: eloPointsTeam,
-                    firstMember: firstPlayerId,
-                    secondMember: secondPlayerId,
-                    thirdMember: thirdPlayerId,
-                    fourthMember: fourthPlayerId,
-                    fifthMember: fifthPlayerId,
+                    newTeamname: setTeamname,
+                    newEloPoints: setEloPoints,
+                    firstMember: setFirstPlayer,
+                    secondMember: setSecondPlayer,
+                    thirdMember: setThirdPlayer,
+                    fourthMember: setFourthPlayer,
+                    fifthMember: setFifthPlayer,
                 }),
             })
                 .then(response => {
@@ -178,7 +219,7 @@ export default {
                         let createTeamForm = document.getElementById('createTeamForm').childNodes;
                         let playeroptions = document.getElementsByClassName('playeroptions');
 
-                        // Set Values of user input to defautl
+                        // Set Values of user input to default after new team is added successfully
                         createTeamForm[1].value = '';
                         for (let i = 0; i < playeroptions.length; i++) {
                             playeroptions[i].checked = false;
@@ -194,13 +235,13 @@ export default {
                 });
         },
         displayAvailablePlayer() {
-            // Display all available player-IDs in the select-option-field
             fetch('http://localhost:3000/getActivePlayer')
                 .then(response => response.json())
                 .then(activePlayerData => {
                     let activePlayer = [];
 
                     for (let i = 0; i < activePlayerData.length; i++) {
+                        // Display all available player-IDs in the select-option-field
                         activePlayer.push({
                             id: activePlayerData[i].playerID,
                             name: activePlayerData[i].playername,
@@ -214,10 +255,11 @@ export default {
                             let activeTeammemberIDs = [];
 
                             for (let i = 0; i < activeTeammemberData.length; i++) {
-                                activeTeammemberIDs.push(activeTeammemberData[i].playerID);
+                                if (!activeTeammemberIDs.includes(activeTeammemberData[i].playerID)) {
+                                    activeTeammemberIDs.push(activeTeammemberData[i].playerID);
+                                }
                             }
 
-                            // Display only player that are not deleted and are not in a team yet
                             let availableTeammember = [];
 
                             for (let i = 0; i < activeTeammemberIDs.length; i++) {
@@ -227,9 +269,7 @@ export default {
                                         !availableTeammember.some(
                                             element => element.id === activePlayer[a].id,
                                         ) &&
-                                        !activeTeammemberIDs.some(
-                                            element => element.id === activePlayer[a].id,
-                                        )
+                                        !activeTeammemberIDs.includes(activePlayer[a].id)
                                     ) {
                                         availableTeammember.push({
                                             id: activePlayer[a].id,
@@ -240,9 +280,9 @@ export default {
                                 }
                             }
 
+                            // Display not deleted player, that are not in a team yet
                             if (availableTeammember.length > 0) {
                                 for (let i = 0; i < availableTeammember.length; i++) {
-                                    // Push data into array in order to display it with v-for
                                     if (availableTeammember[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
                                             id: availableTeammember[i].id,
@@ -278,9 +318,8 @@ export default {
                                         });
                                     }
                                 }
-                            } else if (activePlayer.length > 0) {
+                            } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
                                 for (let i = 0; i < activePlayer.length; i++) {
-                                    // Push data into array in order to display it with v-for
                                     if (activePlayerData[i].position === 'Top-Lane') {
                                         this.availablePlayerTopLane.push({
                                             id: activePlayer[i].id,
@@ -339,25 +378,140 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .create-team-form {
+    width: 400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
     flex-direction: column;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
-#availabe-player {
+#available-player {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     flex-direction: column;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+select,
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.save-team {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 5px 0;
+    background-color: var(--darkgrey);
+    color: var(--white);
+    font-size: 16px;
+    border: none;
+    font-weight: 500;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
+    text-transform: uppercase;
+    margin-left: 135px;
+    margin-bottom: 15px;
+}
+
+.save-team:hover {
+    background-color: var(--hovergreen);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
+}
+
+.column {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .create-team-form {
+        width: 300px;
+    }
+
+    .save-team {
+        padding: 10px 10px;
+        font-size: 13px;
+        margin-left: 104px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

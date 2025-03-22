@@ -1,15 +1,22 @@
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'CreatePlayer',
-            textErrorMessage: '',
-            textSuccessMessage: '',
+            errorMessage: '',
+            successMessage: '',
         };
     },
     methods: {
-        async saveNewPlayer() {
-            this.textSuccessMessage = '';
+        async validateForm() {
+            this.successMessage = '';
 
             let playername = document.getElementById('playername').value;
             let firstname = document.getElementById('firstname').value;
@@ -26,13 +33,13 @@ export default {
                 email.length === 0 ||
                 eloPoints.length === 0
             ) {
-                this.textErrorMessage = 'Please fill out the entire form!';
+                this.errorMessage = 'Please fill out the entire form!';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
 
                 if (eloPoints > 4000) {
-                    this.textErrorMessage = 'Maximum Elo-Points are 4000';
+                    this.errorMessage = 'Maximum Elo-Points are 4000';
                     return;
                 }
 
@@ -51,13 +58,13 @@ export default {
                     });
 
                 if (playernameExists) {
-                    this.textErrorMessage = 'Playername already exists!';
+                    this.errorMessage = 'Playername already exists!';
                     return;
                 }
 
                 const regExEmail = /^[a-z0-9.]+@[a-z]+\.[a-z]{2,4}$/;
                 if (!email.match(regExEmail)) {
-                    this.textErrorMessage = 'Invalid E-mail!';
+                    this.errorMessage = 'Invalid E-mail!';
                     return;
                 }
 
@@ -67,59 +74,71 @@ export default {
 
                 for (let i = 0; i < splittedFirstname.length; i++) {
                     if (!splittedFirstname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid firstname!';
+                        this.errorMessage = 'Invalid firstname!';
                         return;
                     }
                 }
 
                 for (let i = 0; i < splittedLastname.length; i++) {
                     if (!splittedLastname[i].match(onlyLettersRegEx)) {
-                        this.textErrorMessage = 'Invalid lastname!';
+                        this.errorMessage = 'Invalid lastname!';
                         return;
                     }
                 }
 
-                fetch('http://localhost:3000/createNewPlayer', {
-                    method: 'POST',
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        newPlayername: playername,
-                        newFirstname: firstname,
-                        newLastname: lastname,
-                        newEmail: email,
-                        newPosition: position,
-                        newEloPoints: eloPoints,
-                    }),
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
-
-                            // Set Values of user input to default
-                            createPlayerForm[1].value = '';
-                            createPlayerForm[3].value = '';
-                            createPlayerForm[5].value = '';
-                            createPlayerForm[7].value = '';
-                            createPlayerForm[11].value = '';
-
-                            this.textSuccessMessage = 'Added new player successfully!';
-                            return response.json();
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        return;
-                    });
+                this.postNewPlayer(playername, firstname, lastname, email, position, eloPoints);
             }
+        },
+        async postNewPlayer(setPlayername, setFirstname, setLastname, setEmail, setPosition, setEloPoints) {
+            fetch('http://localhost:3000/createNewPlayer', {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newPlayername: setPlayername,
+                    newFirstname: setFirstname,
+                    newLastname: setLastname,
+                    newEmail: setEmail,
+                    newPosition: setPosition,
+                    newEloPoints: setEloPoints,
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(
+                            setPlayername,
+                            setFirstname,
+                            setLastname,
+                            setEmail,
+                            setPosition,
+                            setEloPoints,
+                        );
+                        let createPlayerForm = document.getElementById('createPlayerForm').childNodes;
+
+                        // Set Values of user input to default after player is created
+                        createPlayerForm[1].value = '';
+                        createPlayerForm[3].value = '';
+                        createPlayerForm[5].value = '';
+                        createPlayerForm[7].value = '';
+                        createPlayerForm[11].value = '';
+
+                        this.successMessage = 'Added new player successfully!';
+                        return response.json();
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
         },
     },
 };
 </script>
 
 <template>
+    <navigationBar></navigationBar>
     <h1>Create a new player</h1>
     <form class="createPlayerForm" id="createPlayerForm">
         <label for="playername">Playername:</label>
@@ -140,28 +159,138 @@ export default {
         </select>
         <label for="eloPoints">Elo-Points:</label>
         <input type="number" min="0" max="4000" id="eloPoints" name="eloPoints" />
-        <button type="button" @click="saveNewPlayer">Save player</button>
+        <span class="success-message"> {{ successMessage }}</span>
+        <span class="error-message">{{ errorMessage }}</span>
+        <button type="button" class="save-player" @click="validateForm">Save player</button>
     </form>
-    <span class="success-message"> {{ textSuccessMessage }}</span>
-    <span class="error-message">{{ textErrorMessage }}</span>
-    <RouterLink to="/PlayerSettings"> Back </RouterLink>
+    <RouterLink to="/PlayerSettings" class="back">← Back </RouterLink>
+    <footerBar></footerBar>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .createPlayerForm {
+    width: 400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+select,
+input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.save-player {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 5px 0;
+    background-color: var(--darkgrey);
+    color: var(--white);
+    font-size: 16px;
+    border: none;
+    font-weight: 500;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
+    text-transform: uppercase;
+    margin-left: 135px;
+    margin-bottom: 15px;
+}
+
+.save-player:hover {
+    background-color: var(--hovergreen);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
+}
+
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .createPlayerForm {
+        width: 300px;
+    }
+
+    .save-player {
+        padding: 10px 10px;
+        font-size: 13px;
+        margin-left: 104px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

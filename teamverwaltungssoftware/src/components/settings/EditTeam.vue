@@ -1,59 +1,64 @@
 <template>
+    <navigationBar></navigationBar>
     <h1>Edit existing team</h1>
-    <div class="column">
+    <div class="centered-column">
         <input
             type="text"
             id="searchfield"
             placeholder="search for position,teamname..."
             @keyup="getFilteredTeam"
         />
-        <span class="resultMessage"> {{ textResultMessage }}</span>
+        <span class="resultMessage"> {{ resultMessage }}</span>
     </div>
-    <table id="teams-table">
-        <thead>
-            <tr>
-                <th>teamID</th>
-                <th>teamname</th>
-                <th>eloPoints</th>
-                <th>deleted</th>
-                <th>firstMember</th>
-                <th>secondMember</th>
-                <th>thirdMember</th>
-                <th>fourthMember</th>
-                <th>fifthMember</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="row in tableTeams" :key="row">
-                <td>{{ row.tableDataCellTeamID }}</td>
-                <td>{{ row.tableDataCellTeamname }}</td>
-                <td>{{ row.tableDataCellEloPoints }}</td>
-                <td>{{ row.tableDataCellDeleted }}</td>
-                <td>{{ row.tableDataCellFirstMember }}</td>
-                <td>{{ row.tableDataCellSecondMember }}</td>
-                <td>{{ row.tableDataCellThirdMember }}</td>
-                <td>{{ row.tableDataCellFourthMember }}</td>
-                <td>{{ row.tableDataCellFifthMember }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="button" @click="openAndCloseDeleteTeamPopUpWindow">Delete team</button>
-    <button type="button" @click="openAndCloseEditTeamForm">Edit team</button>
-    <RouterLink to="/TeamSettings"> Back </RouterLink>
+    <div class="scrollable-container">
+        <table id="teams-table">
+            <thead>
+                <tr>
+                    <th>teamID</th>
+                    <th>teamname</th>
+                    <th>eloPoints</th>
+                    <th>deleted</th>
+                    <th>Top-Lane</th>
+                    <th>Jungle</th>
+                    <th>Mid-Lane</th>
+                    <th>Support</th>
+                    <th>Bot-Lane</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="row in fetchedTeamdata" :key="row">
+                    <td>{{ row.teamID }}</td>
+                    <td>{{ row.teamname }}</td>
+                    <td>{{ row.eloPoints }}</td>
+                    <td>{{ row.deleted }}</td>
+                    <td>{{ row.firstMember }}</td>
+                    <td>{{ row.secondMember }}</td>
+                    <td>{{ row.thirdMember }}</td>
+                    <td>{{ row.fourthMember }}</td>
+                    <td>{{ row.fifthMember }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button type="button" @click="openAndCloseDeleteTeamPopUpWindow" class="delete-team margin-right">
+        Delete team
+    </button>
+    <button type="button" @click="openAndCloseEditTeamForm" class="edit-team margin-right">Edit team</button>
+    <RouterLink to="/TeamSettings" class="back">← Back </RouterLink>
 
-    <div class="popUp-Window" v-if="openDeleteTeamPopUpWindow">
+    <div class="popUp-Window position-delete-player-popup" v-if="openDeleteTeamPopUpWindow">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseDeleteTeamPopUpWindow">X</button>
         <div class="column">
             <label for="selectTeamname">Choose a team:</label>
             <select id="selectTeamname" name="selectTeamname">
                 <option v-for="team in deleteableTeams" :key="team" :id="team.id">{{ team.name }}</option>
             </select>
-            <button type="button" @click="deleteTeam">Delete team</button>
+            <span class="success-message"> {{ successMessage }}</span>
+            <button type="button" @click="deleteTeam" class="delete-team">Delete team</button>
         </div>
-        <span class="success-message"> {{ textSuccessMessage }}</span>
     </div>
 
-    <div v-if="openEditTeamForm" class="popUp-Window">
+    <div v-if="openEditTeamForm" class="popUp-Window position-edit-player-popup">
         <button type="button" class="close-PopUpWindow" @click="openAndCloseEditTeamForm">X</button>
         <form class="edit-team-form">
             <label for="selectTeamID">TeamID:</label>
@@ -64,126 +69,172 @@
             <input id="teamname" name="teamname" />
             <label for="deleted">deleted:</label>
             <input type="number" min="0" max="1" id="deleted" name="deleted" />
-            <label for="firstMember">firstMember:</label>
+            <label for="firstMember">Top-Lane:</label>
             <select id="firstMember" name="firstMember">
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option id="NULL">No player</option>
+                <option v-for="player in availablePlayerTopLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="secondMember">secondMember:</label>
+            <label for="secondMember">Jungle:</label>
             <select id="secondMember" name="secondMember">
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option id="NULL">No player</option>
+                <option v-for="player in availablePlayerJungle" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="thirdMember">thirdMember:</label>
+            <label for="thirdMember">Mid-Lane:</label>
             <select id="thirdMember" name="thirdMember">
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option id="NULL">No player</option>
+                <option v-for="player in availablePlayerMidLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="fourthMember">fourthMember:</label>
+            <label for="fourthMember">Support:</label>
             <select id="fourthMember" name="fourthMember">
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option id="NULL">No player</option>
+                <option v-for="player in availablePlayerSupport" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
-            <label for="fifthMember">fifthMember:</label>
+            <label for="fifthMember">Bot-Lane:</label>
             <select id="fifthMember" name="fifthMember">
-                <option v-for="player in availablePlayer" :key="player" :id="player.id">
+                <option id="NULL">No player</option>
+                <option v-for="player in availablePlayerBotLane" :key="player" :id="player.id">
                     {{ player.name }}
                 </option>
             </select>
 
-            <button type="button" @click="editTeam">Edit team</button>
+            <span class="success-message"> {{ successMessage }}</span>
+            <span class="error-message">{{ errorMessage }}</span>
+            <button type="button" @click="validateEditTeamForm" class="edit-team">Edit team</button>
         </form>
-        <span class="success-message"> {{ textSuccessMessage }}</span>
-        <span class="error-message">{{ textErrorMessage }}</span>
     </div>
+    <footerBar></footerBar>
 </template>
 
 <script>
+import navigationBar from '../Atoms/navigationBar.vue';
+import footerBar from '../Atoms/footerBar.vue';
+
 export default {
+    components: {
+        navigationBar,
+        footerBar,
+    },
     data() {
         return {
             name: 'EditTeam',
             openDeleteTeamPopUpWindow: false,
             openEditTeamForm: false,
-            textSuccessMessage: '',
-            textErrorMessage: '',
-            textResultMessage: '',
+            successMessage: '',
+            errorMessage: '',
+            resultMessage: '',
             deleteableTeams: [],
-            availablePlayer: [],
+            availablePlayerTopLane: [],
+            availablePlayerMidLane: [],
+            availablePlayerBotLane: [],
+            availablePlayerSupport: [],
+            availablePlayerJungle: [],
             editableTeams: [],
-            tableTeams: [],
+            fetchedTeamdata: [],
         };
     },
     methods: {
-        displayTeamsTable() {
+        displayTeamsdata() {
+            let playerData = [];
+
+            fetch('http://localhost:3000/getPlayer')
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        playerData.push({ id: data[i].playerID, name: data[i].playername });
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    return;
+                });
+
             fetch('http://localhost:3000/getTeams')
                 .then(response => response.json())
                 .then(data => {
-                    this.tableTeams = [];
+                    this.fetchedTeamdata = [];
 
                     if (data.length === 0) {
                         document.getElementById('teams-table').innerHTML = 'No data available!';
+                        document.getElementById('teams-table').style.border = 'none';
                     }
 
                     for (let i = 0; i < data.length; i++) {
-                        // Push data into array in order to display it with v-for
-                        if (data[i].firstMember === null) {
-                            data[i].firstMember = 'NULL';
+                        for (let a = 0; a < playerData.length; a++) {
+                            // Display fetched data in the select-option-fields above
+                            if (data[i].firstMember === null) {
+                                data[i].firstMember = 'NULL';
+                            } else if (playerData[a].id === data[i].firstMember) {
+                                data[i].firstMember = playerData[a].name;
+                            }
+
+                            if (data[i].secondMember === null) {
+                                data[i].secondMember = 'NULL';
+                            } else if (playerData[a].id === data[i].secondMember) {
+                                data[i].secondMember = playerData[a].name;
+                            }
+
+                            if (data[i].thirdMember === null) {
+                                data[i].thirdMember = 'NULL';
+                            } else if (playerData[a].id === data[i].thirdMember) {
+                                data[i].thirdMember = playerData[a].name;
+                            }
+
+                            if (data[i].fourthMember === null) {
+                                data[i].fourthMember = 'NULL';
+                            } else if (playerData[a].id === data[i].fourthMember) {
+                                data[i].fourthMember = playerData[a].name;
+                            }
+
+                            if (data[i].fifthMember === null) {
+                                data[i].fifthMember = 'NULL';
+                            } else if (playerData[a].id === data[i].fifthMember) {
+                                data[i].fifthMember = playerData[a].name;
+                            }
                         }
 
-                        if (data[i].secondMember === null) {
-                            data[i].secondMember = 'NULL';
-                        }
-
-                        if (data[i].thirdMember === null) {
-                            data[i].thirdMember = 'NULL';
-                        }
-
-                        if (data[i].fourthMember === null) {
-                            data[i].fourthMember = 'NULL';
-                        }
-
-                        if (data[i].fifthMember === null) {
-                            data[i].fifthMember = 'NULL';
-                        }
-
-                        this.tableTeams.push({
-                            tableDataCellTeamID: data[i].teamID,
-                            tableDataCellTeamname: data[i].teamname,
-                            tableDataCellEloPoints: data[i].eloPoints,
-                            tableDataCellDeleted: data[i].deleted,
-                            tableDataCellFirstMember: data[i].firstMember,
-                            tableDataCellSecondMember: data[i].secondMember,
-                            tableDataCellThirdMember: data[i].thirdMember,
-                            tableDataCellFourthMember: data[i].fourthMember,
-                            tableDataCellFifthMember: data[i].fifthMember,
+                        this.fetchedTeamdata.push({
+                            teamID: data[i].teamID,
+                            teamname: data[i].teamname,
+                            eloPoints: data[i].eloPoints,
+                            deleted: data[i].deleted,
+                            firstMember: data[i].firstMember,
+                            secondMember: data[i].secondMember,
+                            thirdMember: data[i].thirdMember,
+                            fourthMember: data[i].fourthMember,
+                            fifthMember: data[i].fifthMember,
                         });
                     }
                 })
                 .catch(error => {
                     console.error(error);
                     document.getElementById('teams-table').innerHTML = 'No data available!';
+                    document.getElementById('teams-table').style.border = 'none';
                     return;
                 });
         },
         openAndCloseDeleteTeamPopUpWindow() {
             this.openDeleteTeamPopUpWindow = !this.openDeleteTeamPopUpWindow;
-            this.textSuccessMessage = '';
+            this.successMessage = '';
 
             if (this.openDeleteTeamPopUpWindow) {
                 this.deleteableTeams = [];
-                //  Display all available player in the select-option-fields
+
                 fetch('http://localhost:3000/getActiveTeams')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Push data into array in order to display it with v-for
-                            this.deleteableTeams.push({ id: data[i].teamID, name: data[i].teamname });
-                        }
+                        // Display fetched data in the table above
+                        this.deleteableTeams = data.map(team => ({
+                            id: team.teamID,
+                            name: team.teamname,
+                        }));
                     })
                     .catch(error => {
                         console.error(error);
@@ -193,20 +244,22 @@ export default {
         },
         openAndCloseEditTeamForm() {
             this.openEditTeamForm = !this.openEditTeamForm;
-            this.textSuccessMessage = '';
-            this.textErrorMessage = '';
+            this.successMessage = '';
+            this.errorMessage = '';
 
             if (this.openEditTeamForm) {
-                this.availablePlayer = [];
+                this.availablePlayerBotLane = [];
+                this.availablePlayerJungle = [];
+                this.availablePlayerMidLane = [];
+                this.availablePlayerSupport = [];
+                this.availablePlayerTopLane = [];
                 this.editableTeams = [];
-                // Display all available player in the select-option-field
+
                 fetch('http://localhost:3000/getTeams')
                     .then(response => response.json())
                     .then(data => {
-                        for (let i = 0; i < data.length; i++) {
-                            // Push data into array in order to display it with v-for
-                            this.editableTeams.push(data[i].teamID);
-                        }
+                        // Display fetched data in the select-option-field above
+                        this.editableTeams = data.map(team => team.teamID);
                     })
                     .catch(error => {
                         console.error(error);
@@ -216,26 +269,20 @@ export default {
                 fetch('http://localhost:3000/getActivePlayer')
                     .then(response => response.json())
                     .then(activePlayerData => {
-                        let activePlayer = [];
-                        for (let i = 0; i < activePlayerData.length; i++) {
-                            activePlayer.push({
-                                id: activePlayerData[i].playerID,
-                                name: activePlayerData[i].playername,
-                            });
-                        }
+                        let activePlayer = activePlayerData.map(data => ({
+                            id: data.playerID,
+                            name: data.playername,
+                            position: data.position,
+                        }));
 
                         fetch('http://localhost:3000/getActiveTeammember')
                             .then(response => response.json())
                             .then(activeTeammemberData => {
-                                let activeTeammember = [];
-                                for (let i = 0; i < activeTeammemberData.length; i++) {
-                                    activeTeammember.push({
-                                        id: activeTeammemberData[i].playerID,
-                                        name: activeTeammemberData[i].playername,
-                                    });
-                                }
+                                let activeTeammember = activeTeammemberData.map(data => ({
+                                    id: data.playerID,
+                                    name: data.playername,
+                                }));
 
-                                // Display only player that are not deleted and are not in a team yet
                                 let availableTeammember = [];
                                 for (let i = 0; i < activeTeammember.length; i++) {
                                     for (let a = 0; a < activePlayer.length; a++) {
@@ -255,27 +302,86 @@ export default {
                                             availableTeammember.push({
                                                 id: activePlayer[a].id,
                                                 name: activePlayer[a].name,
+                                                position: activePlayer[a].position,
                                             });
                                         }
                                     }
                                 }
 
-                                this.availablePlayer.push({ id: 'NULL', name: 'no player' });
-                                if (availableTeammember.length > 0) {
+                                // Display not deleted player, that are not in a team yet, in select-option-field
+                                if (availableTeammember.length > 0 && activeTeammember.length > 0) {
                                     for (let i = 0; i < availableTeammember.length; i++) {
-                                        // Push data into array in order to display it with v-for
-                                        this.availablePlayer.push({
-                                            id: availableTeammember[i].id,
-                                            name: availableTeammember[i].name,
-                                        });
+                                        if (availableTeammember[i].position === 'Top-Lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Jungle') {
+                                            this.availablePlayerJungle.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Mid-lane') {
+                                            this.availablePlayerMidLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Bot-Lane') {
+                                            this.availablePlayerBotLane.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
+
+                                        if (availableTeammember[i].position === 'Support') {
+                                            this.availablePlayerSupport.push({
+                                                id: availableTeammember[i].id,
+                                                name: availableTeammember[i].name,
+                                            });
+                                        }
                                     }
-                                } else if (availableTeammember.length === 0 && activePlayer.length > 0) {
+                                } else if (activeTeammember.length === 0) {
                                     for (let i = 0; i < activePlayer.length; i++) {
-                                        // Push data into array in order to display it with v-for
-                                        this.availablePlayer.push({
-                                            id: activePlayer[i].id,
-                                            name: activePlayer[i].name,
-                                        });
+                                        if (activePlayer[i].position === 'Top-Lane') {
+                                            this.availablePlayerTopLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Jungle') {
+                                            this.availablePlayerJungle.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Mid-lane') {
+                                            this.availablePlayerMidLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Bot-Lane') {
+                                            this.availablePlayerBotLane.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
+
+                                        if (activePlayer[i].position === 'Support') {
+                                            this.availablePlayerSupport.push({
+                                                id: activePlayer[i].id,
+                                                name: activePlayer[i].name,
+                                            });
+                                        }
                                     }
                                 }
                             })
@@ -307,9 +413,8 @@ export default {
             })
                 .then(response => {
                     if (response.ok) {
-                        // Update table in frontend after new changes
-                        this.displayTeamsTable();
-                        this.textSuccessMessage = 'deleted player successfully!';
+                        this.displayTeamsdata();
+                        this.successMessage = 'deleted team successfully!';
                         return response.json();
                     }
                 })
@@ -318,8 +423,8 @@ export default {
                     return;
                 });
         },
-        editTeam() {
-            this.textSuccessMessage = '';
+        validateEditTeamForm() {
+            this.successMessage = '';
 
             let selectFieldTeamId = document.getElementById('selectTeamID');
             let teamId = selectFieldTeamId.options[selectFieldTeamId.selectedIndex].id;
@@ -341,10 +446,17 @@ export default {
             let fifthMember = Number(selectFieldFifthMember.options[selectFieldFifthMember.selectedIndex].id);
 
             if (teamname.length === 0 || deleted.length === 0) {
-                this.textErrorMessage = 'Please fill out at least one form field!';
+                this.errorMessage = 'Please fill out at least one form field!';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
+            }
+
+            if (Number(deleted) === 0 || Number(deleted) === 1) {
+                this.errorMessage = '';
+            } else {
+                this.errorMessage = 'Invalid Value!';
+                return;
             }
 
             if (
@@ -359,32 +471,91 @@ export default {
                 thirdMember === fifthMember ||
                 fourthMember === fifthMember
             ) {
-                this.textErrorMessage = 'Cannot add the same player twice!';
+                this.errorMessage = 'Cannot add the same player twice!';
                 return;
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
             }
 
-            // let teamdata = this.tableTeams.some(element => element.tableDataCellTeamname === teamname);
-
             if (teamname.length > 0) {
-                for (let i = 0; i < this.tableTeams.length; i++) {
+                for (let i = 0; i < this.fetchedTeamdata.length; i++) {
                     if (
-                        this.tableTeams[i].tableDataCellTeamname === teamname &&
-                        this.tableTeams[i].tableDataCellTeamID === Number(teamId)
+                        this.fetchedTeamdata[i].teamname === teamname &&
+                        this.fetchedTeamdata[i].teamID === Number(teamId)
                     ) {
-                        this.textErrorMessage = '';
+                        this.errorMessage = '';
                         break;
                     } else if (
-                        this.tableTeams[i].tableDataCellTeamname === teamname &&
-                        this.tableTeams[i].tableDataCellTeamID !== Number(teamId)
+                        this.fetchedTeamdata[i].teamname === teamname &&
+                        this.fetchedTeamdata[i].teamID !== Number(teamId)
                     ) {
-                        this.textErrorMessage = 'Teamname already exists!';
+                        this.errorMessage = 'Teamname already exists!';
                         return;
                     }
                 }
             } else {
-                this.textErrorMessage = '';
+                this.errorMessage = '';
+            }
+
+            this.updateExistingTeam(
+                teamname,
+                deleted,
+                firstMember,
+                secondMember,
+                thirdMember,
+                fourthMember,
+                fifthMember,
+                teamId,
+            );
+        },
+        async updateExistingTeam(
+            setTeamname,
+            setDeleted,
+            setFirstMember,
+            setSecondMember,
+            setThirdMember,
+            setFourthMember,
+            setFifthMember,
+            setTeamId,
+        ) {
+            let eloPointsTeam = 0;
+            let choosenTeamMembers = [
+                setFirstMember,
+                setSecondMember,
+                setThirdMember,
+                setFourthMember,
+                setFifthMember,
+            ];
+
+            if (
+                !isNaN(setFirstMember) &&
+                !isNaN(setSecondMember) &&
+                !isNaN(setThirdMember) &&
+                !isNaN(setFourthMember) &&
+                !isNaN(setFifthMember)
+            ) {
+                // Calculate Elo-Points, if team is complete
+                eloPointsTeam = await fetch('http://localhost:3000/getPlayer')
+                    .then(response => response.json())
+                    .then(data => {
+                        let calculatedEloPoints = 0;
+                        for (let i = 0; i < choosenTeamMembers.length; i++) {
+                            for (let a = 0; a < data.length; a++) {
+                                if (choosenTeamMembers[i] === data[a].playerID) {
+                                    calculatedEloPoints += data[a].eloPoints;
+                                }
+                            }
+                        }
+
+                        let finalEloPoints = Math.round(calculatedEloPoints / 5);
+                        return finalEloPoints;
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        return;
+                    });
+            } else {
+                eloPointsTeam++;
             }
 
             fetch('http://localhost:3000/updateTeam', {
@@ -394,21 +565,21 @@ export default {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    changedTeamname: teamname,
-                    changedDeletedValue: deleted,
-                    changedFirstMember: firstMember,
-                    changedSecondMember: secondMember,
-                    changedThirdMember: thirdMember,
-                    changedFourthMember: fourthMember,
-                    changedFifthMember: fifthMember,
-                    teamId: teamId,
+                    changedTeamname: setTeamname,
+                    changedDeletedValue: setDeleted,
+                    changedFirstMember: setFirstMember,
+                    changedSecondMember: setSecondMember,
+                    changedThirdMember: setThirdMember,
+                    changedFourthMember: setFourthMember,
+                    changedFifthMember: setFifthMember,
+                    changedEloPoints: eloPointsTeam,
+                    teamId: setTeamId,
                 }),
             })
                 .then(response => {
                     if (response.ok) {
-                        // display new changes in player table
-                        this.displayTeamsTable();
-                        this.textSuccessMessage = 'updated player successfully!';
+                        this.displayTeamsdata();
+                        this.successMessage = 'updated team successfully!';
                         return response.json();
                     }
                 })
@@ -416,22 +587,24 @@ export default {
                     console.error(error);
                     return;
                 });
+
+            this.openAndCloseEditTeamForm();
         },
         getFilteredTeam() {
             let searchvalue = document.getElementById('searchfield').value;
-            let teamtable = document.getElementById('teams-table');
-            let tbodyTeamtable = teamtable.childNodes[1];
-            let tbodyRows = tbodyTeamtable.childNodes;
+            let tableTeams = document.getElementById('teams-table');
+            let tbodyElement = tableTeams.childNodes[1];
+            let tbodyRows = tbodyElement.childNodes;
             let counterDisplayedRows = 0;
 
             if (searchvalue.length === 0) {
-                this.textResultMessage = '';
+                this.resultMessage = '';
 
-                for (let i = 1; i <= this.tableTeams.length; i++) {
+                for (let i = 1; i <= this.fetchedTeamdata.length; i++) {
                     tbodyRows[i].classList.remove('hidden');
                 }
             } else {
-                for (let i = 1; i <= this.tableTeams.length; i++) {
+                for (let i = 1; i <= this.fetchedTeamdata.length; i++) {
                     let currentRow = tbodyRows[i];
 
                     for (let i = 0; i < currentRow.cells.length; i++) {
@@ -447,14 +620,14 @@ export default {
                     }
                 }
 
-                this.textResultMessage =
+                this.resultMessage =
                     'Found ' + counterDisplayedRows + ' datasets that matches ' + searchvalue;
             }
         },
     },
     mounted() {
         // call function, when component is created
-        this.displayTeamsTable();
+        this.displayTeamsdata();
     },
 };
 </script>
@@ -463,46 +636,71 @@ export default {
 <style scoped>
 #teams-table {
     margin: auto;
+    margin-bottom: 15px;
+    border-spacing: 10px 0;
+    border: 2px solid var(--black);
+    border-collapse: collapse;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .error-message {
-    color: red;
+    color: var(--red);
     font-size: 20px;
 }
 
 .popUp-Window {
-    background-color: aquamarine;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px var(--transparentblack);
+    max-width: 600px;
     padding: 15px;
+}
+
+.position-delete-player-popup {
     position: fixed;
-    margin: auto 0;
     left: 45%;
-    top: 25%;
+    top: 40%;
+}
+
+.position-edit-player-popup {
+    position: fixed;
+    left: 45%;
+    top: 5%;
 }
 
 .column {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.centered-column {
+    display: flex;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .close-PopUpWindow {
     display: flex;
+    background: transparent;
+    border: none;
+    padding-bottom: 15px;
+    cursor: pointer;
 }
 
 .success-message {
-    color: green;
+    color: var(--green);
     font-size: 20px;
 }
 
 .edit-team-form {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
     flex-direction: column;
 }
 
@@ -512,5 +710,157 @@ export default {
 
 #searchfield {
     width: 200px;
+    padding: 5px;
+}
+
+select,
+input {
+    padding: 5px;
+    width: 85%;
+    max-width: 250px;
+    font-size: 16px;
+    color: var(--black);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    background-color: var(--white);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 10px;
+}
+
+select:hover,
+input:hover {
+    border-color: var(--black);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 5px var(--transparentblue);
+}
+
+.delete-team,
+.edit-team {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 5px 0;
+    background-color: var(--darkgrey);
+    color: var(--white);
+    font-size: 16px;
+    border: none;
+    font-weight: 500;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px var(--transparentblack);
+    text-transform: uppercase;
+}
+
+.delete-team:hover,
+.edit-team:hover {
+    background-color: var(--hovergreen);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px var(--transparentblack);
+}
+
+.margin-right {
+    margin-right: 20px;
+}
+
+.back {
+    font-size: 16px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.back:hover {
+    color: var(--hoverblue);
+    transform: scale(1.05);
+}
+
+th,
+td {
+    border: 1px solid var(--black);
+    padding: 5px;
+}
+
+tr:nth-of-type(even) {
+    background-color: var(--lightgrey2);
+}
+
+thead {
+    background-color: var(--hovergreen);
+    border: 2px solid var(--black);
+}
+
+.scrollable-container {
+    width: fit-content;
+    overflow-y: scroll;
+    margin: 0 auto;
+    height: 380px;
+}
+
+/* Responsive Anpassungen für Tablets*/
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .position-delete-player-popup {
+        left: 42%;
+        top: 45%;
+    }
+
+    .position-edit-player-popup {
+        left: 45%;
+        top: 28%;
+    }
+}
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    select,
+    input {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    .delete-team,
+    .edit-team {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
+
+    #teams-table {
+        font-size: 15px;
+    }
+
+    .scrollable-container {
+        width: 300px;
+        overflow-x: scroll;
+    }
+
+    .position-delete-player-popup {
+        left: 23%;
+        top: 27%;
+    }
+
+    .position-edit-player-popup {
+        left: 20%;
+        top: 5%;
+        padding: 5px;
+    }
+
+    .error-message,
+    .success-message {
+        font-size: 15px;
+    }
 }
 </style>

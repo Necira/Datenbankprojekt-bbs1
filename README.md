@@ -20,6 +20,12 @@ Turnier gegeneinander bestreiten können
 
 Suchfunktion, damit z. B. alle Spieler gesucht werden können, die als Position “Top“ spielen.
 
+### Zusätzliche Funktionen der Software
+
+Auf dem Startbildschirm der Teamverwaltungssoftware wird ein aktuelles Leaderboard der besten Spieler und Teams angezeigt, diese sind nach den jeweiligen Elo-Punkten absteigend sortiert. So kann sich jeder Nutzer und jedes Team jederzeit einen Überblick über die stärksten und schwächsten Teilnehmer machen, um beispielsweise das nächste Turnier strategisch zu planen.
+
+Zudem laufen die Datenbank und die GUI in einem Docker-Container, in welchem alle notwendige Frameworks und Bibliotheken installiert sind. So muss der Nutzer sich nur noch um die Ausführung per Befehl kümmern und alles andere wird automatisch beim Starten des Containe erledigt.
+
 ### Vorgehensweise
 
 Die Arbeit erfolgt über Git, sowie Docker, sodass die Teamarbeit effizient und möglichst risikofrei verläuft. Eine Skizze jeder Seite mit Inhalten wurde gefertigt, wodurch ersichtlich wurde was genau bearbeitet werden muss. Dann erfassten wir das ER-Diagramm mit Inhalten und Datenbankstruktur.

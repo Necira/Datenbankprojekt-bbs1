@@ -1,8 +1,27 @@
 <template>
   <div class="player-pick">
-    <label :for="player" class="label">Choose {{ player }}</label>
-    <select v-model="selectedPlayer" :id="player" class="select">
-      <option v-for="player in availablePlayers" :key="player.playerID" :value="player.playername">
+    <label :for="player">Choose {{ player }}</label>
+    <select v-model="selectedPlayer" :id="player">
+      <option
+        v-for="player in availablePlayers"
+        :key="player.playerID"
+        :value="player.playername"
+      >
+        {{ player.playername }}
+      </option>
+    </select>
+  </div>
+  <div class="player-pick">
+    <label :for="player" v-if="availablePlayers.length > 0"
+      >Choose {{ player }}</label
+    >
+    <label v-else>Currently no active player available!</label>
+    <select v-model="selectedPlayer" :id="player">
+      <option
+        v-for="player in availablePlayers"
+        :key="player.playerID"
+        :value="player.playername"
+      >
         {{ player.playername }}
       </option>
     </select>
@@ -11,21 +30,21 @@
 
 <script>
 export default {
-  name: 'PlayerPicks',
+  name: "PlayerPicks",
   props: {
-    player: String, 
-    availablePlayers: Array, 
+    player: String,
+    availablePlayers: Array,
   },
   data() {
     return {
-      selectedPlayer: '',  
+      selectedPlayer: "",
     };
   },
   watch: {
     selectedPlayer(newPlayer) {
-      this.$emit('update:playerName', newPlayer);  
-    }
-  }
+      this.$emit("update:playerName", newPlayer);
+    },
+  },
 };
 </script>
 
@@ -35,36 +54,35 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-family: 'Arial', sans-serif;
 }
 
-.label {
+label {
   margin-bottom: 8px;
   font-size: 16px;
-  color: #333;
+  color: var(--black);
   font-weight: 500;
 }
 
-.select {
+select {
   width: 100%;
   max-width: 300px;
   padding: 10px;
   font-size: 16px;
-  color: #333;
-  border: 1px solid #ccc;
+  color: var(--black);
+  border: 1px solid var(--lightgrey);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--white);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.select:hover {
-  border-color: #888;
+select:hover {
+  border-color: var(--black);
 }
 
-.select:focus {
+select:focus {
   outline: none;
-  border-color: #5d5dff;
-  box-shadow: 0 0 5px rgba(93, 93, 255, 0.5);
+  border-color: var(--blue);
+  box-shadow: 0 0 5px var(--transparentblue);
 }
 
 option {
@@ -72,10 +90,19 @@ option {
   padding: 8px;
 }
 
-@media (max-width: 768px) {
-  .select {
+/* Responsive Anpassungen für Tablets*/
+/* @media only screen and (min-width: 768px) and (max-width: 1023px) {
+} */
+
+/* Responsive Anpassungen für smartphone*/
+@media only screen and (max-width: 767px) {
+  select {
+    padding: 5px;
     font-size: 14px;
-    padding: 8px;
+  }
+
+  label {
+    font-size: 15px;
   }
 }
 </style>
